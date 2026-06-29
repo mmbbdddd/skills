@@ -1,5 +1,6 @@
-深度调研skill [deepresearch](deepresearch)
-    
+#  [深度调研skill](deepresearch)
+
+
     深度调研skill
     1，宽度：地理为止覆盖（尤其中国）、品类（开源/商业，不同产品品种等）等角度进行覆盖
     2，深度：深入技术范式、步骤、组件、优缺点；泛化分析等
@@ -13,3 +14,19 @@
         4.1 总编按金字塔结构汇报
         4.2 附录研究员原始报告
         4.3 附录第三方审计报告
+        4.4 html结构化输出
+
+    说明，建议使用DeepSeek Pro 或者GLM 
+
+## 安装方法
+    
+    在 ClaudeCode或Codex中输入  安装skill https://github.com/mmbbdddd/skills/tree/main/deepresearch  
+
+## demo
+
+
+
+    
+
+
+    
