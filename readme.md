@@ -16,7 +16,9 @@
         4.3 附录第三方审计报告
         4.4 html结构化输出
 
-    说明，建议使用DeepSeek Pro 或者GLM 
+    说明，建议使用DeepSeek Pro 或者GLM （风险提示，比较费钱，单个报告3~10RMB/DeepSeek）
+
+![img.png](img.png)
 
 ## 安装方法
     
