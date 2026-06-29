@@ -39,5 +39,6 @@
 
 [Agent开发人工调研.md](Agent%E5%BC%80%E5%8F%91%E8%B0%83%E7%A0%94/%E4%BA%BA%E5%B7%A5%E8%B0%83%E7%A0%94.md)
 
-////////////有些是结构严谨、内容空洞的废话
+////////////有些和当前直觉是矛盾的
 
+[AI时代软件工程设计优先实践_report.html](AI%E6%97%B6%E4%BB%A3%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%BC%98%E5%85%88%E5%AE%9E%E8%B7%B5/AI%E6%97%B6%E4%BB%A3%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%BC%98%E5%85%88%E5%AE%9E%E8%B7%B5_report.html)

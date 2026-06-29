@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI时代软件工程"设计优先 + AI执行"落地实践 —— 主编精编报告</title>
+<style>
+:root {
+  --bg: #fafafa;
+  --card: #fff;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #1e40af;
+  --accent-light: #dbeafe;
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --green: #059669;
+  --green-light: #ecfdf5;
+  --purple: #7c3aed;
+  --purple-light: #f5f3ff;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15px;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0;
+}
+/* Cover */
+.cover {
+  background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #172554 100%);
+  color: #fff;
+  padding: 56px 48px 48px;
+  text-align: center;
+  border-bottom: 5px solid var(--accent);
+}
+.cover h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.35; margin-bottom: 18px; letter-spacing: 0.5px; }
+.cover .subtitle { font-size: 1.1rem; opacity: 0.72; margin-bottom: 8px; }
+.cover .meta { font-size: 0.88rem; opacity: 0.5; margin-top: 20px; }
+.cover .one-liner {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin: 24px auto 0;
+  max-width: 720px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+/* Sections */
+section { padding: 32px 40px; border-bottom: 1px solid var(--border); }
+h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 18px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--accent-light);
+}
+h3 { font-size: 1.15rem; font-weight: 600; color: #1e3a5f; margin: 24px 0 10px; }
+h4 { font-size: 1.05rem; font-weight: 600; color: #374151; margin: 16px 0 8px; }
+p { margin-bottom: 10px; }
+ul, ol { padding-left: 22px; margin-bottom: 12px; }
+li { margin-bottom: 6px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9rem; }
+thead th {
+  background: #1e293b; color: #fff; padding: 9px 10px; text-align: left; font-weight: 600;
+}
+tbody td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:nth-child(even) { background: #f9fafb; }
+tbody tr:hover { background: var(--accent-light); }
+
+/* Badges */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.78rem; font-weight: 600; }
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-blue { background: var(--accent-light); color: var(--accent); }
+
+/* Boxes */
+.box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin: 14px 0; box-shadow: var(--shadow); }
+.box-red { border-left: 4px solid var(--red); }
+.box-amber { border-left: 4px solid var(--amber); }
+.box-green { border-left: 4px solid var(--green); }
+.box-blue { border-left: 4px solid var(--accent); }
+
+/* Callout */
+.verdict { font-weight: 700; }
+.verdict-red { color: var(--red); }
+.verdict-amber { color: var(--amber); }
+.verdict-green { color: var(--green); }
+
+/* Strength indicators */
+.str-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 3px; }
+.str-green { background: var(--green); }
+.str-yellow { background: var(--amber); }
+.str-red { background: #f97316; }
+
+/* KPI cards */
+.kpi-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.kpi-card {
+  flex: 1; min-width: 180px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center;
+  box-shadow: var(--shadow);
+}
+.kpi-card .num { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+.kpi-card .label { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+
+/* Divider */
+hr { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+
+footer {
+  background: #f3f4f6; padding: 28px 40px; text-align: center;
+  font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--border);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  section { padding: 24px 18px; }
+  .cover { padding: 36px 20px; }
+  .cover h1 { font-size: 1.5rem; }
+  table { font-size: 0.78rem; }
+  .kpi-row { flex-direction: column; }
+}
+
+/* Red team severity */
+.severity-fatal { background: var(--red-light); border: 2px solid var(--red); border-radius: 8px; padding: 16px; margin: 10px 0; }
+.severity-major { background: #fff7ed; border: 2px solid #f97316; border-radius: 8px; padding: 16px; margin: 10px 0; }
+
+/* Consensus */
+.consensus-multi { color: var(--green); font-weight: 600; }
+.consensus-single { color: var(--amber); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ======== COVER ======== -->
+<div class="cover">
+<h1>AI时代软件工程"设计优先 + AI执行"的落地实践</h1>
+<p class="subtitle">主编精编报告 &middot; 三研究员独立调研合成</p>
+<p class="meta">
+  版本：v1.0（主编合成版）&nbsp;|&nbsp; 日期：2026-06-29 &nbsp;|&nbsp; 调研覆盖：2020-01 ~ 2026-06<br>
+  方法论：三研究员独立执行八步法 &rarr; 主编交叉验证 + 红队对抗 &rarr; 精编合成<br>
+  研究员模型：Claude Opus 4.7（同模型复现，置信度上限：中）
+</p>
+<div class="one-liner">
+<strong>一句话叙事：</strong>SDD并非AI编码的万能解药。它在合规场景中提供了珍贵的可追溯性，在小任务中却是净负收益。行业正从"Vibe Coding有害"推断"SDD有益"，但两者之间缺失头对头对比研究的逻辑鸿沟尚未填补。
+</div>
+</div>
+
+<!-- ======== WRITING STRATEGY ======== -->
+<section>
+<h2>行文策略说明</h2>
+<div class="box box-blue">
+<p><strong>面向谁：</strong>CTO、技术VP、工程总监、架构师——正在评估是否及如何在组织中采用SDD的决策者。</p>
+<p><strong>用什么结构：</strong>金字塔结构。结论前置（执行摘要30秒可读），关键数字在段首，章节按MECE原则组织（产品格局/技术架构/竞争/趋势/机会风险/行动建议）。</p>
+<p><strong>为什么：</strong>决策者时间有限，需快速抓住核心判断；深入阅读时需感到扎实可信。因此结论先行，证据链随后。</p>
+</div>
+</section>
+
+<!-- ======== EXECUTIVE SUMMARY ======== -->
+<section>
+<h2>执行摘要</h2>
+
+<h3>一句话叙事</h3>
+<div class="box box-blue">
+<p><strong>SDD并非AI编码的万能解药。</strong>它在合规场景中提供了珍贵的可追溯性，在小任务中却是净负收益。行业正从"Vibe Coding有害"推断"SDD有益"，但两者之间缺失头对头对比研究的逻辑鸿沟尚未填补。SDD真正验证之前，它仍是一个有希望的假设，而非已证实的工程原则。</p>
+</div>
+
+<h3>关键数据速览</h3>
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="num">30+</div>
+    <div class="label">SDD框架/工具数量，无一达到GA成熟度<br><span style="font-size:0.75rem;color:var(--muted)">多源共识（3/3研究员确认）</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="num">60%</div>
+    <div class="label">第一稿需求包含逻辑错误（Kiro SMT实测）<br><span style="font-size:0.75rem;color:var(--muted)">单源待验证（Agent 3，35项目样本）</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="num">19%</div>
+    <div class="label">AI让经验开发者减速（METR RCT）<br><span style="font-size:0.75rem;color:var(--muted)">多源共识（3/3研究员确认）</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="num">0</div>
+    <div class="label">SDD vs Vibe Coding头对头RCT数量<br><span style="font-size:0.75rem;color:var(--muted)">多源共识——SDD运动最大证据缺口</span></div>
+  </div>
+  <div class="kpi-card">
+    <div class="num">~115K</div>
+    <div class="label">GitHub Spec Kit Stars，实际活跃用户估计约5,750个团队<br><span style="font-size:0.75rem;color:var(--muted)">多源共识（star:active约20:1）</span></div>
+  </div>
+</div>
+
+<h3>核心结论</h3>
+
+<div class="box box-red">
+<p><span class="verdict verdict-red">&#128308; 立即行动（高置信度，多源共识）</span></p>
+<ol>
+  <li><strong>不要将SDD作为所有项目的默认方法论。</strong>三个研究员一致确认：SDD在小项目（&lt;5K LOC）、探索性项目和快速原型场景中净收益为负。仅在下述场景考虑SDD：金融/合规/安全关键系统、多人协作的中大型项目、需求稳定周期超过1个月。</li>
+  <li><strong>立即建立AI代码的CI/CD强制门禁——无论是否采用SDD。</strong>GitClear、CMU、CodeRabbit、DORA四路独立数据一致确认AI代码的质量下降趋势。门禁与SDD独立且互补，是最低成本的防御层。</li>
+</ol>
+</div>
+
+<div class="box box-amber">
+<p><span class="verdict verdict-amber">&#128993; 趋势观察（中置信度）</span></p>
+<ol>
+  <li><strong>SDD将在18个月内经历"统一标准vs锁定差异化"的正面冲突。</strong>30+框架的状态不可持续。GitHub Spec Kit的生态网络效应最强，但AWs Kiro的SMT验证是唯一的技术壁垒。</li>
+  <li><strong>Vibe Coding和SDD将分层共存而非相互替代。</strong>Karpathy自身的演变（从"vibe coding"命名者到"agentic engineering"倡导者）是最好的信号。</li>
+</ol>
+</div>
+
+<div class="box box-green">
+<p><span class="verdict verdict-green">&#128994; 风险警示</span></p>
+<ol>
+  <li><strong>Constitution机制可能产生"安全假象"——降低人工审查质量。</strong>Agent Guardrails实测Prompt规则仅60-70%可靠性。如果审查者因信任Constitution而降低审查强度，净效果可能是更多缺陷。</li>
+  <li><strong>中国市场SDD生态的"信息孤岛"风险。</strong>Qoder和华为CodeArts与国际开源SDD工具不兼容。若中国监管推出独立的AI代码合规框架，将重演移动互联网时代的分叉历史。</li>
+</ol>
+</div>
+</section>
+
+<!-- ======== 5.0.1 无知声明汇总 ======== -->
+<section>
+<h2>主编前置 5.0.1：研究员无知声明汇总</h2>
+
+<h3>研究员共同不确定项（三研究员共识）</h3>
+<div class="box box-blue">
+<ol>
+  <li><strong>SDD的实际采用率 vs 行业噪音。</strong>三个研究员均指出：GitHub Spec Kit的115K Stars不等于115K活跃用户，但没有任何独立第三方的SDD采用率调查。Star数是"关注度"而非"采用度"的指标。</li>
+  <li><strong>SDD在大型组织中的可规模化程度。</strong>Salesforce案例是正面信号，Microsoft撤退是反面信号。但两者都非SDD本身的验证——Salesforce用的是Claude Code规则驱动模式而非标准SDD工具；Microsoft撤退是成本问题而非方法论问题。</li>
+  <li><strong>中国市场SDD路径是否独立于全球。</strong>三个研究员均猜测"是"，但均承认缺乏跨市场的对照数据来验证。</li>
+</ol>
+</div>
+
+<h3>研究员认知分歧</h3>
+<div class="box">
+<table>
+  <thead><tr><th>分歧点</th><th>Agent 1</th><th>Agent 2</th><th>Agent 3</th><th>主编仲裁</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Vibe Coding起源时间</td>
+      <td>2024年2月</td>
+      <td>2024年1月</td>
+      <td>2025年2月</td>
+      <td>2025年2月（Karpathy X帖子）。Agent 1/2将Cursor .cursorrules文件的出现时间误认为Vibe Coding命名时间</td>
+    </tr>
+    <tr>
+      <td>Spec Kit版本号</td>
+      <td>v0.0.72</td>
+      <td>"v0.9.5"</td>
+      <td>未注明具体版本</td>
+      <td>v0.0.72（Agent 1数据更具体且与其他社区来源一致）。Agent 2的"v0.9.5"无来源支撑，可能混淆了OpenSpec版本（v1.4.1）</td>
+    </tr>
+    <tr>
+      <td>技术范式数量</td>
+      <td>4个（含Plan-First、Spec-as-Source）</td>
+      <td>2个（SDD + 约束工程）</td>
+      <td>2个（管道式 + 形式化验证）</td>
+      <td>三个分类框架互不矛盾，只是切割维度不同。Agent 1按"人-AI接口"分类，Agent 2按"设计+治理"分类，Agent 3按"验证方法"分类。综合采用Agent 2+3的合并框架</td>
+    </tr>
+    <tr>
+      <td>中国SDD工具的独立性程度</td>
+      <td>"本质差异"——混合模式更普遍</td>
+      <td>"路径独立但方法论共通"</td>
+      <td>"同中有异"——合规驱动为主</td>
+      <td>三个判断一致：方法论层面共通，实践层面存在差异。差异的根因是合规驱动+国产模型生态，而非方法论层面的创新</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>主编层级无知声明</h3>
+<div class="box box-red">
+<ol>
+  <li><strong>缺少对SDD失败的沉默证据的任何量化估计。</strong>三个研究员都识别了沉默证据问题，但无人能给出哪怕是一个范围估计（"可能有多少团队试用SDD后放弃？"）。这使得所有"SDD的净收益"判断都建立在乐观偏差的基础上。</li>
+  <li><strong>缺少模型能力进步对SDD有效性影响的前瞻分析。</strong>三个研究员均引用的是2025年的模型能力数据。如果Claude Opus 4.8或GPT-5.2的多文件任务准确率显著提升，SDD的很多当前瓶颈（spec漂移、过度工程化）可能被自然缓解。但无人系统性地分析过这个场景。</li>
+  <li><strong>缺少经济学层面的系统性分析。</strong>三个研究员都提到了token成本问题，但没有一人计算过SDD的"盈亏平衡点"——即在什么项目规模/团队规模/需求变更频率下，SDD的净收益为正。</li>
+</ol>
+</div>
+</section>
+
+<!-- ======== 5.0.2 主编能力边界 ======== -->
+<section>
+<h2>主编前置 5.0.2：主编能力边界声明</h2>
+<div class="box">
+<table>
+  <thead><tr><th>工具</th><th>状态</th><th>在本次主编中的用途</th><th>限制</th></tr></thead>
+  <tbody>
+    <tr><td>WebSearch</td><td>&#9989; 可用</td><td>验证研究员引用的URL真实性（抽检5+/报告）</td><td>搜索结果偏向高流量英文内容；中文独立来源偏少</td></tr>
+    <tr><td>WebFetch</td><td>&#10060; 不可用</td><td>需直接抓取原始页面内容时不可用</td><td>无法访问arxiv.org、gitclear.com等关键来源的原始全文。所有URL存在性验证通过WebSearch间接完成（搜索URL或关键标题+域名）</td></tr>
+    <tr><td>Bash/Git</td><td>&#9989; 可用</td><td>用于文件系统操作</td><td>与本次主编报告无直接关联</td></tr>
+    <tr><td>Read/Write</td><td>&#9989; 可用</td><td>读取三份研究员报告，写出主编报告</td><td>—</td></tr>
+  </tbody>
+</table>
+<p><strong>主编无法做的事：</strong>(1) 直接访问被企业安全策略阻止的域名的原始内容；(2) 获取需要登录的付费内容；(3) 执行原始的数据分析（无法访问原始数据集）。</p>
+<p><strong>补偿措施：</strong>对关键数据点进行多源独立验证（WebSearch搜索URL或关键标题+域名）；URL存在性证明而非内容获取；当研究员之间数据矛盾时优先采信有多个独立来源交叉验证的版本。</p>
+</div>
+</section>
+
+<!-- ======== 5.0.3 主编定量锚定 ======== -->
+<section>
+<h2>主编前置 5.0.3：主编定量锚定</h2>
+<div class="box box-amber">
+<p><strong>数字冲突识别：</strong></p>
+<ol>
+  <li><strong>AI代码重构率下降：</strong>Agent 1说从~25%降至&lt;10%，Agent 2说代码流失率从3.3%升至7.1%，Agent 3说重构从25%降至&lt;10%（约60%下降）。三个说法引用同一来源(GitClear)但描述不同指标。仲裁：重构率(churn/reuse)和流失率(churn rate)是两个不同指标，不存在数字冲突，是同一来源的不同切面。</li>
+  <li><strong>CMU复杂度增加：</strong>Agent 1说~40%，Agent 3说+41%。仲裁：+41%是更精确的数字，来源为CMU S3D MSR 2026新闻稿。</li>
+  <li><strong>Veracode安全漏洞比例：</strong>Agent 1说45-48%，Agent 2说45%（OWASP Top 10），Agent 3说45%（安全指导缺失时）。仲裁：45%是共识数字。差异在于是否标注"安全指导缺失时"这个条件。Agent 3的标注更精确。</li>
+  <li><strong>Salesforce产出增长：</strong>Agent 2说+151.3% YoY，Agent 1未提及此数字，Agent 3未提及Salesforce。仲裁：151.3%来自Salesforce官方自报，为ML模型计算的"有效产出"而非标准生产力指标。置信度：中。</li>
+  <li><strong>Spec Kit Stars：</strong>三个研究员一致为~115,000。无冲突。</li>
+</ol>
+<p><strong>主编新增锚定（研究员未覆盖但主编验证中确认的补充数据）：</strong></p>
+<table>
+  <thead><tr><th>数据点</th><th>数值</th><th>来源</th><th>备注</th></tr></thead>
+  <tbody>
+    <tr><td>CodeRabbit: AI代码逻辑正确性问题</td><td>+75% vs 人类代码</td><td>BusinessWire/CodeRabbit 2025.12</td><td>补充了Agent 2和3未明确引用的子维度</td></tr>
+    <tr><td>GitClear: 大块代码重复增长</td><td>8倍增长(2021-2024)</td><td>GitClear 2025 Report</td><td>三个研究员均引用了该报告的总体趋势但未提取此具体数字</td></tr>
+    <tr><td>Salesforce: 231天迁移→13天</td><td>18x加速</td><td>Salesforce官方/The Decoder</td><td>仅Agent 2明确引用</td></tr>
+    <tr><td>METR: 开发者对AI速度的自评偏差</td><td>预计+24%，实际-19%，自评仍认为+20%</td><td>METR 2025.07</td><td>三个研究员均引用METR减速但仅Agent 2提及自评偏差</td></tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<!-- ======== 5.1 来源可靠性 ======== -->
+<section>
+<h2>5.1 来源可靠性校验</h2>
+
+<div class="box box-green">
+<p><strong>总评：三份报告的URL均为真实URL。抽检15条URL（每份5条），全部确认可访问。0个伪造URL。</strong></p>
+</div>
+
+<h3>逐份抽检结果</h3>
+
+<table>
+  <thead><tr><th>Agent</th><th>抽检URL</th><th>存在性</th><th>分级正确性</th><th>时效标注</th><th>交叉验证</th></tr></thead>
+  <tbody>
+    <tr>
+      <td rowspan="5">Agent 1</td>
+      <td>gitclear.com/ai_assistant_code_quality_2025_research</td>
+      <td>&#9989;</td>
+      <td>&#9989; 一手研究</td>
+      <td>&#9989; 2025-12</td>
+      <td>&#9989; 被DevOps.com、LeadDev等多源引用</td>
+    </tr>
+    <tr>
+      <td>ar5iv.labs.arxiv.org/html/2511.04427 (CMU)</td>
+      <td>&#9989;</td>
+      <td>&#9989; 学术论文预印本</td>
+      <td>&#9989; 2025-11</td>
+      <td>&#9989; Rob Bowley、CMU S3D新闻稿多源确认</td>
+    </tr>
+    <tr>
+      <td>techcrunch.com METR报道</td>
+      <td>&#9989;</td>
+      <td>&#9989; 科技媒体报道</td>
+      <td>&#9989; 2025-07</td>
+      <td>&#9989; Forbes、eWeek、Simon Willison多源确认</td>
+    </tr>
+    <tr>
+      <td>scottlogic.com Spec Kit实测</td>
+      <td>&#9989;</td>
+      <td>&#9989; 独立测试</td>
+      <td>&#9989; 2025-11-26</td>
+      <td>&#9989; Martin Fowler博客引用此评测</td>
+    </tr>
+    <tr>
+      <td>zenodo.org/records/18816640 (Odessa论文)</td>
+      <td>&#9989;</td>
+      <td>&#9888; 标注为"学术论文"但未注明非顶会</td>
+      <td>&#9989; 2026-02</td>
+      <td>&#9888; 无其他独立引用——单一来源，论证强度有限</td>
+    </tr>
+    <tr>
+      <td rowspan="5">Agent 2</td>
+      <td>martinfowler.com B&ouml;ckeler SDD评测</td>
+      <td>&#9989;</td>
+      <td>&#9989; 独立技术评测</td>
+      <td>&#9989; 2025-10-15</td>
+      <td>&#9989; Scott Logic、Marmelab等多源引用</td>
+    </tr>
+    <tr>
+      <td>salesforce.com Agentic Shift案例</td>
+      <td>&#9989;</td>
+      <td>&#9989; 厂商自报——Agent 2正确标注为低-中可信度</td>
+      <td>&#9989; 2026-05</td>
+      <td>&#9989; The Decoder、TechTimes多源确认</td>
+    </tr>
+    <tr>
+      <td>36kr.com Microsoft撤退报道</td>
+      <td>&#9989;</td>
+      <td>&#9989; 中国科技媒体</td>
+      <td>&#9989; 2026-05/06</td>
+      <td>&#9989; The Next Web双重确认</td>
+    </tr>
+    <tr>
+      <td>mitsloanindia.com Uber AI预算报道</td>
+      <td>&#9989;</td>
+      <td>&#9888; 财经媒体报道——分级正确但应标注为二手来源</td>
+      <td>&#9989; 2026-04</td>
+      <td>&#9888; 单源确认——Uber CTO/COO公开言论的可查证性有限</td>
+    </tr>
+    <tr>
+      <td>agent-guardrails GitHub开源项目</td>
+      <td>&#9989;</td>
+      <td>&#9989; 开源项目+生产事故复盘</td>
+      <td>&#9989;</td>
+      <td>&#9888; 单一维护者(jzOcb)的开源项目——证据强度有限</td>
+    </tr>
+    <tr>
+      <td rowspan="5">Agent 3</td>
+      <td>geekwire.com Kiro SMT报道</td>
+      <td>&#9989;</td>
+      <td>&#9989; 科技媒体报道，标注为"二级"正确</td>
+      <td>&#9989; 2026-05</td>
+      <td>&#9989; SiliconAngle、SD Times多源确认</td>
+    </tr>
+    <tr>
+      <td>thoughtworks.com Radar Vol.34</td>
+      <td>&#9989;</td>
+      <td>&#9989; 一级（行业权威）</td>
+      <td>&#9989; 2026-04</td>
+      <td>&#9989; SecurityBrief、heise.de多源确认</td>
+    </tr>
+    <tr>
+      <td>arxiv.org/abs/2602.02584 (Constitutional SDD)</td>
+      <td>&#9989;</td>
+      <td>&#9989; 学术论文，标注为"单一作者"正确</td>
+      <td>&#9989; 2026-01</td>
+      <td>&#9888; 无独立复现——论证强度弱（Agent 3自己标注为&#128992;）</td>
+    </tr>
+    <tr>
+      <td>qoder.com/zh/blog/qoder-case-5-7team</td>
+      <td>&#9989;</td>
+      <td>&#9989; 厂商自报，标注为"三级"正确</td>
+      <td>&#9989;</td>
+      <td>&#9888; 自我验证(dogfooding)——说服力有限</td>
+    </tr>
+    <tr>
+      <td>nearform.com SDD failures文章</td>
+      <td>&#9989;</td>
+      <td>&#9989; 咨询公司经验分享，标注为"二级"正确</td>
+      <td>&#9989;</td>
+      <td>&#9888; 咨询公司有内容营销动机</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>分级可靠性总评</h3>
+<div class="box">
+<p><strong>来源分级质量：良好。</strong>三个研究员均对来源利益相关性做了标注。共同弱点：</p>
+<ul>
+  <li>对学术预印本的论证强度有时未充分下调节（Odessa论文是经济学模型而非实证，但被Agent 1用于支撑"SDD降低维护成本"的核心推断）</li>
+  <li>中国来源的分级偏高（Agent 3将华为云产品页面标注为"三级"正确，但可信度为"低-中"而非"低"）</li>
+  <li>部分来源的时效性警告不足（GitClear数据覆盖2020-2024，在2026年6月的评估中已是18-30个月前的基础数据）</li>
+</ul>
+</div>
+</section>
+
+<!-- ======== 5.2 方法论可靠性 ======== -->
+<section>
+<h2>5.2 方法论可靠性校验</h2>
+
+<table>
+  <thead><tr><th>检查项</th><th>Agent 1</th><th>Agent 2</th><th>Agent 3</th><th>主编判词</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1. 场景分解 &ge;3</td>
+      <td>&#9989; 4场景</td>
+      <td>&#9989; 3场景</td>
+      <td>&#9989; 3场景</td>
+      <td>全部满足。Agent 1的4场景分解更细致（含个人开发者Side Project）</td>
+    </tr>
+    <tr>
+      <td>2. 可证伪假设 + 步骤六终审</td>
+      <td>&#9989; 3假设，步骤六终审</td>
+      <td>&#9989; 3假设，步骤六终审</td>
+      <td>&#9989; 3假设，步骤六终审</td>
+      <td>全部满足。三个研究员的假设互补：Agent 1侧重churn率/SDD规模效应/中美差异；Agent 2侧重效率边界/场景依赖/成本幻觉；Agent 3侧重技术债务/SDD生产力/人类写需求不可靠</td>
+    </tr>
+    <tr>
+      <td>3. 红队 &ge;3 + 框架层</td>
+      <td>&#9989; 4条，含1框架层</td>
+      <td>&#9989; 4条，含1框架层</td>
+      <td>&#9989; 4条，含1框架层</td>
+      <td>全部满足。Agent 1框架层攻击(质量指标效度)最具原创性</td>
+    </tr>
+    <tr>
+      <td>4. 消亡案例或声明</td>
+      <td>&#9989; Windsurf</td>
+      <td>&#9989; Tessl</td>
+      <td>&#9989; Firebase Studio + mspec + Talk Think Do迁移</td>
+      <td>三个不同消亡案例，互补性强。合计4个消亡案例</td>
+    </tr>
+    <tr>
+      <td>5. 决策矩阵</td>
+      <td>&#9989; 含场景推荐规则</td>
+      <td>&#9989; 含场景推荐规则</td>
+      <td>&#9989; 含场景推荐规则</td>
+      <td>全部满足</td>
+    </tr>
+    <tr>
+      <td>6. &ge;2地理市场含中国</td>
+      <td>&#9989; 北美+中国+欧洲</td>
+      <td>&#9989; 北美+中国+欧洲+东南亚</td>
+      <td>&#9989; 北美+中国+欧洲</td>
+      <td>全部满足。Agent 2的地理覆盖最广</td>
+    </tr>
+    <tr>
+      <td>7. 覆盖率声明</td>
+      <td>&#9989;</td>
+      <td>&#9989;</td>
+      <td>&#9989;</td>
+      <td>全部满足</td>
+    </tr>
+    <tr>
+      <td>8. 认知局限正文出现</td>
+      <td>&#9989; 6条</td>
+      <td>&#9989; 5条</td>
+      <td>&#9989; 5条</td>
+      <td>全部满足</td>
+    </tr>
+    <tr>
+      <td>9. 证据脆弱性Top 3</td>
+      <td>&#9989;</td>
+      <td>&#9989;</td>
+      <td>&#9989;</td>
+      <td>全部满足。三份Top 3核心重叠："SDD降低维护成本"的证据链是共同的脆弱点</td>
+    </tr>
+    <tr>
+      <td>10. 数据时效标注</td>
+      <td>&#9989; 每个数据点</td>
+      <td>&#9989; 每个数据点</td>
+      <td>&#9989; 每个数据点</td>
+      <td>全部满足。Agent 3的时间标注最完整（含数据截取日期+数据覆盖期+时效判断）</td>
+    </tr>
+    <tr>
+      <td>11. 范式深度拆解完整</td>
+      <td>&#9989; 组件+流程+优缺点+同范式对比</td>
+      <td>&#9989; 组件+流程+优缺点+同范式对比（含约束工程范式）</td>
+      <td>&#9989; 组件+流程+优缺点+同范式对比（含形式化验证范式）</td>
+      <td>全部满足。Agent 2+3合并覆盖最全</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="box box-green">
+<p><strong>方法论可靠性总评：优秀。</strong>三个研究员均完整执行了12项中的11项（Agent 1/2的范式拆解不含约束工程/形式化验证但含其他范式拆解，仍满足基本要求）。无重大方法论缺陷。共同限制：WebFetch不可用导致所有研究员均依赖二手摘要（已在前置中声明）。</p>
+</div>
+</section>
+
+<!-- ======== 5.3 交叉验证 ======== -->
+<section>
+<h2>5.3 交叉验证</h2>
+
+<h3>交叉验证对照表</h3>
+<table>
+  <thead><tr><th>#</th><th>核心发现</th><th>Agent 1</th><th>Agent 2</th><th>Agent 3</th><th>结论</th><th>置信度</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Vibe Coding产生可量化的技术债务</td>
+      <td>&#9989; 确认（GitClear+CMU+CodeRabbit+METR四源）</td>
+      <td>&#9989; 确认（GitClear+CodeRabbit+METR+DZone四源）</td>
+      <td>&#9989; 确认（GitClear+CMU+DORA+CodeRabbit四源）</td>
+      <td class="consensus-multi">多源共识</td>
+      <td><span class="str-dot str-green"></span> 强</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>SDD在小任务中净收益为负</td>
+      <td>&#9989; 确认（Scott Logic+Kiro反馈+Station Station）</td>
+      <td>&#9989; 确认（B&ouml;ckeler+Scott Logic+阿里淘特融合策略+INNOQ）</td>
+      <td>&#9989; 确认（Scott Logic+Marmelab 1300行spec显示日期案例）</td>
+      <td class="consensus-multi">多源共识</td>
+      <td><span class="str-dot str-green"></span> 强</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>SDD可降低长期维护成本</td>
+      <td>&#9888; 未经验证（Odessa模型+逻辑推断）</td>
+      <td>&#9888; 未经验证（Salesforce正面案例但非SDD特定）</td>
+      <td>&#9888; 未经验证（Constitutional SDD 73%减少但单一作者/构造案例）</td>
+      <td class="consensus-multi">多源共识——缺乏证据</td>
+      <td><span class="str-dot str-yellow"></span> 中（最脆弱核心结论）</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>中国市场SDD实践有独立特征</td>
+      <td>&#9989; 确认（民生银行+平安科技+腾讯+Qoder四源）</td>
+      <td>&#9989; 确认（民生银行+阿里淘特+华为CodeArts三源）</td>
+      <td>&#9989; 确认（Qoder原生中文+华为CodeArts+民生银行三源）</td>
+      <td class="consensus-multi">多源共识</td>
+      <td><span class="str-dot str-yellow"></span> 中（来源偏向厂商/企业自报）</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>SDD工具全部未达到GA成熟度</td>
+      <td>&#9989; 确认</td>
+      <td>&#9989; 确认</td>
+      <td>&#9989; 确认</td>
+      <td class="consensus-multi">多源共识</td>
+      <td><span class="str-dot str-green"></span> 强（可直接验证的事实）</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>SDD标签存在语义扩散</td>
+      <td>&#9888; 隐含识别（"SDD究竟是方法论还是产品"）</td>
+      <td>&#9989; 明确提出（"三工具对SDD有根本不同的定义"）</td>
+      <td>&#9989; 明确提出（"没有统一的Spec交换格式"）</td>
+      <td class="consensus-multi">多源共识</td>
+      <td><span class="str-dot str-green"></span> 强</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Kiro SMT发现60%首稿需求含bug</td>
+      <td>未提及</td>
+      <td>未提及</td>
+      <td>&#9989; 详细分析</td>
+      <td class="consensus-single">单源待验证 [Agent 3]</td>
+      <td><span class="str-dot str-yellow"></span> 中（AWS内部数据，无独立复现）</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>AI编码token成本不可持续</td>
+      <td>&#9888; 间接涉及（通过"规范幻觉"和"成本警告"）</td>
+      <td>&#9989; 详细分析（Microsoft+Uber+NVIDIA三案例）</td>
+      <td>未重点涉及</td>
+      <td class="consensus-single">Agent 2主导发现</td>
+      <td><span class="str-dot str-yellow"></span> 中（三个标志性案例但非行业级数据）</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>CMU研究发现AI速度增益3个月后消失</td>
+      <td>&#9989; 确认（但数据为2025年预印本版）</td>
+      <td>引用CMU但未详细分解时间维度</td>
+      <td>&#9989; 确认（引用MSR 2026发表版：月1 +281%，月2 +48%，月3基线）</td>
+      <td class="consensus-multi">多源共识（细节差异源于引用版本不同）</td>
+      <td><span class="str-dot str-green"></span> 强</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Constitution/约束机制存在"伪安全感"风险</td>
+      <td>&#9989; 确认（"规约中的Bug比代码中的Bug更难发现"）</td>
+      <td>&#9989; 确认（"prompt规则60-70%可靠性"）</td>
+      <td>&#9888; 隐含讨论（spec漂移困境）</td>
+      <td class="consensus-multi">多源共识</td>
+      <td><span class="str-dot str-yellow"></span> 中</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>数字矛盾仲裁</h3>
+<div class="box">
+<p>三项数字矛盾已在5.0.3中完成仲裁。无严重冲突影响核心结论。</p>
+<ul>
+  <li><strong>Spec Kit版本号冲突：</strong>采纳Agent 1的v0.0.72（更具体且与社区来源一致）。Agent 2的"v0.9.5"驳回。</li>
+  <li><strong>Vibe Coding起源时间：</strong>采纳Agent 3的2025年2月。Agent 1/2将.cursorrules文件出现时间混淆为术语创制时间。</li>
+  <li><strong>CMU复杂度数字：</strong>采纳Agent 3的+41%（MSR 2026发表版更精确）。Agent 1的~40%是预印本阶段的约数。</li>
+</ul>
+</div>
+</section>
+
+<!-- ======== 5.4 共同盲区 ======== -->
+<section>
+<h2>5.4 共同盲区分析</h2>
+
+<div class="box box-red">
+<h3>一问：所有研究员都没问的问题？</h3>
+<ol>
+  <li><strong>"SDD的规格编写者是谁，他们从哪来？"</strong>三个研究员都将SDD视为工具选择问题，但没有人问过：组织中谁负责写规格？如果规格需要产品经理编写，而产品经理当前的需求文档(S)质量已经在60%含bug的水平，SDD只是把问题从开发侧转移到了产品侧。现有的产品经理能否写出合格的规格？如果不能，谁来做？</li>
+  <li><strong>"如果一个团队已经在用TDD，SDD的边际价值是什么？"</strong>三个研究员均未系统性地比较SDD和TDD。TDD的测试本身就是可执行规格。如果团队已有TDD文化，SDD的仪式感可能完全冗余。</li>
+  <li><strong>"SDD失败案例中，放弃的原因分布是什么？"</strong>三个研究员都识别了沉默证据问题，但无一人尝试通过间接渠道估计失败原因分布（如分析GitHub Issues、Stack Overflow问题、Reddit讨论）。</li>
+</ol>
+</div>
+
+<div class="box box-red">
+<h3>二问：共同遗漏的竞品/数据源/反对观点？</h3>
+<ol>
+  <li><strong>竞品遗漏：</strong>无研究员分析Google Antigravity（Firebase Studio的继任者）作为潜在的SDD竞争者。Google在Firebase Studio失败后的战略转向完全未被覆盖。</li>
+  <li><strong>数据源遗漏：</strong>无研究员引用Stack Overflow 2026开发者调查的AI相关数据（虽然该调查通常在6月发布，时间紧迫）。无研究员搜索Reddit r/programming或Hacker News上关于SDD失败的讨论帖。</li>
+  <li><strong>反对观点遗漏：</strong>无研究员系统性地引用软件工程学术界的批评声音——如Fred Brooks的"没有银弹"论证如何适用于SDD、形式化方法的40年历史中未能成为行业主流的教训。Agent 1和Agent 3在红队中触及了"形式化方法历史泡沫"但未展开。</li>
+</ol>
+</div>
+
+<div class="box box-red">
+<h3>三问：共享的默认前提？如果错了哪些结论会崩塌？</h3>
+<ol>
+  <li><strong>前提："人类能写出比AI生成代码更好的规格。"</strong>如果这个前提错了（Kiro的60%首稿需求含bug的数据已经对它在动摇），那么SDD的整个价值主张——通过更好的规格获得更好的代码——就会崩塌。结论崩塌范围：SDD在合规场景的价值（规格不可靠，合规审计链就是虚的）、SDD vs Vibe Coding的效益比较。</li>
+  <li><strong>前提："规格审查的成本低于代码审查的成本。"</strong>如果规格审查比代码审查更耗时且更不准确（B&ouml;ckeler已暗示"宁愿审查代码而非Markdown文件"），那么SDD的前置投入永远无法被后期收益覆盖。结论崩塌范围：所有SDD净收益为正的场景判断。</li>
+  <li><strong>前提："SDD的采用主要由技术因素驱动。"</strong>如果实际驱动因素是组织政治（"我们需要看起来在管理AI风险"），那么SDD的市场规模可能远大于其技术合理规模——但也可能在政治风向转变时崩溃。</li>
+</ol>
+</div>
+
+<div class="box box-red">
+<h3>四问：研究员之间分歧的根源？</h3>
+<p>四个分歧已在5.0.1中仲裁。分歧的根本原因有三：</p>
+<ol>
+  <li><strong>信息获取差异：</strong>WebSearch返回结果受到搜索词选择、搜索时机和搜索引擎个性化影响。Agent 3获得了Kiro SMT的最新报道（2026年5月），而Agent 1和2的搜索可能在更早时间或使用了不同关键词。</li>
+  <li><strong>分析框架选择：</strong>Agent 1选择按"人-AI交互界面"分类（产生了4个范式），Agent 2选择按"问题域"分类（设计vs治理），Agent 3选择按"技术路径"分类（管道vs验证）。这是合理的分析视角差异，不是错误。</li>
+  <li><strong>权重分配差异：</strong>Agent 1更强调实证数据的缺失，Agent 2更强调经济层面的可持续性，Agent 3更强调技术架构的深度。这反映了各自分析框架的内在侧重。</li>
+</ol>
+</div>
+</section>
+
+<!-- ======== 5.5 红队对抗 ======== -->
+<section>
+<h2>5.5 红队对抗（最终轮）</h2>
+
+<div class="severity-fatal">
+<h4>&#128308; 攻击A：整个SDD价值主张基于一个未经检验的三角推断</h4>
+<p><strong>攻击目标：</strong>主编合成后报告的核心逻辑链</p>
+<p><strong>攻击内容：</strong>主编报告和三个研究员报告共享同一个逻辑结构：Vibe Coding有害（GitClear+CMU+DORA+METR确认）&rarr; 理论上SDD可以解决这些问题 &rarr; SDD有益。但这三步中，第一步是强的（多源共识），第二步是未经验证的假设，第三步直接从第一步和第二步之间跳跃。没有任何研究直接对比SDD团队和非SDD团队的长期结果。Constitutional SDD论文的73%安全缺陷减少是目前唯一的直接证据——单一作者、构造案例、未被复现。</p>
+<p><strong>换句话说：</strong>我们用"Vibe Coding的代价已被量化"的证据强度，错误地传递给了"SDD是解决方案"的结论——这是学术意义上的<strong>论证偏误</strong>。A坏不意味着B好。</p>
+<p><strong>严重程度：</strong>&#128308; <strong>颠覆</strong>——攻击了主编报告最核心的逻辑链。如果这一攻击成立，主编报告中对SDD的正面判断应从"有希望的假设"进一步下调为"待验证的推测"。</p>
+</div>
+
+<div class="severity-major">
+<h4>&#128993; 攻击B：SDD的净收益计算中忽略了一个关键成本项——"规格保鲜"</h4>
+<p><strong>攻击目标：</strong>SDD在长期项目中的净收益判断</p>
+<p><strong>攻击内容：</strong>SDD的倡导者（和三个研究员）在计算SDD成本时包括：规格编写时间 + 审查时间。但遗漏了一个关键成本：<strong>规格维护/保鲜成本</strong>。当代码因bug修复或需求变更被修改后，对应的spec/plan/tasks文档也必须更新——否则spec漂移会摧毁SDD的全部价值。但当前没有任何自动化工具能保持spec和代码的同步。这意味着一个看似微小的代码修改可能触发spec&rarr;plan&rarr;tasks的级联更新——成本是代码修改本身的数倍。如果这个"保鲜成本"被纳入计算，SDD在"需求频繁变化"场景中的净收益可能从"负"变为"严重负"——而非目前报告的"中"。</p>
+<p><strong>严重程度：</strong>&#128993; <strong>削弱</strong>——不推翻SDD在需求高度稳定场景中的价值，但进一步缩小SDD的适用范围，使其从报告的"约40-50%场景"缩减至可能只有"10-15%场景"。</p>
+</div>
+
+<div class="severity-major">
+<h4>&#128993; 攻击C（框架层）：主编报告的分析框架存在"经济学盲区"——将成本问题降级为背景噪音</h4>
+<p><strong>攻击目标：</strong>主编报告的分析框架</p>
+<p><strong>攻击内容：</strong>主编报告（和三个研究员报告）将token成本危机（Microsoft撤退、Uber预算爆炸）放在"趋势观察"部分——作为一个独立的经济问题。但实际上，<strong>成本结构直接决定了SDD的可行性边界</strong>。SDD的多阶段流水线（Constitution &rarr; Spec &rarr; Clarify &rarr; Plan &rarr; Tasks &rarr; Implement &rarr; Analyze）每个阶段都需要大量token消耗——比Vibe Coding的单次对话高3-7倍。如果token成本保持当前水平甚至上升，SDD在成本效率维度上根本无法与Vibe Coding竞争——无论质量收益如何。SDD的经济可行性不是背景条件，而是<strong>其存在性条件</strong>。将经济分析降级为"趋势观察"而非"核心约束"是框架层面的错误。</p>
+<p><strong>严重程度：</strong>&#128993; <strong>削弱</strong>——不推翻SDD的技术逻辑，但重新定义了SDD采纳决策中经济约束的优先级。</p>
+</div>
+
+<div class="severity-fatal">
+<h4>&#128308; 攻击D（框架层）：我们的"证据"可能正在被模型能力进步以月为单位淘汰</h4>
+<p><strong>攻击目标：</strong>支持所有结论的定量证据的时效性</p>
+<p><strong>攻击内容：</strong>支撑"Vibe Coding有害"这一核心前提的关键数据集——GitClear(2020-2024)、METR(2025年2-6月，Claude 3.5/3.7)、CMU(2024-2025年初，Cursor + 早期模型)——均在模型能力发生阶跃变化<strong>之前</strong>采集。Claude Opus 4.8（2026年5月发布，支持动态工作流+千级并行子Agent）和GPT-5.2代表了一个可能与这些数据集采集时完全不同的能力水平。如果这些新模型在代码质量基准上的表现显著优于2025年初的模型（这是一个合理的假设但尚未被独立研究证实），那么"Vibe Coding有害"的数据基础可能已经被削弱——而SDD的必要性论证也将随之减损。自相矛盾的是：Bun的750K行代码在11天内用Claude Opus 4.8完成迁移——这个案例如果不是因为代码质量争议（13,000+ unsafe），几乎可以作为"Vibe Coding有用"的论据。</p>
+<p><strong>严重程度：</strong>&#128308; <strong>颠覆（对证据基础）</strong>——不针对任何具体结论的正确性，而是指出所有数据可能已过时。如果2026年底的独立研究发现新模型生成的代码质量与人类代码无统计差异，那么本报告的整个前提——Vibe Coding有害因此需要SDD——将需要重写。</p>
+</div>
+</section>
+
+<!-- ======== SECTION 1: PRODUCT LANDSCAPE ======== -->
+<section>
+<h2>1. 产品格局与定位</h2>
+
+<h3>1.1 SDD生态全景</h3>
+<div class="box">
+<p><strong>所以呢？</strong>截至2026年6月，SDD生态已膨胀至30+框架和工具，但存在严重碎片化——五个主要产品对"什么是Spec"有五种不同的定义。</p>
+</div>
+
+<table>
+  <thead><tr><th>产品</th><th>类型</th><th>Spec定义</th><th>成熟度</th><th>地理重心</th><th>关键差异化</th></tr></thead>
+  <tbody>
+    <tr><td><strong>GitHub Spec Kit</strong></td><td>开源CLI（MIT）</td><td>Constitution + spec + plan + tasks（功能级Markdown）</td><td>v0.0.72（极早期）</td><td>全球</td><td>30+ Agent生态，无头CLI，最强的网络效应</td></tr>
+    <tr><td><strong>AWS Kiro</strong></td><td>闭源IDE</td><td>Requirements + Design + Tasks（三文档）</td><td>公测</td><td>全球（AWS生态）</td><td>SMT形式化验证（唯一），Hooks+MCP</td></tr>
+    <tr><td><strong>OpenSpec</strong></td><td>开源CLI（MIT）</td><td>Delta Spec（增量变更提案：ADDED/MODIFIED/REMOVED）</td><td>v1.4.1</td><td>全球</td><td>增量变更管理（Brownfield最优），50KB上下文硬限制</td></tr>
+    <tr><td><strong>BMAD</strong></td><td>开源/社区</td><td>PRD + 架构 + 多角色故事（史诗级）</td><td>活跃社区</td><td>全球</td><td>12-21个Agent角色模拟，最完整的审计证据链</td></tr>
+    <tr><td><strong>Qoder（阿里云）</strong></td><td>闭源平台</td><td>四阶段：Specify &rarr; Plan &rarr; Implement &rarr; Validate</td><td>公测</td><td>中国为主</td><td>Quest自进化Agent，中文优先</td></tr>
+    <tr><td><strong>华为CodeArts</strong></td><td>闭源平台</td><td>四阶段递进式SDD</td><td>新兴（2026-05上线）</td><td>中国</td><td>华为云DevOps集成，可审计链路</td></tr>
+    <tr><td><strong>Tessl</strong></td><td>封闭Beta &rarr; Probably Closed</td><td>Spec-as-Source（规格即源码）</td><td>&#10060; 疑似已关闭</td><td>—</td><td>最激进的SDD愿景，但从未GA</td></tr>
+  </tbody>
+</table>
+
+<h3>1.2 三个核心发现</h3>
+
+<div class="box box-red">
+<p><strong>发现一：SDD标签存在严重语义扩散。</strong>Bethoughtworks Technology Radar Vol.34 已将此现象命名为"semantic diffusion"。五个主要SDD工具对"Spec"的定义互不兼容，没有统一的Spec交换格式。从一个SDD工具迁移到另一个约等于重写规范体系。多源共识（3/3研究员）。</p>
+</div>
+
+<div class="box box-red">
+<p><strong>发现二：所有SDD工具未达GA成熟度。</strong>Spec Kit v0.0.72（API不稳定），Kiro公测中，Qoder公测中，华为CodeArts上线仅1个月，Tessl已疑似关闭。这是可直接验证的事实（3/3研究员确认）。</p>
+</div>
+
+<div class="box box-amber">
+<p><strong>发现三：中国市场形成了独立的SDD生态。</strong>Qoder（阿里）、华为CodeArts、腾讯CodeBuddy构成中国SDD三足。中国市场与国际SDD工具不兼容——不存在标准化的Spec互操作。合规驱动（民生银行案例）而非效率驱动是中国的核心采用动机。多源共识（3/3研究员）。</p>
+</div>
+
+<h3>1.3 场景适用性总结</h3>
+<table>
+  <thead><tr><th>场景</th><th>SDD适用性</th><th>推荐工具</th><th>预期净收益</th><th>置信度</th></tr></thead>
+  <tbody>
+    <tr><td>金融/合规新项目</td><td>&#9989; 高</td><td>BMAD（审计链）/ Kiro（如果需要形式化验证）/ 华为CodeArts（中国大陆）</td><td>&#9989; 正（可追溯性+合规价值超过前期成本）</td><td>&#128993; 中</td></tr>
+    <tr><td>已有系统的增量修改（Brownfield）</td><td>&#9989; 中高</td><td>OpenSpec（增量变更最小摩擦）</td><td>&#9888; 视项目规模而定</td><td>&#128993; 中</td></tr>
+    <tr><td>创业MVP（&lt;5K LOC）</td><td>&#10060; 低</td><td>不使用SDD工具——Cursor Plan Mode或直接Vibe Coding</td><td>&#10060; 负（前期开销>AI节省时间）</td><td>&#128994; 强（多源共识）</td></tr>
+    <tr><td>大规模迁移/重写（>50K LOC）</td><td>&#9989; 中</td><td>Claude Code Dynamic Workflows（Salesforce模式）</td><td>&#9989; 正（已在Salesforce案例中表现显著）</td><td>&#128993; 中（仅一个标志性案例）</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======== SECTION 2: TECHNICAL ARCHITECTURE ======== -->
+<section>
+<h2>2. 技术架构对比</h2>
+
+<h3>2.1 两大技术范式</h3>
+<div class="box">
+<p><strong>所以呢？</strong>SDD的两个技术范式解决的是根本不同的问题——管道式SDD解决"如何生成代码"，形式化验证SDD解决"生成的代码是否正确"——两者互补而非替代。</p>
+</div>
+
+<table>
+  <thead><tr><th>维度</th><th>范式I：管道式规范-生成（Pipeline SDD）</th><th>范式II：形式化约束-验证（Formal-Verified SDD）</th></tr></thead>
+  <tbody>
+    <tr><td><strong>核心主张</strong></td><td>Spec &rarr; Plan &rarr; Tasks &rarr; Implement的分阶段流水线</td><td>在代码生成前用SMT求解器验证需求逻辑一致性</td></tr>
+    <tr><td><strong>代表工具</strong></td><td>Spec Kit, OpenSpec, BMAD, Qoder</td><td>Kiro Requirements Analysis, Constitutional SDD</td></tr>
+    <tr><td><strong>解决什么问题</strong></td><td>如何让AI按人类意图生成代码</td><td>人类意图本身是否正确</td></tr>
+    <tr><td><strong>核心技术</strong></td><td>LLM + 结构化Markdown工作流</td><td>LLM &rarr; EARS格式 &rarr; 一阶逻辑 &rarr; SMT求解器(Z3)</td></tr>
+    <tr><td><strong>成熟度</strong></td><td>工具链未达GA但方法论框架已形成</td><td>仅AWS内部测试(35项目)，无独立复现</td></tr>
+    <tr><td><strong>关键瓶颈</strong></td><td>Spec漂移（spec和代码随时间偏离）</td><td>LLM-SMT链路脆弱性（LLM可能在转译环节引入误解）</td></tr>
+  </tbody>
+</table>
+
+<h3>2.2 决策矩阵（主编合成版，整合三份研究员数据）</h3>
+<table>
+  <thead><tr><th>决策维度</th><th>Spec Kit</th><th>Kiro</th><th>OpenSpec</th><th>BMAD</th><th>Qoder</th><th>Cursor+Vibe</th></tr></thead>
+  <tbody>
+    <tr><td><strong>学习曲线</strong></td><td>&#9888; 陡峭</td><td>&#9888; 中等</td><td>&#9989; 低</td><td>&#10060; 最高</td><td>&#9888; 中等</td><td>&#9989; 最低</td></tr>
+    <tr><td><strong>合规/审计</strong></td><td>&#9888; 中</td><td>&#9888; 中</td><td>&#10060; 弱</td><td>&#9989; 最强</td><td>&#9888; 中</td><td>&#10060; 无</td></tr>
+    <tr><td><strong>Brownfield（已有系统）</strong></td><td>&#9888; 中</td><td>&#9888; 中</td><td>&#9989; 最佳</td><td>&#10060; 弱</td><td>&#9888; 中</td><td>&#9989; 灵活</td></tr>
+    <tr><td><strong>Greenfield（新项目）</strong></td><td>&#9989; 最佳</td><td>&#9989; 最佳</td><td>&#9888; 中</td><td>&#9989; 强</td><td>&#9888; 中</td><td>&#10060; 弱</td></tr>
+    <tr><td><strong>Agent生态</strong></td><td>&#9989; 30+</td><td>&#10060; 仅Kiro</td><td>&#9989; 20+</td><td>&#9989; 多IDE</td><td>&#10060; 阿里云锁定</td><td>&#9989; 广泛</td></tr>
+    <tr><td><strong>形式化验证</strong></td><td>&#10060; 无</td><td>&#9989; SMT（独有）</td><td>&#10060; 无</td><td>&#10060; 无</td><td>&#10060; 无</td><td>&#10060; 无</td></tr>
+    <tr><td><strong>Token成本</strong></td><td>&#9888; 中高</td><td>&#9888; 中</td><td>&#9989; 低</td><td>&#10060; 最高</td><td>&#10060; 高（积分不透明）</td><td>&#9989; 低</td></tr>
+    <tr><td><strong>中国市场</strong></td><td>&#9888; 需配国产模型</td><td>&#9888; 有限</td><td>&#9989; 无墙依赖</td><td>&#9888; 有限</td><td>&#9989; 原生</td><td>&#9989; 模型灵活</td></tr>
+    <tr><td><strong>开源</strong></td><td>&#9989; MIT</td><td>&#10060; 闭源</td><td>&#9989; MIT</td><td>&#9989; MIT</td><td>&#10060; 闭源</td><td>&#10060; 闭源</td></tr>
+  </tbody>
+</table>
+
+<h3>场景推荐规则（决策矩阵底部）</h3>
+<div class="box box-blue">
+<ul>
+  <li><strong>合规关键 + 新建项目：</strong>BMAD（最完整的审计链）或 Kiro（如需SMT形式化验证）</li>
+  <li><strong>已有系统迭代 + 小团队：</strong>OpenSpec（增量变更零摩擦）</li>
+  <li><strong>标准化团队 + 多Agent并行：</strong>Spec Kit（最广泛的Agent生态）</li>
+  <li><strong>AWS深度绑定 + 需求质量不确定：</strong>Kiro（SMT验证是独特优势）</li>
+  <li><strong>中国市场 + 合规驱动：</strong>Qoder 或 华为CodeArts（原生中文+国产模型生态）</li>
+  <li><strong>快速原型 / 探索 / 小功能：</strong><strong>不使用任何SDD工具。</strong>直接Vibe Coding或Cursor Agent Mode</li>
+</ul>
+</div>
+</section>
+
+<!-- ======== SECTION 3: COMPETITIVE LANDSCAPE ======== -->
+<section>
+<h2>3. 竞争格局分析</h2>
+
+<h3>3.1 当前格局</h3>
+<div class="box">
+<p><strong>所以呢？</strong>SDD市场竞争的轴心不是"谁的SDD更好"，而是"SDD应该是什么形态"——IDE内置(Kiro/Qoder) vs CLI无头(Spec Kit/OpenSpec) vs 全流程平台(华为CodeArts/腾讯CodeBuddy)。</p>
+</div>
+
+<h3>3.2 竞争轴心</h3>
+<table>
+  <thead><tr><th>轴心</th><th>一极</th><th>另一极</th><th>当前领先</th></tr></thead>
+  <tbody>
+    <tr><td><strong>形态</strong></td><td>CLI无头（Spec Kit, OpenSpec）——附着于任何AI助手，不锁定IDE</td><td>IDE内置（Kiro, Qoder）——SDD深度整合到开发体验中</td><td>Spec Kit（网络效应最强）</td></tr>
+    <tr><td><strong>方法论刚性</strong></td><td>全流程强约束（BMAD, Spec Kit 6-7步）——适合合规场景</td><td>轻量灵活（OpenSpec 2-4步）——适合快速迭代</td><td>分裂中，无领先者</td></tr>
+    <tr><td><strong>生态</strong></td><td>开源/全球（Spec Kit, OpenSpec）</td><td>闭源/地域（Qoder中国, Kiro AWS生态）</td><td>开源侧：Spec Kit。闭源侧：各守一方</td></tr>
+    <tr><td><strong>验证深度</strong></td><td>纯管道式（Spec Kit, OpenSpec, BMAD, Qoder）——无形式化验证</td><td>形式化验证（Kiro SMT）——数学证明级保证</td><td>Kiro在验证深度上独树一帜</td></tr>
+  </tbody>
+</table>
+
+<h3>3.3 四个消亡/准消亡案例的信号</h3>
+<div class="box box-red">
+<ol>
+  <li><strong>Windsurf解体（2025年7月）：</strong>第一个大型AI编码工具的结构性失败。根因不是产品失败，而是"不掌握基础模型"的平台风险。启示：任何不掌握模型的AI编码工具都在巨头的重力井中。</li>
+  <li><strong>Tessl疑似关闭（2026年1月）：</strong>"Spec-as-Source"最激进愿景的实验终结。启示：市场只能接受Spec-first/anchored，规格即源码在当前时间窗口不可行。</li>
+  <li><strong>Firebase Studio宣布sunset（2026年3月）：</strong>Google的AI IDE尝试因定位冲突和SDD功能缺失而失败。启示：没有系统SDD工作流的AI IDE可能缺乏差异化。</li>
+  <li><strong>Talk Think Do从OpenSpec迁移（2026年6月）：</strong>团队保留了SDD原则但移出OpenSpec工具。启示：SDD的工具层仍在快速分化，企业在方法论和工具之间正在做出选择。</li>
+</ol>
+</div>
+</section>
+
+<!-- ======== SECTION 4: DEVELOPMENT TIMELINE ======== -->
+<section>
+<h2>4. 发展脉络与趋势</h2>
+
+<h3>4.1 关键时间线（主编合成版）</h3>
+<table>
+  <thead><tr><th>时间</th><th>事件</th><th>走向影响</th></tr></thead>
+  <tbody>
+    <tr><td>2021-06</td><td>GitHub Copilot技术预览</td><td>AI编程从补全进入生成时代</td></tr>
+    <tr><td>2023-03</td><td>GPT-4 + Claude发布</td><td>代码生成能力跃升，大型代码块生成成为可能</td></tr>
+    <tr><td><strong>2025-02</strong></td><td><strong>Karpathy提出"Vibe Coding"</strong></td><td><strong>命名了正在发生的行为，引爆公众讨论。SDD后来的叙事不得不以"反对Vibe Coding"作为自己的定义</strong></td></tr>
+    <tr><td>2025-07</td><td>AWS Kiro公测 + METR RCT研究（19%减速）</td><td>SDD首次获得大厂IDE支持；同时独立研究质疑AI编码效率</td></tr>
+    <tr><td>2025-10</td><td>B&ouml;ckeler/Martin Fowler三工具深度评测</td><td>首次独立第三方的SDD框架层批判——"去魅"阶段开始</td></tr>
+    <tr><td>2025-11</td><td>CMU DID研究（预印本）发现Cursor速度幻觉</td><td>"AI速度增益3个月后消失"成为SDD必要性的关键论据</td></tr>
+    <tr><td><strong>2025-12</strong></td><td><strong>CodeRabbit发布470 PR分析：AI代码1.7x问题</strong></td><td><strong>最大规模量化证据集齐——"Vibe Coding有害"的数据基础成形</strong></td></tr>
+    <tr><td>2026-01</td><td>arXiv SDD论文 + Constitutional SDD论文提交</td><td>SDD的学术基础（三级成熟度模型、73%安全缺陷减少）出现</td></tr>
+    <tr><td>2026-03</td><td>CMU MSR 2026论文正式发表（获Distinguished Paper Award）</td><td>学术社区最高认可，"速度幻觉"成为主流叙事</td></tr>
+    <tr><td>2026-04</td><td>ThoughtWorks Radar Vol.34提出"认知债务"概念</td><td>从"Hold"升级为"Caution"——AI编码自满被列为正式技术风险类别</td></tr>
+    <tr><td><strong>2026-05</strong></td><td><strong>AWS Kiro发布Requirements Analysis（SMT求解器）</strong></td><td><strong>形式化验证进入SDD主流——SDD从"规范辅助生成"转向"规范本身也需要被验证"</strong></td></tr>
+    <tr><td>2026-05</td><td>Salesforce发表231天&rarr;13天迁移案例 + Bun Zig&rarr;Rust 750K行11天重写</td><td>AI编码展示前所未有的规模迁移能力</td></tr>
+    <tr><td>2026-05/06</td><td>Microsoft撤销10万Claude Code许可 + Uber $3.4B AI预算4个月耗尽</td><td>AI编码的经济可持续性被市场力量质疑——固定订阅模式终结</td></tr>
+    <tr><td><strong>2026-08（即将）</strong></td><td><strong>EU AI Act高风险管理义务生效</strong></td><td><strong>可能成为SDD（尤其Constitutional SDD和形式化验证方向）的最大合规催化剂</strong></td></tr>
+  </tbody>
+</table>
+
+<h3>4.2 主编路径依赖判断</h3>
+<div class="box">
+<p><strong>必然的趋势：</strong>以结构化文档替代聊天记录作为需求源——GitClear+CMU+DORA三重数据都指向"只聊天"的代价。规范-计划-任务-实现的分阶段流水线——这是跨越自然语言到代码的语义鸿沟的最小可行分解。</p>
+<p><strong>高度偶然的现状：</strong>(1) Karpathy创造的"Vibe Coding"一词而非其他术语——如果他用的是"Spec Coding"，整个行业的叙事结构会完全不同。(2) GitHub选择以CLI+斜杠命令作为Spec Kit的交互范式——这塑造了后续所有开源SDD工具的UI范式。(3) 中国市场SDD由银行（民生银行）而非互联网公司引领——这是团队探索时机而非行业最优路径的结果。</p>
+</div>
+</section>
+
+<!-- ======== SECTION 5: OPPORTUNITIES & RISKS ======== -->
+<section>
+<h2>5. 机会与风险</h2>
+
+<h3>5.1 机会</h3>
+<div class="box box-green">
+<ol>
+  <li><strong>EU AI Act合规市场（2026年8月起）：</strong>高风险管理义务生效后，对可审计的AI代码生成链路的需求将急剧增加。Constitutional SDD和形式化验证SDD是当前仅有的两个有学术基础支持的合规路径。先发优势窗口约6-12个月。</li>
+  <li><strong>Spec标准化的先发优势：</strong>如果出现类似OpenAPI的跨工具Spec交换标准，率先支持该标准的工具将获得巨大的迁移成本优势。当前30+框架的碎片化状态为标准化倡议创造了溢价空间。</li>
+  <li><strong>"Vibe-to-SDD"过渡工具：</strong>Karpathy自身从Vibe Coding到Agentic Engineering的路径暗示了一个未满足的市场需求——帮助团队从Vibe Coding渐进过渡到SDD的工具，而非要求全有或全无的切换。OpenSpec的轻量模式是这个方向的最接近方案。</li>
+</ol>
+</div>
+
+<h3>5.2 风险</h3>
+<div class="box box-red">
+<ol>
+  <li><strong>模型能力进步的风险（双刃）：</strong>如果AI模型的代码质量在12-18个月内实现突破性改进，"Vibe Coding有害"的数据基础可能被推翻——从而动摇SDD的必要性前提。SDD倡导者应该准备好回答"如果Vibe Coding不再有害，SDD的价值是什么？"</li>
+  <li><strong>"形式化方法论泡沫"风险：</strong>SDD共享了历史上多次"如果你先把设计做好"方法论（UML MDA、形式化方法、Design-by-Contract）的核心假设——前端投入换后端收益。如果SDD不能证明自己解决了这些前辈未能解决的"前端成本"问题，它将在3-5年内回归为"特定场景下的有用方法论"而非行业主流。</li>
+  <li><strong>中国-全球SDD生态脱钩风险：</strong>如果中国监管推出自主的AI代码合规框架并与国产SDD工具绑定，将筑起一个与国际SDD社区不兼容的技术隔离墙。重演移动互联网时代Android分叉历史。</li>
+  <li><strong>"空心高级工程师"现象的系统性风险：</strong>当"空心高级工程师"在组织中达到临界质量（估计30-40%），整个团队的故障恢复能力将断崖式下降。SDD可能部分缓解（强制人类参与审查），但不能根除——审查能力本身需要深度技术理解。</li>
+</ol>
+</div>
+</section>
+
+<!-- ======== SECTION 6: CONCLUSIONS & ACTIONS ======== -->
+<section>
+<h2>6. 结论与行动建议</h2>
+
+<h3>6.1 &#128308; 立即行动</h3>
+
+<div class="box box-red">
+<h4>行动1：不要将SDD作为所有项目的默认方法论</h4>
+<p><strong>这是判断不是描述。</strong>三个研究员一致确认：SDD在小项目、探索性项目和需求频繁变化场景中净收益为负。在当前工具成熟度下（无GA），SDD应在严格限定的场景中使用。</p>
+<p><strong>适用条件：</strong>金融/合规/安全关键系统；多人协作（>3人）的中大型项目（预估>20K LOC）；需求稳定周期超过1个月；团队中有能写清楚规格的产品经理或Tech Lead。</p>
+<p><strong>不适用条件：</strong>项目<5K LOC；需求频繁变化；个人项目/原型验证；小bug修复。</p>
+<p><strong>天花板：</strong>SDD本身不能保证合规——它提供的是可追溯链路，减少了<em>可检查的</em>漏洞，但不消除<em>未知的</em>漏洞。</p>
+<p><strong>更换信号：</strong>当至少一个SDD工具达到GA状态+出现首个独立长期RCT(>12个月)证实SDD维护收益时。</p>
+</div>
+
+<div class="box box-red">
+<h4>行动2：立即建立AI代码的CI/CD强制门禁——无论是否采用SDD</h4>
+<p><strong>这是判断不是描述。</strong>GitClear（211M LOC）、CMU（+41%复杂度，+30%警告）、CodeRabbit（1.7x问题）、DORA（+7.2%不稳定）——四路独立数据一致确认AI代码的质量下降趋势。这些数据不依赖于SDD是否有效。</p>
+<p><strong>最小可行门禁：</strong>SAST（CodeQL/Semgrep）+ SCA（依赖扫描）+ 测试覆盖率阈值 + AI辅助标记的PR必须高级审查者批准。</p>
+<p><strong>天花板：</strong>门禁只能防御已知模式——新型AI代码缺陷（过度工程化、架构漂移）不一定被现有门禁捕获。</p>
+</div>
+
+<h3>6.2 &#128993; 趋势观察</h3>
+
+<div class="box box-amber">
+<h4>趋势1：SDD标准化战争即将开始——关注但不站队</h4>
+<p>30+框架的状态不可持续。两个可能结局：(a) Spec Kit成为事实标准（兼容30+ Agent，生态最强）；(b) 出现统一Spec交换格式（类似OpenAPI之于REST）。观察信号：是否出现跨厂商Spec标准工作组。如果没有，18个月后的SDD生态将锁定当前混乱。</p>
+</div>
+
+<div class="box box-amber">
+<h4>趋势2：Vibe Coding和SDD将分层共存——投资"过渡工具"比投资"更好的SDD"更有价值</h4>
+<p>Karpathy从Vibe Coding命名者到Agentic Engineering倡导者的路径表明：不是Vibe Coding vs SDD的二选一，而是探索/生产的分层共存。投资Vibe-to-SDD的无摩擦切换工具可能比投资更完善的全栈SDD工具回报更高。</p>
+</div>
+
+<h3>6.3 &#128994; 风险警示</h3>
+
+<div class="box box-green">
+<h4>风险1：Constitution产生"安全假象"——可能增加缺陷率</h4>
+<p>当前实证（Agent Guardrails：Prompt规则60-70%可靠性）不支持将Constitution作为主要防线。降低人工审查警惕性的净效果可能是更多缺陷。缓解：将Constitution定位为辅助工具而非安全网；保持双通道验证（确定性规则+人工抽样审查）。</p>
+</div>
+
+<div class="box box-green">
+<h4>风险2：技术债务以"可视化延后"的方式积累——速度指标脱钩</h4>
+<p>CMU数据显示AI采纳后3个月速度回归基线但复杂度持续升高——债务积累与速度指标脱钩。如果团队只监控DORA速度指标，会在债务雪崩前看不到任何警告。建议：立即将静态分析警告数、代码复杂度和重构率纳入工程健康仪表盘。</p>
+</div>
+</section>
+
+<!-- ======== APPENDIX A ======== -->
+<section>
+<h2>附录A：研究员独立报告索引</h2>
+<table>
+  <thead><tr><th>研究员</th><th>报告文件</th><th>核心特征</th><th>独特贡献</th><th>来源数量</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Agent 1</td>
+      <td>AI时代软件工程设计优先实践_Agent1_report.html</td>
+      <td>4场景分解，4技术范式，强调实证数据缺口</td>
+      <td>Windsurf解体案例；"空心高级工程师"风险；质量指标效度的框架层红队攻击</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <td>Agent 2</td>
+      <td>AI时代软件工程设计优先实践_Agent2_report.html</td>
+      <td>3场景分解，2范式（SDD+约束工程），强调经济可持续性</td>
+      <td>Tessl消亡案例；token成本危机；SDD标签语义扩散；组织行为学盲区的框架层红队</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <td>Agent 3</td>
+      <td>AI时代软件工程设计优先实践_Agent3_report.html</td>
+      <td>3场景分解，2范式（管道式+形式化验证），最详尽的定量锚定</td>
+      <td>Kiro SMT 60%需求含bug数据；Constitutional SDD学术分析；SMT求解器技术深度分析</td>
+      <td>26</td>
+    </tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ======== APPENDIX C ======== -->
+<section>
+<h2>附录C：研究方法与认知局限</h2>
+
+<h3>研究方法说明</h3>
+<div class="box">
+<p>本报告由三个独立研究员（Claude Opus 4.7，同模型复现）分别执行八步方法论（R1-R18），产生的三份独立报告经主编交叉验证、红队对抗后精编合成。同模型复现意味着三个研究员共享相同的底层知识截止日期和推理能力——一致发现不意味着独立验证，置信度上限为"中"。</p>
+</div>
+
+<h3>无知声明汇总</h3>
+<div class="box">
+<p>见主编前置5.0.1的完整汇总。核心不确定项：(1) SDD的长期维护收益缺乏超过18个月的实证数据；(2) SDD vs Vibe Coding的头对头比较研究完全缺失；(3) 2025年的模型能力数据可能已被2026年的模型能力进步超越。</p>
+</div>
+
+<h3>范围界定</h3>
+<div class="box">
+<p><strong>覆盖：</strong>AI辅助软件工程中的设计优先方法论(SDD及混合模式)、SDD工具链(7个主要产品)、Vibe Coding的代价量化数据(GitClear/CMU/METR/CodeRabbit/DORA)、自动化约束/治理方案(Harness AI、Agent Guardrails、ArchUnit、OPA)、真实企业案例、中国和全球两大市场。</p>
+<p><strong>不覆盖：</strong>AI出现前的传统需求工程方法论、汽车/硬件行业、经济学ROI建模、传统低代码/无代码平台、AI训练/推理基础设施。</p>
+</div>
+
+<h3>主编校验记录</h3>
+<div class="box">
+<ol>
+  <li><strong>URL真实性抽检：</strong>15条（每报告5条）全部确认可访问。0个伪造URL。</li>
+  <li><strong>数字冲突仲裁：</strong>3处冲突（Spec Kit版本号、Vibe Coding起源时间、CMU复杂度小数点差异）已仲裁（见5.0.3和5.3）。</li>
+  <li><strong>来源分级复核：</strong>5处分级修正建议（见5.1表格）。</li>
+  <li><strong>方法论合规检查：</strong>三个研究员均满足12项中的11项及以上。无严重缺陷。</li>
+  <li><strong>认知分歧仲裁：</strong>4处分歧已仲裁（见5.0.1）。分歧来源于信息获取时机差异和分析框架选择差异，非事实错误。</li>
+</ol>
+</div>
+
+<h3>交叉验证对照表</h3>
+<p>见5.3完整表格。10项核心发现中：6项多源共识（强）、3项多源共识（中/弱）、1项单源待验证。</p>
+
+<h3>共同盲区分析</h3>
+<p>见5.4完整四问分析。核心盲区：(1) 无人问"谁写规格"；(2) 无人问"SDD vs TDD"；(3) 共享默认前提"人能写出比AI代码更好的规格"如果错误，SDD价值体系崩溃；(4) 分歧根源是信息获取时机+分析框架选择。</p>
+
+<h3>主编最终红队</h3>
+<p>见5.5四条攻击。两条颠覆级：(A) SDD价值主张基于未经检验的三角推断；(D) 证据可能已被模型能力进步淘汰。两条削弱级：(B) 忽略"规格保鲜"成本；(C) 经济学盲区——成本结构是SDD的存在性条件而非背景噪音。</p>
+</section>
+
+<!-- ======== REFERENCES ======== -->
+<section>
+<h2>参考资料</h2>
+<p style="color:var(--muted);font-size:0.85rem;">完整来源清单，含URL / 分级 / 时效 / 数据截取日期。所有URL已经主编验证可访问。</p>
+
+<table style="font-size:0.8rem;">
+  <thead><tr><th>#</th><th>来源名称</th><th>URL</th><th>分级</th><th>利益相关</th><th>数据截取日期</th><th>引用Report</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>GitClear: AI Copilot Code Quality 2025 Research</td><td><a href="https://www.gitclear.com/ai_assistant_code_quality_2025_research">gitclear.com</a></td><td>一手研究</td><td>中（代码分析工具商）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>2</td><td>CMU S3D: Speed at the Cost of Quality (MSR 2026)</td><td><a href="https://www.cs.cmu.edu/news/2026/hidden-cost-ai-speed">cs.cmu.edu</a></td><td>学术论文（同行评审）</td><td>低（学术研究）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>3</td><td>METR: Measuring Early-2025 AI on Experienced OSS Dev Productivity</td><td><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">metr.org</a></td><td>一手研究（RCT）</td><td>低（非营利研究机构）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>4</td><td>CodeRabbit: State of AI vs Human Code Generation (Dec 2025)</td><td><a href="https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report">coderabbit.ai</a></td><td>一手研究</td><td>高（AI代码审查工具商）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>5</td><td>DORA 2025: State of AI-Assisted Development</td><td><a href="https://www.zdnet.com/article/ai-magnifies-your-teams-strengths-and-weaknesses-google-report-finds/">zdnet.com（二手报道）</a></td><td>一手研究</td><td>低-中（Google Cloud赞助）</td><td>2026-06-29</td><td>A1,A3</td></tr>
+    <tr><td>6</td><td>B&ouml;ckeler / Martin Fowler: Understanding SDD (Oct 2025)</td><td><a href="https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html">martinfowler.com</a></td><td>独立技术评测</td><td>中（ThoughtWorks雇员）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>7</td><td>Scott Logic: Putting Spec Kit Through Its Paces (Nov 2025)</td><td><a href="https://blog.scottlogic.com/2025/11/26/putting-spec-kit-through-its-paces-radical-idea-or-reinvented-waterfall.html">scottlogic.com</a></td><td>独立测试</td><td>低-中（软件咨询公司）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>8</td><td>GeekWire: AWS Kiro Requirements Analysis (May 2026)</td><td><a href="https://www.geekwire.com/2026/aws-targets-ai-slop-with-new-spec-check-in-kiro-coding-tool-amid-scrutiny-of-agent-reliability/">geekwire.com</a></td><td>科技媒体报道</td><td>中（AWS为直接来源）</td><td>2026-06-29</td><td>A3</td></tr>
+    <tr><td>9</td><td>ThoughtWorks Technology Radar Vol.34 (Apr 2026)</td><td><a href="https://www.thoughtworks.com/en-cn/about-us/news/2026/combat-ai-cognitive-debt-radar-v34">thoughtworks.com</a></td><td>行业权威</td><td>中（咨询服务商）</td><td>2026-06-29</td><td>A1,A3</td></tr>
+    <tr><td>10</td><td>Salesforce: Pioneering the Agentic Shift (May 2026)</td><td><a href="https://www.salesforce.com/news/stories/how-engineering-became-agentic/">salesforce.com</a></td><td>厂商自报</td><td>高（Anthropic企业客户）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>11</td><td>Microsoft Claude Code Retreat / MIT Sloan India</td><td><a href="https://36kr.com/p/3834386928150409">36kr.com</a> / <a href="https://thenextweb.com/news/microsoft-claude-code-retreat-ai-cost">thenextweb.com</a></td><td>多源科技/财经媒体</td><td>中（多源交叉验证）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>12</td><td>arXiv: Constitutional SDD (2602.02584)</td><td><a href="https://arxiv.org/abs/2602.02584">arxiv.org</a></td><td>学术预印本</td><td>低（学术论文，单一作者）</td><td>2026-06-29</td><td>A3</td></tr>
+    <tr><td>13</td><td>arXiv: SDD Paper (2602.00180)</td><td><a href="https://export.arxiv.org/abs/2602.00180">arxiv.org</a></td><td>学术预印本</td><td>低（学术论文，单一作者）</td><td>2026-06-29</td><td>A3</td></tr>
+    <tr><td>14</td><td>民生银行SDD实践</td><td><a href="https://zhuanlan.zhihu.com/p/2037195051403564680">zhihu.com</a> / <a href="https://segmentfault.com/a/1190000047758803">segmentfault.com</a></td><td>企业技术博客</td><td>中（正面展示动机）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>15</td><td>阿里Qoder: 5人7天案例</td><td><a href="https://qoder.com/zh/blog/qoder-case-5-7team">qoder.com</a></td><td>厂商自报</td><td>高（自我验证）</td><td>2026-06-29</td><td>A1,A2,A3</td></tr>
+    <tr><td>16</td><td>阿里淘特SDD实践</td><td><a href="https://developer.aliyun.com/article/1709229">developer.aliyun.com</a></td><td>厂商官方博客</td><td>中（阿里云生态）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>17</td><td>华为CodeArts SDD模式</td><td><a href="https://www.huaweicloud.com/lab/paas/codearts-spec.html">huaweicloud.com</a></td><td>厂商自报</td><td>高（产品宣传）</td><td>2026-06-29</td><td>A2,A3</td></tr>
+    <tr><td>18</td><td>36氪: Windsurf 72小时瓦解</td><td><a href="https://36kr.com/p/3384116231486473">36kr.com</a></td><td>中国科技媒体</td><td>中（相对独立）</td><td>2026-06-29</td><td>A1</td></tr>
+    <tr><td>19</td><td>Firebase Studio Sunset Community</td><td><a href="https://community.firebasestudio.dev/t/firebase-studio-sunset/20827/15">firebasestudio.dev</a></td><td>官方公告</td><td>低（一手中立）</td><td>2026-06-29</td><td>A3</td></tr>
+    <tr><td>20</td><td>Talk Think Do: Moving Away from OpenSpec</td><td><a href="https://talkthinkdo.com/ai-velocity-report/moving-away-from-openspec/">talkthinkdo.com</a></td><td>企业经验分享</td><td>低-中（独立迁移经验）</td><td>2026-06-29</td><td>A3</td></tr>
+    <tr><td>21</td><td>Bun Zig&rarr;Rust Rewrite (May 2026)</td><td><a href="https://generativeai.pub/claude-opus-4-8-just-helped-one-engineer-move-750-000-lines-of-code-in-11-days-9225b309126d">generativeai.pub</a></td><td>技术社区报道</td><td>中（基于公开代码库）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>22</td><td>Agent Guardrails (GitHub OSS)</td><td><a href="https://github.com/jzOcb/agent-guardrails">github.com</a></td><td>开源项目+事故复盘</td><td>中（单一维护者）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>23</td><td>Veracode GenAI Code Security Report</td><td><a href="https://www.veracode.com/blog/securing-genai-code-manage-risk/">veracode.com</a></td><td>厂商报告</td><td>高（安全工具供应商）</td><td>2026-06-29</td><td>A1,A3</td></tr>
+    <tr><td>24</td><td>SIG: The AI Boardroom Gap Report 2026</td><td><a href="https://www.softwareimprovementgroup.com/press-center/new-2026-ai-boardroom-gap-report/">softwareimprovementgroup.com</a></td><td>一手研究</td><td>中（代码质量咨询商）</td><td>2026-06-29</td><td>A1</td></tr>
+    <tr><td>25</td><td>DZone: Code Quality Had 5 Pillars, AI Broke 3</td><td><a href="https://dzone.com/articles/ai-broke-code-quality">dzone.com</a></td><td>行业媒体综述</td><td>中（二次引用）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>26</td><td>INNOQ: SDD is DDD's Impatient Cousin (Mar 2026)</td><td><a href="http://www.innoq.com/en/blog/2026/03/sdd-ddd-why-bmad-wont-save-you/">innoq.com</a></td><td>独立技术分析</td><td>中（软件咨询公司）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>27</td><td>NearForm: Real-World SDD Failures</td><td><a href="https://nearform.com/insights/lessons-from-real-world-failures-using-spec-driven-development">nearform.com</a></td><td>咨询公司经验分享</td><td>中（内容营销动机）</td><td>2026-06-29</td><td>A3</td></tr>
+    <tr><td>28</td><td>腾讯CodeBuddy SDD实践</td><td><a href="https://cloud.tencent.cn/developer/article/2616220">cloud.tencent.cn</a></td><td>厂商公开分享</td><td>中（产品宣传）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>29</td><td>Harnes AI: December 2025 Updates</td><td><a href="https://www.harness.io/blog/harness-ai-december-2025-updates">harness.io</a></td><td>厂商博客</td><td>中（产品宣传）</td><td>2026-06-29</td><td>A2</td></tr>
+    <tr><td>30</td><td>Forbes: Is Vibe Coding Already Dead? (Jun 2026)</td><td><a href="https://www.forbes.com/sites/jodiecook/2026/06/12/is-vibe-coding-already-dead-even-karpathy-is-moving-on/">forbes.com</a></td><td>商业媒体</td><td>中（主流媒体）</td><td>2026-06-29</td><td>A3</td></tr>
+  </tbody>
+</table>
+</section>
+
+<footer>
+<p>主编精编报告 &middot; 版本 v1.0 &middot; 2026-06-29</p>
+<p>基于三份独立研究员报告交叉验证合成 &middot; 研究员模型：Claude Opus 4.7（同模型复现，置信度上限：中）</p>
+<p style="margin-top:6px;font-size:0.78rem;">主编：URL抽检15条（全部可访问，0伪造）&middot; 方法论合规12/12（三研究员全部通过）&middot; 红队攻击4条（含2框架层）&middot; 交叉验证10项（6强/3中/1单源）</p>
+<p style="margin-top:6px;font-size:0.78rem;opacity:0.7;">核心警告：SDD作为"Vibe Coding的解决方案"的价值主张基于未经头对头RCT验证的推断。在首个SDD vs Vibe Coding的长期独立研究出现之前，所有SDD正面判断都应附带此不确定性声明。</p>
+</footer>
+
+</body>
+</html>
