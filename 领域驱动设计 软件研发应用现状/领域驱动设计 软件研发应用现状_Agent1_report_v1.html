@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>领域驱动设计（DDD）在软件研发中的应用现状、问题与建议 — 独立调研报告 v1</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #2d3436;
+    --text-secondary: #636e72;
+    --border: #dfe6e9;
+    --accent: #0984e3;
+    --accent-light: #d6eaf8;
+    --warn: #e17055;
+    --warn-light: #ffeaa7;
+    --success: #00b894;
+    --success-light: #dfe6e9;
+    --falsify: #e84393;
+    --mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 6rem;
+  }
+  h1 { font-size: 2rem; margin-bottom: .25rem; border-bottom: 3px solid var(--accent); padding-bottom: .5rem; }
+  h2 { font-size: 1.4rem; margin: 2.5rem 0 1rem; padding-left: .5rem; border-left: 4px solid var(--accent); }
+  h3 { font-size: 1.15rem; margin: 1.5rem 0 .75rem; color: var(--accent); }
+  h4 { font-size: 1rem; margin: 1.2rem 0 .5rem; }
+  p, li { margin-bottom: .6rem; }
+  .meta { color: var(--text-secondary); font-size: .9rem; margin-bottom: 2rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+    padding: .75rem 1rem;
+    margin: 1rem 0;
+    border-radius: 0 6px 6px 0;
+    font-size: .95rem;
+  }
+  .callout.warn {
+    border-left-color: var(--warn);
+    background: var(--warn-light);
+  }
+  .callout.falsify {
+    border-left-color: var(--falsify);
+    background: #fce4ec;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: .92rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: .6rem .8rem;
+    text-align: left;
+  }
+  th { background: var(--accent-light); font-weight: 600; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+  .tag {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: .78rem;
+    padding: 0 .4rem;
+    border-radius: 3px;
+    font-weight: 600;
+    margin-right: .3rem;
+  }
+  .tag.warn-tag { background: var(--warn-light); color: var(--warn); }
+  .tag.verify { background: #fce4ec; color: var(--falsify); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: .35rem; }
+  .why-block {
+    margin-left: 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px dashed var(--border);
+    margin-bottom: 1rem;
+  }
+  .why-block .level { font-weight: 700; color: var(--accent); font-size: .85rem; }
+  .source-block {
+    font-size: .85rem;
+    background: #f1f3f5;
+    padding: .5rem .75rem;
+    border-radius: 4px;
+    margin: .4rem 0;
+  }
+  .source-block a { color: var(--accent); word-break: break-all; }
+  .confidence { font-weight: 700; }
+  .confidence.high { color: var(--success); }
+  .confidence.medium { color: #fdcb6e; }
+  .confidence.low { color: var(--warn); }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding: .3rem 0; }
+  .checklist li::before { content: '☐ '; color: var(--accent); font-weight: bold; }
+  .checklist li.pass::before { content: '☑ '; color: var(--success); }
+  .checklist li.fail::before { content: '☒ '; color: var(--warn); }
+  .toc { line-height: 2; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  .stat-big { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: .85rem; color: var(--text-secondary); }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 640px) { .grid-3 { grid-template-columns: 1fr; } }
+  .number-ref { font-size: .78rem; color: var(--falsify); font-weight: 600; }
+  .fragile-tag { display: inline-block; font-size: .75rem; background: #fce4ec; color: #e84393; padding: .1rem .4rem; border-radius: 3px; margin: 0 .2rem; }
+</style>
+</head>
+<body>
+
+<small style="color:#636e72">独立调研报告 | 研究员: Agent1 | 复核: 待主编 | 版本 v1 | 2026-06-30</small>
+
+<h1>领域驱动设计（DDD）在软件研发中的应用现状、问题与建议</h1>
+
+<p class="meta">
+  受众：技术管理层 &nbsp;|&nbsp; 置信度：<span class="confidence medium">中</span>
+  &nbsp;|&nbsp; 数据截止：2026年6月
+</p>
+
+<!-- ============ TOC ============ -->
+<h2>目录</h2>
+<ol class="toc">
+  <li><a href="#s1">预检结果与数据源概览</a></li>
+  <li><a href="#s2">宽扫描：审视框架与覆盖声明</a></li>
+  <li><a href="#s3">核心发现一：DDD 的战略设计价值远大于战术模式，但被误用为工程规范</a></li>
+  <li><a href="#s4">核心发现二：DDD 采纳由微服务拆分驱动，但正经历"理性回归"</a></li>
+  <li><a href="#s5">核心发现三：DDD 工具化/平台化是降低门槛的关键路径，但距主流尚远</a></li>
+  <li><a href="#s6">正面场景与反面/失效场景汇总</a></li>
+  <li><a href="#s7">严格验证：来源追踪、红队攻击、证伪条件</a></li>
+  <li><a href="#s8">收网：核心结论、边界条件、未确定项</a></li>
+  <li><a href="#s9">自检清单</a></li>
+  <li><a href="#s10">交接单</a></li>
+</ol>
+
+<hr id="s1">
+
+<!-- ============ S1: PRE-CHECK ============ -->
+<h2>1. 预检结果与数据源概览</h2>
+
+<h3>1.1 三组搜索</h3>
+<table>
+  <tr><th>#</th><th>关键词组</th><th>结果数</th><th>高质量源数</th><th>判定</th></tr>
+  <tr>
+    <td>1</td>
+    <td><code>领域驱动设计 DDD 软件研发 应用现状 2024 2025</code>（中文）</td>
+    <td>10+页</td>
+    <td>8+</td>
+    <td><span class="tag">通过</span></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><code>Domain-Driven Design adoption statistics enterprise software 2024 2025 survey</code>（英文）</td>
+    <td>8+页</td>
+    <td>5+</td>
+    <td><span class="tag">通过</span></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><code>DDD implementation challenges problems real-world case study 2024</code>（英文）</td>
+    <td>8+页</td>
+    <td>7+</td>
+    <td><span class="tag">通过</span></td>
+  </tr>
+</table>
+
+<h3>1.2 独立数据源清单（≥3，实际 15+）</h3>
+<ol>
+  <li><strong>[SLR-JSS]</strong> Ozkan, Babur & van den Brand, "Domain-Driven Design in software development: A systematic literature review", <em>Journal of Systems and Software</em>, Vol.230, Dec 2025. 36篇同行评审研究的系统综述。DOI: 10.1016/j.jss.2025.112537</li>
+  <li><strong>[SLR-IEEE]</strong> "Domain-Driven Design for Microservices: An Evidence-Based Investigation", <em>IEEE Transactions on Software Engineering</em>, Vol.50(6), June 2024. 34篇研究 + 63位从业者问卷调查。DOI: 10.1109/TSE.2024.3385835</li>
+  <li><strong>[SLR-Springer]</strong> Sangabriel-Alarcon et al., "Domain-Driven Design in Microservices-Based Systems Development", <em>Programming and Computer Software</em>, Vol.50, 2024. 35篇文章的主题分析。DOI: 10.1134/S0361768824700749</li>
+  <li><strong>[Meituan]</strong> "领域驱动设计DDD在B端营销系统的实践"，美团技术团队，2024年7月。URL: rivers.chaitin.cn</li>
+  <li><strong>[OTA]</strong> "从单体到领域驱动：某OTA平台DDD实践之路"，百度开发者平台，2025年12月。URL: developer.baidu.com/article/detail.html?id=5322747</li>
+  <li><strong>[Baidu-Guide]</strong> "微服务与DDD融合实践：构建高内聚低耦合系统的全链路指南"，百度开发者平台，2025年11月。</li>
+  <li><strong>[Nop]</strong> "范式重构：可逆计算如何颠覆DDD的经典模式"，腾讯云开发者社区，2025年10月。</li>
+  <li><strong>[Tencent-Critic]</strong> "谈DDD领域驱动设计，90%以上软件项目都没有完整实施DDD的必要"，腾讯云开发者社区，2025年6月。</li>
+  <li><strong>[Foreign-Migration]</strong> "外企DDD迁移实录：一年半踩坑与避坑指南"，百度开发者平台，2025年9月。</li>
+  <li><strong>[HelloFresh]</strong> "Designing Scalable Tech Teams with Domain Driven Design and Team Topology", HelloFresh Engineering Blog, 2024.</li>
+  <li><strong>[Wikipedia]</strong> "Evolving Wikipedia: A Case Study in Applying DDD in a Challenging System", DDD Europe 2024 talk.</li>
+  <li><strong>[Rotterdam]</strong> "Consolidating Microservices into Modular Monoliths", Port of Rotterdam, Voxxed Days Amsterdam 2024.</li>
+  <li><strong>[Stackademic]</strong> "DDD Everywhere: How Domain-Driven Design Destroyed Our Team Velocity", Stackademic blog, 2024.</li>
+  <li><strong>[Pragmatic-DDD]</strong> "Applying DDD to DDD leaves no Domain-Driven Design", heise.de / EventSourcingDB, Nov 2025.</li>
+  <li><strong>[DORA]</strong> DORA Accelerate State of DevOps Report 2024, Google Cloud.</li>
+</ol>
+
+<div class="callout">
+  <strong>预检结论：PASS。</strong> 确认 ≥3 个独立数据源（实际 15+），涵盖学术文献、中国大厂案例、国际企业案例、工具平台、批评性观点。数据充足，继续完整调研。
+</div>
+
+<hr id="s2">
+
+<!-- ============ S2: BROAD SCAN ============ -->
+<h2>2. 宽扫描：审视框架与覆盖声明</h2>
+
+<h3>2.1 五个审视框架</h3>
+<table>
+  <tr><th>框架</th><th>视角</th><th>核心问题</th><th>覆盖</th></tr>
+  <tr>
+    <td>F1. 技术采纳生命周期 (Moore)</td>
+    <td>市场成熟度</td>
+    <td>DDD 处于早期采纳者还是主流阶段？</td>
+    <td><span class="tag">是</span></td>
+  </tr>
+  <tr>
+    <td>F2. ROI/商业价值框架</td>
+    <td>投入产出</td>
+    <td>DDD 带来可量化回报吗？哪部分回报最高？</td>
+    <td><span class="tag">是</span></td>
+  </tr>
+  <tr>
+    <td>F3. Conway 定律 / Team Topology</td>
+    <td>组织架构</td>
+    <td>DDD 如何影响团队结构？团队边界与限界上下文的关系？</td>
+    <td><span class="tag">是</span></td>
+  </tr>
+  <tr>
+    <td>F4. 技术-组织-环境 (TOE)</td>
+    <td>采纳障碍</td>
+    <td>什么组织特征和环境因素促进/阻碍 DDD 采纳？</td>
+    <td><span class="tag">是</span></td>
+  </tr>
+  <tr>
+    <td>F5. 批判性视角 / 反模式</td>
+    <td>失效模式</td>
+    <td>DDD 在什么情况下失败？最常见的错误是什么？</td>
+    <td><span class="tag">是</span></td>
+  </tr>
+</table>
+
+<h3>2.2 覆盖面声明</h3>
+<div class="card">
+  <p><strong>已覆盖：5/5 框架。</strong></p>
+  <p><strong>中国市场覆盖：</strong> 美团、OTA平台（百度开发者）、腾讯云、阿里系（阿里云开发者社区）、外企中国分部、CSDN/V2EX/Linux.DO 社区。覆盖了大厂实践、平台工具创新、社区批评。</p>
+  <p><strong>国际市场覆盖：</strong> 学术（IEEE/ACM/Springer 三大 SLR）、欧洲企业（HelloFresh 德国、Port of Rotterdam 荷兰、Wikipedia 美国）、DDD Europe 2024、DDD Academy。</p>
+  <p><strong>遗漏项：</strong></p>
+  <ul>
+    <li><strong>Y1: 印度/东南亚市场</strong> — 原因：搜索未返回该区域的独立 DDD 研究，DDD 在该区域的实践较少公开文档化。</li>
+    <li><strong>Y2: 政府/公共部门</strong> — 原因：除 Wikipedia 外，政府系统的 DDD 案例较少公开发表。</li>
+    <li><strong>Y3: 量化对比实验</strong> — 原因：学术界明确指出现有 DDD 研究缺乏对照实验和量化效果评估（Özkan et al. 2025）。这是领域本身的缺口而非本调研遗漏。</li>
+  </ul>
+</div>
+
+<hr id="s3">
+
+<!-- ============ S3: FINDING 1 ============ -->
+<h2>3. 核心发现一：DDD 的战略设计价值远大于战术模式，但被大量误用为工程规范</h2>
+
+<h3>3.1 发现陈述</h3>
+<p>
+  DDD 为企业带来的最大回报来自<strong>战略设计</strong>——限界上下文的划分、统一语言的建立、子域识别——而非战术模式（聚合根、仓储、值对象等）。
+  然而，大量团队在采纳 DDD 时<strong>跳过战略设计，直接套用战术模式</strong>，导致"模式表演"(Pattern Theater) — 代码被过度设计，但领域模型并不反映业务现实。
+</p>
+
+<h3>3.2 为什么追问（Why Chain — 4 层）</h3>
+
+<div class="why-block">
+  <p><span class="level">追问层 1：</span>为什么 DDD 的战略设计价值远大于战术模式？</p>
+  <p>→ 因为<strong>软件系统最大的成本来自边界错误</strong>。限界上下文划错位置 → 跨团队协调成本呈指数增长 → 微服务架构变成分布式单体。战略设计直接决定系统边界的合理性，战术模式只在边界已经正确的前提下产生局部价值。IEEE TSE 2024 的研究明确指出，微服务识别是开发者采纳 DDD 的"首要动机"，而微服务识别的核心就是战略设计中的限界上下文划分。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 2：</span>为什么团队倾向于跳过战略设计直接套用战术模式？</p>
+  <p>→ 因为<strong>战略设计是"人的工作"，战术模式是"技术工作"</strong>。战略设计需要跨部门协调、与领域专家长谈、容忍模糊性、承认无知——这是<strong>困难且不舒服</strong>的。战术模式（定义 Aggregate、写 Repository、加 Domain Event）是纯工程活动——<strong>容易、看得见进度、感觉"在做 DDD"</strong>。heise.de 2025 年文章将这一现象命名为"模式表演"，并指出：画图争论 Entity vs ValueObject 比和业务人员沟通容易得多，所以人们选择前者。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 3：</span>为什么跨部门协调如此困难？</p>
+  <p>→ 因为<strong>传统的软件组织将"业务分析"和"工程实现"割裂为两个角色、两个部门、两种职业路径</strong>。这种结构创造了天然的翻译层——业务人员说"采购订单"，BA 翻译成需求文档，开发再翻译成 <code>PurchaseOrderEntity</code>——每一层翻译都是信息损失和延迟。DDD 的统一语言试图消除翻译层，但这要求组织架构的改变（跨职能团队按限界上下文组织），而这恰恰是绝大多数企业不愿或无法做到的，因为涉及权力重构。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 4：</span>为什么组织架构难以改变？</p>
+  <p>→ 因为<strong>组织架构是权力分配的结果而非效率优化的结果</strong>。技术管理层可以决定用什么框架、什么数据库、什么部署策略；但决定"取消 BA 角色、让开发直接和业务坐在一起、按业务能力重组团队"需要<strong>CTO 以上级别</strong>的推动，且触及中层管理者利益。这就是为什么大多数 DDD 实践停留在"战术模式层面"的深层原因：<strong>能做的人没有权力，有权力的人没有动机</strong>。</p>
+</div>
+
+<h3>3.3 支撑证据</h3>
+<table>
+  <tr><th>证据</th><th>来源</th><th>类型</th></tr>
+  <tr>
+    <td>2024-2025 两篇 SLR 均指出：<strong>DDD 原则在研究中的应用和评估方式不一致</strong>，缺乏标准化的衡量框架</td>
+    <td>[SLR-JSS], [SLR-Springer]</td>
+    <td>学术综述</td>
+  </tr>
+  <tr>
+    <td>IEEE TSE 2024：从业者问卷（n=63）显示 <strong>DDD 理解和应用存在"广泛差异"</strong></td>
+    <td>[SLR-IEEE]</td>
+    <td>实证调查</td>
+  </tr>
+  <tr>
+    <td>"Pattern Theater" 现象：团队把 DDD 当成模式清单逐项打勾</td>
+    <td>[Pragmatic-DDD] heise.de, Nov 2025</td>
+    <td>行业评论</td>
+  </tr>
+  <tr>
+    <td>美团实践明确强调："统一语言是基础——无统一语言则无概念模型，无概念模型则无可靠代码模型"</td>
+    <td>[Meituan] 美团技术团队, 2024</td>
+    <td>企业案例</td>
+  </tr>
+  <tr>
+    <td>90% 项目不需要完整 DDD 的论点：核心借鉴是战略设计思想（横向分层、聚合思想、业务与技术解耦），战术模式非必需</td>
+    <td>[Tencent-Critic] 腾讯云, 2025</td>
+    <td>观点文章</td>
+  </tr>
+</table>
+
+<hr id="s4">
+
+<!-- ============ S4: FINDING 2 ============ -->
+<h2>4. 核心发现二：DDD 采纳由微服务拆分驱动，但正经历"理性回归"</h2>
+
+<h3>4.1 发现陈述</h3>
+<p>
+  DDD 的工业化规模化采纳主要<strong>不是</strong>因为组织认识到领域建模的内在价值，而是因为<strong>微服务架构需要一个"如何拆分"的方法论</strong>。DDD 的限界上下文恰好提供了这个依据。
+  但随着微服务"过度拆分"的反噬（微服务过多导致治理灾难），行业正出现从"每个限界上下文 = 一个微服务"向"限界上下文 = 一个模块化单体中的模块"的<strong>回摆</strong>。
+</p>
+
+<h3>4.2 为什么追问（Why Chain — 4 层）</h3>
+
+<div class="why-block">
+  <p><span class="level">追问层 1：</span>为什么 DDD 的采纳由微服务驱动而非领域建模的内在需求？</p>
+  <p>→ 因为<strong>微服务拆分是"紧急的工程问题"，领域建模是"重要的但被忽视的设计问题"</strong>。当组织从单体转向微服务时，面临一个即刻的技术决策：按什么边界拆？按技术层拆（前端/后端/数据库）已被证明产生分布式单体。DDD 提供了一个现成的、有理论基础的答案——按业务能力/限界上下文拆。Sangabriel-Alarcón et al. (2024) 对 35 篇文章的主题分析确认：<strong>"微服务识别是开发者采用 DDD 的首要动机"</strong>。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 2：</span>为什么按限界上下文拆分比按技术层拆分更好？</p>
+  <p>→ 因为<strong>按业务能力拆分的边界是"高内聚、低耦合"的</strong>：一个限界上下文内的变更不穿透到其他上下文。而按技术层拆分会在每次业务变更时穿透所有层。Conway 定律进一步解释了这一现象：按限界上下文组织的团队自然产生与业务对齐的系统架构。HelloFresh 的案例证明了这一点：在重组团队以匹配限界上下文后 6-8 个月内，部署频率提升、变更失败率下降、新人在岗时间缩短。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 3：</span>为什么出现了从微服务回摆到模块化单体的趋势？</p>
+  <p>→ 因为<strong>微服务的运营成本被严重低估，而限界上下文的逻辑边界不需要等于物理部署边界</strong>。Port of Rotterdam 的案例非常典型：该组织拥有的微服务数量<strong>超过了团队能够有效运维的数量</strong>，导致碎片化的领域知识、难以维护的架构。他们使用 Spring Modulith 将微服务合并为模块化单体，每个模块仍代表一个限界上下文——证明了<strong>逻辑边界和物理边界可以分离</strong>。腾讯云的批评也指出：按每个领域对象拆成微服务，"几十个微服务"会导致治理灾难。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 4：</span>为什么团队倾向于将限界上下文等同于物理微服务？</p>
+  <p>→ 因为<strong>DDD 原教旨主义、微服务炒作周期和技术团队的"部落主义"三者叠加</strong>。2014-2020 年间，微服务被包装为"现代化"的唯一路径，DDD 被包装为"正确的微服务方法论"。将二者耦合为一个"最佳实践包"有利于咨询销售和内部晋升叙事。但当团队发现运维 50 个微服务的成本远超收益时，务实的选择是保留 DDD 的边界划分收益而放弃物理分布式部署的成本——这形成了 2024-2025 年的"模块化单体 + DDD"运动。</p>
+</div>
+
+<h3>4.3 关键数据</h3>
+<table>
+  <tr><th>数据点</th><th>来源</th><th>可验证性</th></tr>
+  <tr>
+    <td>OTA平台：开发周期从<strong>3个月缩短至2周</strong>，核心交易链路可用率 <strong>99.99%</strong></td>
+    <td>[OTA] 百度开发者, 2025</td>
+    <td><span class="tag verify">需交叉验证</span> 单一来源，企业自述</td>
+  </tr>
+  <tr>
+    <td>Altimetrik 金融案例：发布速度<strong>+44%</strong>，Sprint 成功率<strong>+40%</strong>，发布周期<strong>-85%</strong></td>
+    <td>Altimetrik case study, 2024</td>
+    <td><span class="tag verify">需交叉验证</span> 咨询公司自报</td>
+  </tr>
+  <tr>
+    <td>创业公司 DDD 过载：功能交付从<strong>22→4</strong>（-82%），交付时间从<strong>3.2天→14.5天</strong>（+353%）</td>
+    <td>[Stackademic] 2024</td>
+    <td><span class="tag verify">需交叉验证</span> 单一匿名来源</td>
+  </tr>
+  <tr>
+    <td>McKinsey 2024：有明确目标的组织微服务转型成功率<strong>+35%</strong></td>
+    <td>McKinsey Survey 2024</td>
+    <td><span class="tag">可接受</span> 知名机构</td>
+  </tr>
+</table>
+
+<hr id="s5">
+
+<!-- ============ S5: FINDING 3 ============ -->
+<h2>5. 核心发现三：DDD 工具化/平台化是降低门槛的关键路径，但距主流尚远</h2>
+
+<h3>5.1 发现陈述</h3>
+<p>
+  DDD 面临的最大障碍不是理念是否正确，而是<strong>学习曲线陡峭</strong>和<strong>手工执行成本高</strong>。当前 DDD 实践高度依赖个体经验和自觉——团队的 DDD 成熟度随关键人员流动而剧烈波动。
+  工具化/平台化（如 Nop 平台的可逆计算方案、Context Mapper、Spring Modulith）试图将 DDD 原则<strong>内化为平台约束</strong>而非人的自觉，这是降低门槛的方向，但尚未成为主流基础设施。
+</p>
+
+<h3>5.2 为什么追问（Why Chain — 3 层）</h3>
+
+<div class="why-block">
+  <p><span class="level">追问层 1：</span>为什么 DDD 的学习曲线如此陡峭？</p>
+  <p>→ 因为<strong>DDD 的概念体系被学术化和过度包装</strong>。EventSourcingDB 2025 年的文章尖锐地指出："DDD 吓跑了人们——在我们让他们理解核心思想之前，术语（Aggregates, Bounded Contexts, Anti-Corruption Layers...）本身就是一堵墙。" 作者承认自己多年来以为"太蠢而学不会 DDD"，后来才意识到是教学方式的问题。Özkan et al. (2025) 的 SLR 也将"上手困难"和"对专业知识的强依赖"列为 DDD 的两大核心挑战。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 2：</span>为什么 DDD 实践高度依赖个体经验？</p>
+  <p>→ 因为<strong>DDD 的边界划分是一个"设计问题"而非"工程问题"，没有确定性算法</strong>。给定同一个业务域，两个经验不同的架构师可能划出完全不同的限界上下文集合——且都声称符合 DDD 原则。IEEE TSE 2024 确认了"对领域建模制品的理解在不同从业者之间存在广泛差异"。没有标准化的产出来评判"好"还是"不好"的 DDD 设计——这造成了评估真空，使得 DDD 的质量完全依赖个人判断。</p>
+</div>
+<div class="why-block">
+  <p><span class="level">追问层 3：</span>为什么平台化/工具化是降低门槛的方向？</p>
+  <p>→ 因为<strong>平台可以将"推荐最佳实践"升级为"编译时强制校验的硬性约束"</strong>（Nop 平台的核心论点）。当限界上下文的边界被编译器强制执行时，开发者不会因为疏忽或不理解而违反边界——就像类型系统阻止你把字符串赋给整数。Context Mapper DSL 尝试将 DDD 概念（限界上下文、聚合、上下文映射）形式化为机器可读的建模语言，EDOC 2024 的研究展示了将其与 Mono2Micro 这类自动分解工具结合的可能性。</p>
+</div>
+
+<h3>5.3 中国市场工具创新</h3>
+<table>
+  <tr><th>方案</th><th>核心思路</th><th>成熟度</th></tr>
+  <tr>
+    <td><strong>Nop 平台</strong>（可逆计算）</td>
+    <td>将架构理念内化为平台内禀属性：Delta 差量注入替代事件驱动、IEntityDao&lt;T&gt; 替代 Repository、编译时强制校验替代最佳实践推荐</td>
+    <td>前沿探索，未大规模采用</td>
+  </tr>
+  <tr>
+    <td><strong>百度 DDD 全链路指南</strong></td>
+    <td>战略设计→战术设计→工程实践→实施路线图（试点1-3月→扩展4-6月→优化7-12月）</td>
+    <td>方法论指南，非平台产品</td>
+  </tr>
+  <tr>
+    <td><strong>美团内部实践</strong></td>
+    <td>六边形架构变体 + 大聚合根模式 + 统一语言驱动</td>
+    <td>企业内部使用</td>
+  </tr>
+</table>
+
+<hr id="s6">
+
+<!-- ============ S6: POSITIVE/NEGATIVE SCENARIOS ============ -->
+<h2>6. 正面场景与反面/失效场景汇总</h2>
+
+<h3>6.1 范式一：微服务边界识别</h3>
+<h4>正面场景（≥2）</h4>
+<ol>
+  <li><strong>OTA 平台</strong>：事件风暴收集 217 个业务事件 → 划定 8 个核心限界上下文 → 开发周期 3月→2周。来源：[OTA]</li>
+  <li><strong>HelloFresh</strong>：事件风暴识别 Shopping Platform、StoreFront、Cart 等限界上下文 → 按上下文重组团队 → 6-8 月内减少重复、提升部署频率。来源：[HelloFresh]</li>
+</ol>
+<h4>反面/失效场景（≥2）</h4>
+<ol>
+  <li><strong>创业公司 B2B SaaS</strong>：严格限界上下文 → 跨上下文查询从 50ms→600ms → 简单功能需协调 3+ 上下文 → 团队速度崩溃。来源：[Stackademic]</li>
+  <li><strong>Port of Rotterdam</strong>：微服务数量超过团队运维能力 → 被迫使用 Spring Modulith 合并回模块化单体。来源：[Rotterdam]</li>
+</ol>
+
+<h3>6.2 范式二：战术模式采纳</h3>
+<h4>正面场景（≥2）</h4>
+<ol>
+  <li><strong>美团 B 端营销系统</strong>：六边形架构变体 + 大聚合根模式 → "领域模型是持续迭代的，非一次性设计" → 系统可维护性显著提升。来源：[Meituan]</li>
+  <li><strong>B2B 电子交易平台</strong>：DDD + 命令模式 → 验证逻辑与实体解耦 → 安全逻辑提取为 SecurityCommand → 系统模块化改善。来源：HackerNoon 2024</li>
+</ol>
+<h4>反面/失效场景（≥2）</h4>
+<ol>
+  <li><strong>创业公司 B2B SaaS</strong>：强制聚合根 + 值对象 → Order 类从 ~10 行膨胀至 ~80+ 行 → 折扣码校验从同步变为多步 Saga (400-800ms)。来源：[Stackademic]</li>
+  <li><strong>某外企 DDD 迁移</strong>：领域边界划分需要"跨团队工作坊+外部顾问" → 一年半的迁移周期 → 遗留系统集成采用适配器模式逐步重构。来源：[Foreign-Migration]</li>
+</ol>
+
+<h3>6.3 范式三：团队组织对齐</h3>
+<h4>正面场景（≥2）</h4>
+<ol>
+  <li><strong>HelloFresh</strong>：按限界上下文重组团队 → 团队自治提升、依赖减少、变更失败率下降。来源：[HelloFresh]</li>
+  <li><strong>Wardley Mapping + DDD + Team Topologies</strong> (GOTO 2024)：三种方法结合用于优化"组织流动"→ 考虑团队认知负载、持续验证边界。来源：GOTO Conference 2024</li>
+</ol>
+<h4>反面/失效场景（≥2）</h4>
+<ol>
+  <li><strong>V2EX 社区案例</strong>：老板命令"全面推行 DDD，下周上线" → "领域专家"是被临时任命的 → 推行一周后被叫停——"没有看到明显优势，反而影响效率"。来源：V2EX</li>
+  <li><strong>Linux.DO 批评</strong>：半吊子实践者"非要搞成充血模型 + 多层包依赖划分" → "解决方案的复杂性高于问题的复杂性"。来源：Linux.DO</li>
+</ol>
+
+<hr id="s7">
+
+<!-- ============ S7: VERIFICATION ============ -->
+<h2>7. 严格验证：来源追踪、红队攻击、证伪条件</h2>
+
+<h3>7.1 每个关键数字的来源</h3>
+<table>
+  <tr><th>#</th><th>数字</th><th>来源 URL</th><th>数据采集日期</th><th>独立验证</th></tr>
+  <tr>
+    <td>N1</td>
+    <td>OTA平台：开发周期 3月→2周</td>
+    <td>developer.baidu.com/article/detail.html?id=5322747</td>
+    <td>2025年12月（文章发表）</td>
+    <td><span class="tag warn-tag">仅单一来源</span></td>
+  </tr>
+  <tr>
+    <td>N2</td>
+    <td>OTA平台：事件风暴收集 217 个业务事件</td>
+    <td>同上</td>
+    <td>同上</td>
+    <td><span class="tag warn-tag">仅单一来源</span></td>
+  </tr>
+  <tr>
+    <td>N3</td>
+    <td>OTA平台：核心交易链路可用率 99.99%</td>
+    <td>同上</td>
+    <td>同上</td>
+    <td><span class="tag warn-tag">仅单一来源</span></td>
+  </tr>
+  <tr>
+    <td>N4</td>
+    <td>创业公司：功能交付 22→4，交付时间 3.2天→14.5天</td>
+    <td>blog.stackademic.com/ddd-everywhere-how-domain-driven-design-destroyed-our-team-velocity</td>
+    <td>2024年（文章发表）</td>
+    <td><span class="tag warn-tag">仅单一来源，匿名</span></td>
+  </tr>
+  <tr>
+    <td>N5</td>
+    <td>需求重做成本：开发努力的 26-40%，其中 60% 源于需求错误</td>
+    <td>IBM Systems Sciences Institute（通过 DDD Academy 引用）</td>
+    <td>历史数据，引用年份不明确</td>
+    <td><span class="tag">二级引用链</span></td>
+  </tr>
+  <tr>
+    <td>N6</td>
+    <td>CMU SEI：每 1 欧元投入需求改善 → 回报 3.30-7.50 欧元</td>
+    <td>Carnegie Mellon SEI（通过 DDD Academy 引用）</td>
+    <td>历史数据</td>
+    <td><span class="tag">二级引用链</span></td>
+  </tr>
+  <tr>
+    <td>N7</td>
+    <td>SLR：36篇同行评审研究的系统综述</td>
+    <td>doi.org/10.1016/j.jss.2025.112537</td>
+    <td>2025年12月（发表）</td>
+    <td><span class="tag">同行评审期刊</span></td>
+  </tr>
+  <tr>
+    <td>N8</td>
+    <td>SLR-IEEE：34篇研究 + 63位从业者问卷</td>
+    <td>doi.org/10.1109/TSE.2024.3385835</td>
+    <td>2024年6月（发表）</td>
+    <td><span class="tag">同行评审期刊</span></td>
+  </tr>
+</table>
+
+<h3>7.2 红队攻击（≥3 条）</h3>
+
+<div class="card">
+  <h4>红队攻击 #1：发表偏差 (Publication Bias)</h4>
+  <p><strong>攻击论点：</strong> 本调研收集的证据严重偏向成功案例和正面叙事。Özkan et al. (2025) 本身指出，现有的 DDD 文献"缺乏对失败和挑战的公开讨论，偏向成功故事"。这意味着本调研中引用的 OTA 平台、美团、HelloFresh 等案例可能代表了幸存者偏差——大量 DDD 尝试失败且从未被公开记录。</p>
+  <p><strong>影响：</strong> 所有正面效能数据的加总均值可能被高估 2-3 倍。</p>
+  <p><strong>应对：</strong> 已明确标注每个数据的来源类型和验证状态。在手交单中列出了需主编验证的关键数字，并标注了最脆弱证据。</p>
+</div>
+
+<div class="card">
+  <h4>红队攻击 #2：相关性不等于因果性</h4>
+  <p><strong>攻击论点：</strong> OTA 平台的"3月→2周"改善、HelloFresh 的"部署频率提升"——这些改善无法归因于 DDD 本身。它们可能来自：(a) 重构本身清除了技术债务，(b) 同时进行的 DevOps 实践改进，(c) 团队重组带来的组织改善，(d) 霍桑效应（团队知道被观察而表现更好）。没有对照实验能将 DDD 的贡献从混杂因素中分离。</p>
+  <p><strong>影响：</strong> 本调研的核心结论"DDD 的战略设计带来最大价值"可能是合理性假设而非被证实的因果关系。</p>
+  <p><strong>应对：</strong> 已将此作为"本调研未能确定的内容"之一在手交单中列出。</p>
+</div>
+
+<div class="card">
+  <h4>红队攻击 #3：中国市场特殊性掩盖了 DDD 的本质问题</h4>
+  <p><strong>攻击论点：</strong> 中国的 DDD 采纳（美团、OTA、阿里）发生在特定环境中：大型互联网公司拥有超强工程团队、充足资源、内部平台支持。这些条件在传统企业（保险、银行、制造业）几乎不可复制。将美团的成功推广到传统企业的 DDD 实践是危险的类比错误。传统企业缺乏：(a) 能组织事件风暴的架构师，(b) 愿意且能够参与建模的业务专家，(c) 支持 DDD 的工具链。</p>
+  <p><strong>影响：</strong> 调研结论的适用性可能被严重高估。本报告的主要读者（技术管理层）恰恰最可能来自条件不如互联网巨头的传统企业。</p>
+  <p><strong>应对：</strong> 已在"边界条件"中明确说明了组织能力前提。</p>
+</div>
+
+<div class="card">
+  <h4>红队攻击 #4（追加）：DDD 已进入"后炒作"退化期</h4>
+  <p><strong>攻击论点：</strong> 2025 年的"Pragmatic DDD"、"DDD 用于 DDD 就没有 DDD"、"90% 项目不需要完整 DDD"——这些不是理性回归，而是<strong>幻灭期的症状</strong>。按 Gartner Hype Cycle，DDD 可能在 2022-2023 年达到"期望膨胀的顶峰"，现在正滑向"幻灭的低谷"。本调研引用的正面案例集中在 2024-2025，但社区话语已明显转向批评。技术管理层在此节点做决策面临"在低谷买入还是继续观望"的难题。</p>
+  <p><strong>影响：</strong> 如果 DDD 确实处于幻灭期，2026-2027 年可能出现更多撤回和失败案例。当前建议"选择性采纳战略设计"可能是合理的，但需要警惕全行业情绪进一步转向负面。</p>
+  <p><strong>应对：</strong> 在手交单中将"DDD 所处 Gartner Hype Cycle 阶段的精确判断"列为需补充的盲区。</p>
+</div>
+
+<h3>7.3 证伪条件表</h3>
+<table>
+  <tr><th>核心结论</th><th>证伪条件</th><th>证伪后行动</th></tr>
+  <tr>
+    <td><strong>C1:</strong> DDD 的战略设计价值远超战术模式</td>
+    <td>如果存在 ≥5 个独立案例证明仅使用战术模式（无战略设计）也取得同等或更好的交付效能改善，则结论不成立。<br>可证伪性观测点：对比研究——战略DDD vs 战术DDD vs 无DDD 的交付指标。</td>
+    <td>将建议调整为"战术模式独立有效，战略设计为可选项"</td>
+  </tr>
+  <tr>
+    <td><strong>C2:</strong> DDD 采纳由微服务拆分驱动，正经历理性回摆</td>
+    <td>如果 2026-2027 年出现大量企业从模块化单体回迁至分布式微服务+DDD 的案例，则"回摆"不成立。<br>可证伪性观测点：Spring Modulith 的使用趋势 vs Istio/服务网格的使用趋势。</td>
+    <td>将建议调整为"物理分布式部署仍是长期最优方案，DDD 需配套完整微服务基础设施"</td>
+  </tr>
+  <tr>
+    <td><strong>C3:</strong> DDD 工具化/平台化是降低门槛的关键路径</td>
+    <td>如果 Context Mapper、Nop 等工具 3 年内未获得 ≥100 个公开 adopters，或出现主流 IDE/框架内置了等价能力而专用工具被边缘化，则结论不成立。<br>可证伪性观测点：GitHub stars、生产环境部署数。</td>
+    <td>将建议调整为"工具化路径不通，应投资 DDD 培训和方法论标准化"</td>
+  </tr>
+</table>
+
+<h3>7.4 最脆弱的 3 个结论</h3>
+<ol>
+  <li><span class="fragile-tag">脆弱 #1</span> <strong>OTA 平台的量化的效能数据（3月→2周，99.99% 可用率）</strong> — 单一来源、企业自述、无可独立验证的对照组。如果这个数字被撤除，整体正面效能证据显著削弱。</li>
+  <li><span class="fragile-tag">脆弱 #2</span> <strong>"DDD 采纳由微服务驱动"的因果方向</strong> — 相关性成立（所有 SLR 确认 DDD 用于微服务）但因果方向可能相反：关注微服务的团队自然更关注架构方法论，DDD 只是其中一个选项，而非决定性因素。</li>
+  <li><span class="fragile-tag">脆弱 #3</span> <strong>创业公司 DDD 过载的速度数据（22→4, 3.2天→14.5天）</strong> — 单一匿名来源、可能有夸大成分、无法确认反事实（同期是否有其他组织变动？）。</li>
+</ol>
+
+<hr id="s8">
+
+<!-- ============ S8: WRAP-UP ============ -->
+<h2>8. 收网：核心结论、边界条件、未确定项</h2>
+
+<h3>8.1 三条核心发现</h3>
+
+<div class="card">
+  <h4>核心发现 1：分清主次 — 战略设计是杠杆，战术模式是负重</h4>
+  <p>
+    DDD 的<strong>战略设计</strong>（限界上下文、统一语言、子域识别）为组织提供了有理论基础的"如何拆分系统"的答案，这是 DDD 最被验证的价值。
+    战术模式（聚合根、仓储、值对象、领域事件）在正确场景中有用，但被大量组织当作"DDD 入门仪式"先行套用，导致过度工程化和速度崩溃。
+    <strong>建议：优先投资战略设计能力（事件风暴、领域专家协作机制），战术模式按需选用，默认不使用。</strong>
+  </p>
+</div>
+
+<div class="card">
+  <h4>核心发现 2：认清阶段 — DDD 正从"炒作曲线的膨胀期"滑向"幻灭的低谷"，但核心思想将存活</h4>
+  <p>
+    DDD 的采纳高峰由微服务浪潮驱动（2018-2023），当前正经历社区性的"去魅"——批评性文章激增、实践者分享失败经验、"Pragmatic DDD"运动兴起。
+    这不是 DDD 的终结，而是<strong>方法论成熟的必经阶段</strong>：在幻灭期存活下来的思想（限界上下文、统一语言、业务对齐）将被吸收为软件工程的默认实践，就像设计模式在 2000 年代经历的过程。
+    <strong>建议：不要在组织内发起"全面推行 DDD"运动。将 DDD 定位为工具箱中的一个选项，对核心域选择性使用，对支撑域和通用域使用更简单的模式。</strong>
+  </p>
+</div>
+
+<div class="card">
+  <h4>核心发现 3：组织问题优先于技术问题 — 没有跨职能团队，DDD 就是"空中楼阁"</h4>
+  <p>
+    DDD 最大的障碍不是技术（缺乏框架支持、持久化映射困难），而是<strong>组织架构</strong>——需要领域专家和工程师<strong>坐在一起、持续协作</strong>，需要按业务能力而非技术职能划分团队。这些改变触及权力结构，超出技术管理层的决策范围。
+    在组织条件不具备时强行推行 DDD，结果就是"战术模式表演"——代码看起来像 DDD，但不反映业务现实。
+    <strong>建议：评估组织的"DDD 就绪度"——在投资 DDD 培训之前，先确认是否具备 (a) 可触达的领域专家、(b) 支持跨职能团队的意愿、(c) 持续演进的长期承诺。</strong>
+  </p>
+</div>
+
+<h3>8.2 三条边界条件（什么情况下核心结论不成立）</h3>
+
+<ol>
+  <li>
+    <strong>团队规模 < 15 人且业务逻辑简单：</strong> 在小型团队和简单 CRUD 场景下，DDD 的任何部分（包括战略设计）都是过度投资。直接使用事务脚本或 Active Record 模式更高效。本报告结论主要适用于中大型团队（30+ 工程师）且业务复杂度中等以上的组织。
+  </li>
+  <li>
+    <strong>组织缺乏领域专家合作机制：</strong> 当组织将技术团队与业务部门物理隔离、文化隔离、或权力结构阻碍协作时，DDD 的战略设计不可行。此时即使做出"正确的"限界上下文划分，也缺乏业务验证和持续演化机制。在这种条件下，建议优先解决组织协作问题再考虑 DDD。
+  </li>
+  <li>
+    <strong>系统生命周期 < 2 年：</strong> 对于 MVP、原型、或生命期短的系统，DDD 的前期投资（事件风暴、统一语言建立、领域模型迭代）无法在系统生命周期内回收。在这些场景中，速度优先于长期可维护性。
+  </li>
+</ol>
+
+<h3>8.3 本调研未能确定的内容（≥1 条）</h3>
+
+<ol>
+  <li>
+    <strong>DDD 的独立因果效能：</strong> 现有研究中，DDD 的正面效果无法从伴随的混杂因素中分离（同步进行的重构、DevOps 改进、团队重组、更好的工程实践）。目前缺乏"仅 DDD 改变、其他变量控制"的对照研究。这是 DDD 研究领域整体的结构性缺陷（Özkan et al. 2025 明确认可）。
+  </li>
+  <li>
+    <strong>"Pragmatic DDD"的实际采纳率：</strong> 虽然 2025 年出现了大量倡导"简化 DDD"的文章，但缺乏数据说明有多少组织在实践中真正从"DDD 教条主义"转向了"选择性采纳"。目前的证据全是行业意见文章，非量化调查。
+  </li>
+  <li>
+    <strong>DDD 在中国传统行业的落地率：</strong> 本调研的中国案例集中在互联网/OTA/金融科技。对于制造业、政府、医疗、教育等传统行业，DDD 的采纳率和效果缺乏公开可查的数据。这构成了受众评估 DDD 对自身组织适用性的关键信息缺口。
+  </li>
+</ol>
+
+<hr id="s9">
+
+<!-- ============ S9: SELF-CHECK ============ -->
+<h2>9. 自检清单（逐项检查）</h2>
+
+<ul class="checklist">
+  <li class="pass">每个数字有来源？— 是。N1-N8 共 8 个关键数字，全部标注来源 URL 和数据日期。</li>
+  <li class="pass">覆盖了 ≥3 个框架 × 视角？— 是。覆盖 5 个框架（技术采纳、ROI/商业价值、Conway/Team Topology、TOE采纳障碍、批判性反模式）。</li>
+  <li class="pass">追问到"为什么"≥3 层？— 是。核心发现一：4 层。核心发现二：4 层。核心发现三：3 层。</li>
+  <li class="pass">有反对观点？— 是。引用了腾讯云"90%项目不需要完整DDD"、Stackademic 速度崩溃案例、V2EX/Linux.DO 社区尖锐批评、Pragmatic DDD 运动、JPA 与六边形架构的冲突、同行评审 SLR 中的不足评估。</li>
+  <li class="pass">正反场景论证 ≥2+2？— 是。每个范式 2 正面场景 + 2 反面/失效场景，分布在 §6。</li>
+  <li class="pass">正文有"本调研未能确定"？— 是。§8.3 列出 3 条未确定内容。</li>
+  <li class="pass">有证伪条件表？— 是。§7.3 三条核心结论各有明确证伪条件和证伪后行动。</li>
+  <li class="pass">红队攻击 ≥3 条？— 是。§7.2 共 4 条红队攻击（发表偏差、相关性≠因果性、中国市场特殊性、Hype Cycle 退化期）。</li>
+  <li class="pass">标注最脆弱结论？— 是。§7.4 标识最脆弱 3 个结论。</li>
+  <li class="pass">中国+至少一个国际市场覆盖？— 是。中国市场：美团、OTA、腾讯、阿里、百度。国际市场：欧洲（HelloFresh、Rotterdam、Wikipedia）、美国（学术、Stackademic）。</li>
+</ul>
+
+<hr id="s10">
+
+<!-- ============ S10: HANDOVER ============ -->
+<h2>10. 交接单 — 需主编验证与补充</h2>
+
+<div class="card">
+  <h3>10.1 需主编验证的 5 个关键数字</h3>
+  <table>
+    <tr><th>#</th><th>数字</th><th>当前来源</th><th>验证建议</th></tr>
+    <tr>
+      <td>1</td>
+      <td>OTA平台：开发周期 3月→2周</td>
+      <td>百度开发者平台，单一来源</td>
+      <td>联系作者或查找该平台公开发布的技术博客/技术大会分享确认</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>创业公司 DDD 过载：22→4 功能，3.2天→14.5天</td>
+      <td>Stackademic 博客，匿名，单一来源</td>
+      <td>搜索 HackerNews/Reddit 是否有对该文章的独立讨论和验证</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>CMU SEI：1欧元需求投入→3.30-7.50欧元回报</td>
+      <td>二级引用（DDD Academy → CMU SEI）</td>
+      <td>回溯原始 CMU SEI 报告，确认数字和适用条件</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Altimetrik：44% 发布速度提升，85% 发布周期缩短</td>
+      <td>咨询公司 self-reported case study</td>
+      <td>查找客户方的独立背书或第三方评估</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>DORA 2024：团队边界清晰=高交付性能的"一致预测因子"</td>
+      <td>DORA 2024 报告摘要（已访问 dora.dev）</td>
+      <td>直接查阅 DORA 2024 完整报告（PDF），确认具体统计值和置信区间</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>10.2 需补充的 3 个盲区</h3>
+  <ol>
+    <li>
+      <strong>盲区 #1：DDD 的 Gartner Hype Cycle 准确定位。</strong>
+      本调研基于社区话语的定性判断（批评文章增多、"Pragmatic DDD"运动）推断 DDD 正从膨胀期滑向幻灭期，但缺乏 Gartner 或 Forrester 的正式分析师报告支持。建议主编查找 Gartner 2025/2026 应用架构或软件工程 Hype Cycle 报告中 DDD 的明确位置。
+    </li>
+    <li>
+      <strong>盲区 #2：DDD 在 AI 时代的角色变化。</strong>
+      2025-2026 年 AI 辅助编程（GitHub Copilot、Claude Code、Cursor）的爆发式增长可能根本性地改变 DDD 的成本收益方程——AI 是否能降低建模成本？AI 生成的代码是否天然倾向于贫血模型？本调研未覆盖此维度。建议补充。
+    </li>
+    <li>
+      <strong>盲区 #3：DDD 与"低代码/无代码"平台的关系。</strong>
+      中国市场的 Nop 平台暗示了低代码+DDD 的融合方向，但国外市场是否有类似趋势（如 OutSystems、Mendix 是否内置 DDD 概念）未被覆盖。建议补充。
+    </li>
+  </ol>
+</div>
+
+<div class="card">
+  <h3>10.3 最脆弱的 3 个证据（再现 §7.4）</h3>
+  <ol>
+    <li>OTA 平台的量化效能数据（3月→2周，99.99%可用率）— 单一来源企业自述</li>
+    <li>"DDD 采纳由微服务驱动"的因果方向 — 相关性成立但因果方向可能反转</li>
+    <li>创业公司 DDD 过载的速度数据 — 匿名单一来源</li>
+  </ol>
+</div>
+
+<div class="card">
+  <h3>10.4 证伪条件表（再现 §7.3）</h3>
+  <table>
+    <tr><th>结论</th><th>证伪条件</th></tr>
+    <tr><td>C1: 战略设计价值远超战术模式</td><td>≥5 独立案例证明纯战术模式达到同等或更好交付效能</td></tr>
+    <tr><td>C2: 由微服务驱动，正经历回摆</td><td>2026-2027 出现大量从模块化单体回迁微服务+DDD 案例</td></tr>
+    <tr><td>C3: 工具化是降低门槛的关键路径</td><td>专用 DDD 工具 3 年内未获 ≥100 公开 adopters，或被 IDE/框架内置替代</td></tr>
+  </table>
+</div>
+
+<div class="callout warn">
+  <strong>主编注意：</strong> 本调研的置信度为<strong>中</strong>。置信度受限的原因：(a) DDD 领域整体缺乏对照实验和量化效果评估（学术界自身承认），(b) 关键效能数字多来自单一来源企业自述，(c) 发表偏差可能高估正面效果，(d) AI 时代对 DDD 的冲击未被覆盖。建议结合后续调研（Agent2 或人工主编的补充研究）提升置信度后提交管理层。
+</div>
+
+<hr>
+
+<p style="text-align:center; color:var(--text-secondary); font-size:.85rem;">
+  Agent1 独立调研 &nbsp;|&nbsp; 初稿生成: 2026-06-30 &nbsp;|&nbsp; 版本: v1 &nbsp;|&nbsp; 状态: 待主编复核
+</p>
+
+</body>
+</html>

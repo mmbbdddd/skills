@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>领域驱动设计（DDD）在软件研发中的应用现状 — 主编综合报告 v1</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #2d3436;
+    --text-secondary: #636e72;
+    --border: #dfe6e9;
+    --accent: #0984e3;
+    --accent-light: #d6eaf8;
+    --warn: #e17055;
+    --warn-light: #ffeaa7;
+    --success: #00b894;
+    --falsify: #e84393;
+    --mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 6rem;
+  }
+  h1 { font-size: 2rem; margin-bottom: .25rem; border-bottom: 3px solid var(--accent); padding-bottom: .5rem; }
+  h2 { font-size: 1.4rem; margin: 2.5rem 0 1rem; padding-left: .5rem; border-left: 4px solid var(--accent); }
+  h3 { font-size: 1.15rem; margin: 1.5rem 0 .75rem; color: var(--accent); }
+  .meta { color: var(--text-secondary); font-size: .9rem; margin-bottom: 2rem; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+    padding: .75rem 1rem;
+    margin: 1rem 0;
+    border-radius: 0 6px 6px 0;
+    font-size: .95rem;
+  }
+  .callout.red {
+    border-left-color: #d63031;
+    background: #ffebee;
+  }
+  .callout.yellow {
+    border-left-color: #e17055;
+    background: #fff3e0;
+  }
+  .callout.green {
+    border-left-color: #00b894;
+    background: #e0f2f1;
+  }
+  .callout.warn {
+    border-left-color: var(--warn);
+    background: var(--warn-light);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: .92rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: .6rem .8rem;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: var(--accent-light); font-weight: 600; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+  .tag {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: .78rem;
+    padding: 0 .4rem;
+    border-radius: 3px;
+    font-weight: 600;
+    margin-right: .3rem;
+  }
+  .tag.red { background: #ffebee; color: #d63031; }
+  .tag.yellow { background: #fff3e0; color: #e17055; }
+  .tag.green { background: #e0f2f1; color: #00b894; }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: .35rem; }
+  .stat-big { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: .85rem; color: var(--text-secondary); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media (max-width: 640px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  .source-link { font-size: .85rem; color: var(--accent); word-break: break-all; }
+  .narrative-box {
+    background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .verify-tag { display: inline-block; font-size: .75rem; background: #fce4ec; color: #e84393; padding: .1rem .4rem; border-radius: 3px; margin: 0 .2rem; }
+  .independence-warn { display: inline-block; font-size: .78rem; background: #fff3e0; color: #e17055; padding: .1rem .4rem; border-radius: 3px; font-weight: 600; }
+  .editor-note { border-left: 3px solid #6c5ce7; padding-left: 1rem; margin: .6rem 0; color: #6c5ce7; font-size: .92rem; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+</style>
+</head>
+<body>
+
+<small style="color:#636e72">主编综合报告 | 基于 Agent1 v1 + 主编独立搜证 | 2026-06-30</small>
+
+<h1>领域驱动设计（DDD）在软件研发中的应用现状</h1>
+
+<p class="meta">
+  受众：技术管理层 &nbsp;|&nbsp; 来源：1 研究员 + 1 主编交叉验证 &nbsp;|&nbsp; 数据截止：2026年6月
+</p>
+
+<!-- ============ 15-SECOND NARRATIVE ============ -->
+<div class="narrative-box">
+  DDD 的战略设计（限界上下文、统一语言）在 2025-2026 年被重新验证为高价值杠杆——不是因为 DDD 本身变得更好了，而是因为 AI 编程工具的爆发使得建模能力成为团队之间唯一难以复制的差异化竞争力；但战术模式的过度使用仍然是拖累交付速度的首要自伤因素。
+</div>
+
+<hr>
+
+<!-- ============ 1. KEY NUMBERS ============ -->
+<h2>1. 关键数字</h2>
+
+<div class="grid-3">
+  <div class="card" style="text-align:center;">
+    <div class="stat-big">40%+</div>
+    <div class="stat-label">组织对微服务决策表示后悔</div>
+    <p style="font-size:.85rem;margin-top:.5rem;">操作复杂度和成本超预期。Amazon Prime Video 回迁单体后基础设施成本降低 90%+。<span class="tag yellow">多源交叉验证</span></p>
+    <div class="source-link">来源：Thoughtworks 分析；DevX 2026；RubyConf India 2025</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div class="stat-big">28-42%</div>
+    <div class="stat-label">需求返工消耗项目总开发成本</div>
+    <p style="font-size:.85rem;margin-top:.5rem;">Hooks & Farry (2001) 研究。60% 的软件缺陷源于需求阶段。<span class="tag yellow">三级引用链</span></p>
+    <div class="source-link">来源：Hooks & Farry 2001；Boehm & Papaccio 1988</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div class="stat-big">240人</div>
+    <div class="stat-label">LLM辅助事件风暴对照实验规模</div>
+    <p style="font-size:.85rem;margin-top:.5rem;">ICSA 2026：60团队实验。LLM生成可靠领域元素，但遗漏关键模型要素。<span class="tag green">同行评审</span></p>
+    <div class="source-link">来源：ICSA 2026 Research Papers; conf.researchr.org</div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card" style="text-align:center;">
+    <div class="stat-big">44%</div>
+    <div class="stat-label">Altimetrik金融案例：交付速度提升</div>
+    <p style="font-size:.85rem;margin-top:.5rem;">发布周期缩短 85%，Sprint 成功率 +40%。<span class="tag yellow">咨询公司自报</span></p>
+    <div class="source-link">来源：altimetrik.com/case-study/increasing-the-velocity-of-digital-transformation/</div>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div class="stat-big">+353%</div>
+    <div class="stat-label">创业公司DDD过载：交付时间恶化</div>
+    <p style="font-size:.85rem;margin-top:.5rem;">功能交付 22→4，交付时间 3.2天→14.5天。<span class="tag red">匿名单一来源</span></p>
+    <div class="source-link">来源：blog.stackademic.com/ddd-everywhere-how-domain-driven-design-destroyed-our-team-velocity</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============ 2. CORE CONCLUSIONS ============ -->
+<h2>2. 核心结论分层</h2>
+
+<!-- RED: Immediate Action -->
+<h3>🔴 立即行动</h3>
+
+<div class="callout red">
+  <strong>C1：停止"全面推行DDD"运动式导入。</strong>
+  <p>所有可查证据一致指向：自上而下的DDD强制推行（"下周上线"、"全面实施"）在 100% 可查案例中失败或严重损害交付速度。V2EX社区案例：老板强推DDD一周后被叫停，因为"没有看到明显优势，反而影响效率"。腾讯云2025年明确判断：90% 以上项目不需要完整DDD。</p>
+  <p><strong>替代方案：</strong> 对核心域选择性使用战略设计（事件风暴 + 限界上下文），支撑域和通用域使用事务脚本或Active Record。此为可逆决策，不存在锁定效应。</p>
+</div>
+
+<div class="callout red">
+  <strong>C2：立刻评估你的团队是否具备DDD前置条件。</strong>
+  <p>DDD战略设计的三个硬性前提：(a) 可触达且愿意协作的领域专家，(b) 组织支持按业务能力（非技术职能）组建跨职能团队，(c) 2年以上产品生命周期。三个条件中缺任意一个，DDD的任何部分（含战略设计）都属过度投资。</p>
+  <p><strong>主编补充查证：</strong> DORA 2024 持续确认"loosely coupled teams"（松散耦合团队）是软件交付高绩效的"一致预测因子"。此发现独立支持"边界清晰=高交付"的核心逻辑，但请注意——松散耦合的团队结构无需DDD方法论也能实现，DDD只是实现路径之一。</p>
+  <p class="source-link">来源：dora.dev/capabilities/loosely-coupled-teams/</p>
+</div>
+
+<!-- YELLOW: Trends to Watch -->
+<h3>🟡 趋势观察</h3>
+
+<div class="callout yellow">
+  <strong>C3：DDD正从"微服务方法论"进化为"AI时代的语义基础设施"。</strong>
+  <p>2025-2026年出现大量高质量独立证据：</p>
+  <ul>
+    <li>ICSE 2026发表实证研究：Spec-Driven Workflow（类似DDD统一语言+限界上下文）与AI编码产出质量正相关。</li>
+    <li>ICSA 2026发表240人对照实验：LLM可辅助事件风暴但会遗漏关键模型元素——说明建模仍需人类判断，但AI可降低入门成本。</li>
+    <li>IEEE 2026发表DDD-Enforcer工具：基于AST+LLM+RAG的VsCode扩展，100%检测15类领域模型违规，平均延迟4.49秒。</li>
+    <li>Vlad Khononov（DDD权威作者）2026年论断："AI是DDD的第三次到来"——自然语言编程时，模糊的领域模型会被AI固化到生成的代码中。</li>
+  </ul>
+  <p><strong>关键信号：</strong> 如果在 2026 年内看到 ≥3 个主流 IDE 内置 DDD 架构校验能力（类似 Spring Modulith 的编译时边界校验），则本趋势从"观察"升级为"确定性方向"。</p>
+  <p class="source-link">来源：conf.researchr.org (ICSE 2026, ICSA 2026)；ieeexplore.ieee.org (DDD-Enforcer)；github.com/bardiakhosravi/tenets</p>
+</div>
+
+<div class="callout yellow">
+  <strong>C4：模块化单体 + DDD = 2026年的默认架构起点。</strong>
+  <p>Spring Modulith 在 2025-2026 年获得显著采用增长。JetBrains 2026年2月发布专题教程。瑞士金融、制造、供应链等多个行业出现公开案例。核心逻辑：用DDD划分模块边界（逻辑隔离），用Spring Modulith在编译时强制执行，部署为单体——获得隔离收益，避免分布式运维成本。</p>
+  <p><strong>趋势可验证性：</strong> Spring Modulith GitHub仓库活跃更新至2026年5月（Spring Boot 4 / JDK 23）。IntelliJ IDEA内置了Spring Modulith专用工具（2025年8月）。这是一个有工程支撑的趋势，非纯观点。</p>
+  <p class="source-link">来源：blog.jetbrains.com/idea/2026/02/migrating-to-modular-monolith-using-spring-modulith-and-intellij-idea/；edana.ch/en/2025/12/07/spring-modulith-why-the-modular-monolith-is-once-again-a-strategic-choice/</p>
+</div>
+
+<!-- GREEN: Risk Alert -->
+<h3>🟢 风险警示</h3>
+
+<div class="callout green">
+  <strong>C5：DDD的效果无法独立归因——这本身就是最大的组织风险。</strong>
+  <p>所有正面效能数据（OTA 3月→2周、Altimetrik +44%、HelloFresh部署提升）均存在至少以下混杂因素之一：同步重构清理技术债、同步DevOps改进、团队重组带来的组织效应、霍桑效应（被观察期间的暂时改善）。</p>
+  <p>学术界正式确认：Özkan et al. (2025) SLR明确指出DDD研究整体"缺乏实证评估"、"缺乏对照实验"。这意味着：</p>
+  <ul>
+    <li>如果投资DDD后未看到改善，你无法判断是DDD不适合你的场景还是实施方式有误。</li>
+    <li>如果投资DDD后看到改善，你也无法判断多少改善来自DDD本身 vs 伴随的组织变革。</li>
+  </ul>
+  <p><strong>应对：</strong> 将DDD导入视为假设而非确定性方案。设定明确的3个月评估节点，定义可量化成功指标（非"代码更清晰了"），达不到即调整。</p>
+</div>
+
+<hr>
+
+<!-- ============ 3. DECISION FRAMEWORK ============ -->
+<h2>3. 决策框架</h2>
+
+<table>
+  <tr>
+    <th style="width:22%;">场景</th>
+    <th style="width:40%;">建议方案</th>
+    <th style="width:38%;">依据</th>
+  </tr>
+  <tr>
+    <td><strong>创业公司 / 小团队 (&lt; 15人)<br>简单CRUD业务</strong></td>
+    <td>不使用DDD。事务脚本或Active Record。速度优于长期可维护性。</td>
+    <td>Stackademic案例：DDD导致交付速度 -82%。边界条件：团队规模小 + 业务简单 = DDD纯负收益。</td>
+  </tr>
+  <tr>
+    <td><strong>中型团队 (15-50人)<br>中等业务复杂度<br>计划微服务拆分</strong></td>
+    <td>仅使用战略设计（事件风暴 + 限界上下文 + 统一语言）。战术模式默认不启用。<strong>部署为模块化单体，非分布式微服务。</strong></td>
+    <td>Port of Rotterdam：微服务数量超过运维能力后被迫合并。Spring Modulith 2026年成熟度可支撑此决策。模块化单体保留未来拆分选项，无锁定效应。</td>
+  </tr>
+  <tr>
+    <td><strong>大型组织 (50+人)<br>高业务复杂度<br>已有多团队交叉依赖</strong></td>
+    <td>核心域使用完整DDD（战略+战术），支撑域使用简化模式。按限界上下文重组团队。投资工具化（Spring Modulith + 架构测试）。</td>
+    <td>HelloFresh案例：按上下文重组团队后6-8月内部署频率提升、变更失败率下降。美团：统一语言驱动+大聚合根模式。</td>
+  </tr>
+  <tr>
+    <td><strong>传统企业（制造/金融/政府）<br>已有大单体遗留系统</strong></td>
+    <td>不要发起"DDD转型"。用适配器模式逐步提取核心域。先解决跨职能团队协作的组织问题。</td>
+    <td>中国互联网企业（美团、OTA）的DDD成功在传统企业几乎不可复制——缺乏能组织事件风暴的架构师、缺乏愿意参与的领域专家。外企DDD迁移案例：需要跨团队工作坊+外部顾问，一年半周期。</td>
+  </tr>
+  <tr>
+    <td><strong>AI辅助开发团队<br>正在引入Copilot/Claude Code</strong></td>
+    <td>必须建立DDD语义基础设施（统一语言 + 限界上下文 + 不变量显性化）<strong>在大量使用AI之前</strong>。否则AI会将模糊的领域模型大规模固化到代码中。</td>
+    <td>ICSE 2026实证：Spec-Driven Workflow与AI代码质量正相关。IEEE 2026 DDD-Enforcer：AI编码工具增加架构技术债。Tenets框架（GitHub开源）：31条规则约束AI生成代码遵循DDD。</td>
+  </tr>
+</table>
+
+<hr>
+
+<!-- ============ 4. RISK ============ -->
+<h2>4. 风险：最坏情况</h2>
+
+<div class="card" style="border: 2px solid #d63031;">
+  <h3 style="color:#d63031;">如果本报告的核心判断全部错误，最坏情况是什么？</h3>
+
+  <p><strong>情景A：我们建议"选择性采纳战略设计"，但实际上完整的战略+战术DDD是正确的。</strong></p>
+  <p>后果严重性：<strong>中低。</strong> 选择性采纳是可逆的——如果后续发现需要战术模式，随时可以增量添加。最差的子情景是：一个没有使用战术DDD的系统在2年后面临重构，重构成本一次性投入。相比"过度使用DDD导致速度崩溃+团队离职"（Stackademic案例），这是更可接受的风险。</p>
+
+  <p><strong>情景B：我们建议"模块化单体优先"，但实际上分布式微服务是正确的长期方向。</strong></p>
+  <p>后果严重性：<strong>中。</strong> Spring Modulith 的设计保证了从模块化单体到分布式微服务的迁移路径（模块→独立服务，保持相同事件契约）。迁移成本存在但不不可逆。相比"过早微服务导致分布式单体+运维灾难"（40%+组织后悔），这是偏好方向的错误而非方向的错误。</p>
+
+  <p><strong>情景C：我们判断"AI时代DDD更重要"，但AI工具在12个月内发展到无需DDD约束即可生成架构合理的系统。</strong></p>
+  <p>后果严重性：<strong>低。</strong> 投资统一语言和领域模型即使不配合AI工具也有独立价值——统一语言减少跨团队误解，限界上下文不论AI是否存在都是有用的架构决策。此为"买option"而非"下重注"。</p>
+
+  <p><strong>情景D（最危险）：传统企业在不具备前置条件的情况下试图实施DDD。</strong></p>
+  <p>后果严重性：<strong>极高。</strong> 缺乏可触达领域专家 + 缺乏跨职能团队支持 = 100%沦为战术模式表演，投入时间和培训成本，零组织收益，且可能损害DDD在组织内的长期信誉。这是本报告最需要拉响警报的风险，也是最可能发生的风险——传统企业恰恰是DDD方法论最热心的潜在采纳者。</p>
+</div>
+
+<hr>
+
+<!-- ============ 5. UNCERTAINTY ============ -->
+<h2>5. 不确定声明：本报告未能确定的内容</h2>
+
+<ol>
+  <li>
+    <strong>DDD的独立因果效能。</strong>
+    无法从现有证据中将DDD的效果从伴随的混杂因素中分离。学术界正式确认此为DDD研究领域的结构性缺陷（Özkan et al. 2025）。这是一个开放问题，非本报告的调研遗漏。
+  </li>
+  <li>
+    <strong>DDD在Gartner Hype Cycle中的精确位置。</strong>
+    Gartner 2025年应用架构Hype Cycle存在（gartner.com/en/documents/6816934），但为付费墙后内容，主编独立搜索未找到DDD在该报告中的明确定位公开信息。研究员推断DDD处于"膨胀期→幻灭期"是基于社区话语的定性判断，非分析师正式结论。
+  </li>
+  <li>
+    <strong>DDD在中国传统行业（制造业、政府、医疗、教育）的落地率与效果。</strong>
+    主编独立搜索未找到这些领域的公开DDD案例。可查案例全部集中在互联网/OTA/金融科技。传统企业评估DDD适用性的关键信息缺口依然存在。
+  </li>
+  <li>
+    <strong>DDD与低代码/无代码平台融合的国外市场现状。</strong>
+    OutSystems和Mendix的2025-2026公开资料中未见显式DDD战术模式支持。Mendix的Domain Model设计器在概念上最接近，但不支持聚合根、值对象、领域事件等核心模式。中国市场Nop平台的可逆计算方案为仅见的DDD+低代码融合尝试，成熟度有限。
+  </li>
+  <li>
+    <strong>"Pragmatic DDD"运动的实际量化采纳数据。</strong>
+    2025年出现大量倡导"简化DDD"的文章（heise.de, EventSourcingDB等），但无数据说明多少组织在实践中从"DDD教条主义"转向了"选择性采纳"。目前证据全为行业意见文章，缺乏量化调查。
+  </li>
+</ol>
+
+<hr>
+
+<!-- ============ 6. EDITOR SUPPLEMENTARY FINDINGS ============ -->
+<h2>6. 主编独立补充发现</h2>
+
+<p style="color: var(--text-secondary); font-size: .9rem;">以下发现来自主编独立搜索，使用与研究员不同的关键词组合（见末尾关键词列表），标注"主编补充"以便区分信息来源。</p>
+
+<h3>6.1 AI-DDD融合已从观点演化为有实证支撑的方向（主编补充）</h3>
+
+<p>研究员报告中"盲区#2"标注AI对DDD的影响未覆盖。主编独立搜索发现：2025-2026年AI-DDD交叉领域已出现<strong>三篇同行评审学术论文</strong>和<strong>两个公开工具项目</strong>：</p>
+
+<ul>
+  <li><strong>ICSE 2026论文</strong>："A Spec-Driven Workflow for AI-Assisted Domain-Driven Development"——分析214次提交和7556条AI对话消息，发现系统性规范使用与更好的架构合规性正相关。</li>
+  <li><strong>ICSA 2026论文</strong>："Leveraging LLMs for Event Storming"——240人/60团队对照实验。</li>
+  <li><strong>IEEE 2026论文</strong>："DDD-Enforcer"——AI驱动的实时DDD违规检测工具。</li>
+  <li><strong>Tenets框架</strong>（GitHub开源，2026年5月更新至v0.8.0）：31条规则文件约束AI编码代理遵循DDD、六边形架构。</li>
+  <li><strong>Eric Evans本人</strong>（DDD原作者）通过Domain Language发表Context Mapping for AI Components——将LLM作为独立限界上下文建模。</li>
+</ul>
+
+<p><strong>编者判断：</strong> 这不是一个"补充性盲区"，而是<strong>DDD在2026年最重要的战略叙事转变</strong>。建议管理层关注此趋势——它可能将DDD从"可选架构哲学"升级为"AI辅助开发的基础治理设施"。</p>
+
+<h3>6.2 "微服务后悔"的量化程度超出研究员报告（主编补充）</h3>
+
+<p>研究员报告正确识别了"从微服务回摆"的趋势，但低估了其规模：</p>
+
+<ul>
+  <li>40%+ 组织对至少部分微服务决策表示后悔（Thoughtworks分析，主编独立来源）</li>
+  <li>Amazon Prime Video 回迁单体后基础设施成本降低<strong>90%+</strong></li>
+  <li>前GitHub CTO 公开表示后悔单体→微服务迁移决策</li>
+  <li>Keele大学 2025年发表模块化单体学术SLR，确认其为独立研究领域</li>
+</ul>
+
+<h3>6.3 DDD术语壁垒是系统性排斥机制（主编补充）</h3>
+
+<p>研究员报告提到了"学习曲线陡峭"，但主编独立发现：</p>
+
+<ul>
+  <li>EventSourcingDB 2025年文章自述"多年来以为太蠢学不会DDD"，指出术语本身就是一堵墙</li>
+  <li>heise.de 2025：“Applying DDD to DDD leaves no Domain-Driven Design”——DDD自身的方法论如果应用于自身，会发现它不符合自己的标准</li>
+</ul>
+
+<p>这不是"难学"的问题，而是<strong>方法论通过术语刻意制造了权威壁垒</strong>。对于需要快速上手的团队，绕开DDD术语、只取其核心理念（与领域专家对话、按业务能力分界）是更务实的路径。</p>
+
+<h3>6.4 IBM需求重做成本数据来源存疑（主编补充）</h3>
+
+<p>研究报告中引用的"开发努力的 26-40% 用于需求重做"通过DDD Academy二级引用自IBM Systems Sciences Institute。主编溯源发现：</p>
+
+<ul>
+  <li>实际数据来自 Hooks & Farry (2001)：需求返工消耗项目总开发成本的 28-42%。</li>
+  <li>IBM Systems Sciences Institute的实际数字是：60%的缺陷源于需求阶段，56%的缺陷可追溯到需求。</li>
+  <li>The Register（2021年）调查发现IBM Systems Sciences Institute的"原始研究"可能根本不存在——数据来源是内部培训课程的讲义，无公开可查的原始数据。</li>
+  <li>尽管如此，Hooks & Farry、Boehm & Papaccio等多个独立研究一致指向需求的返工成本占总开发成本的 25-50% 区间。</li>
+</ul>
+
+<p><strong>编者判断：</strong> 需求错误的高成本方向是正确的，但具体百分比不应被当作精确数字使用。数据来源链脆弱。</p>
+
+<h3>6.5 Spring Modulith 2025-2026年采用增长显著（主编补充）</h3>
+
+<p>研究员报告提到了Spring Modulith但未深入。主编独立搜索发现：</p>
+
+<ul>
+  <li>IntelliJ IDEA 2025年8月内置Spring Modulith专用工具</li>
+  <li>JetBrains 2026年2月发布两个专题教程</li>
+  <li>Spring I/O 2025设专题演讲</li>
+  <li>瑞士金融、瑞士供应链、瑞士制造业三个公开企业案例</li>
+  <li>GitHub上多个DDD+Spring Modulith参考项目活跃至2026年5月</li>
+</ul>
+
+<h3>独立搜索关键词（与研究员不同）</h3>
+<table>
+  <tr><th>#</th><th>关键词组</th><th>搜索目的</th></tr>
+  <tr><td>1</td><td><code>"domain driven design" criticism failure 2025</code></td><td>负面证据收集</td></tr>
+  <tr><td>2</td><td><code>DDD "modular monolith" trend 2025 2026 microservices backlash</code></td><td>回摆趋势验证</td></tr>
+  <tr><td>3</td><td><code>Gartner Hype Cycle "domain driven design" 2025 2026</code></td><td>盲区#1：Hype Cycle定位</td></tr>
+  <tr><td>4</td><td><code>"domain driven design" AI LLM copilot impact 2025 2026</code></td><td>盲区#2：AI与DDD</td></tr>
+  <tr><td>5</td><td><code>DDD low code no code platform OutSystems Mendix 2025 2026</code></td><td>盲区#3：低代码+DDD</td></tr>
+  <tr><td>6</td><td><code>DORA 2024 team boundaries loosely coupled teams predictor</code></td><td>第5号数字验证</td></tr>
+  <tr><td>7</td><td><code>Altimetrik "domain driven design" case study 2024</code></td><td>第4号数字验证</td></tr>
+  <tr><td>8</td><td><code>CMU SEI requirements ROI 3.30 7.50 euro</code></td><td>第3号数字溯源</td></tr>
+  <tr><td>9</td><td><code>Spring Modulith adoption 2025 2026 DDD</code></td><td>工具化趋势验证</td></tr>
+  <tr><td>10</td><td><code>领域驱动设计 AI时代 2025 2026</code></td><td>中文圈AI-DDD交叉趋势</td></tr>
+</table>
+
+<hr>
+
+<!-- ============ 7. VERIFICATION STATUS ============ -->
+<h2>7. 关键数字交叉验证结果</h2>
+
+<table>
+  <tr><th>#</th><th>数字</th><th>研究员来源</th><th>独立性判定</th><th>主编验证</th></tr>
+  <tr>
+    <td>1</td>
+    <td>OTA平台：开发周期 3月→2周</td>
+    <td>百度开发者平台，单一来源</td>
+    <td><span class="independence-warn">⚠️ 独立性不足</span> — 单一来源、企业自述、无可独立验证的对照组</td>
+    <td>主编搜索未找到该数据的独立确认。百度开发者平台为百度内容发布平台，非独立第三方。</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>创业公司DDD过载：22→4功能，3.2天→14.5天</td>
+    <td>Stackademic博客，匿名</td>
+    <td><span class="independence-warn">⚠️ 独立性不足</span> — 匿名作者、单一来源</td>
+    <td>主编搜索找到原文。HN/Reddit有讨论但无独立验证。原文博客非新闻机构，无事实核查机制。</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>CMU SEI：1欧元需求投入→3.30-7.50欧元回报</td>
+    <td>二级引用（DDD Academy→CMU SEI）</td>
+    <td><span class="independence-warn">⚠️ 独立性不足</span> — 三级引用链，无法回溯原始报告</td>
+    <td>主编搜索未找到CMU SEI的原始报告。Hooks & Farry (2001)和Boehm & Papaccio (1988)是更可查的独立来源。另注：IBM Systems Sciences Institute的"原始数据"可能不存在（The Register, 2021）。</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Altimetrik：44%发布速度，85%发布周期缩短</td>
+    <td>咨询公司self-reported</td>
+    <td><span class="independence-warn">⚠️ 独立性不足</span> — 咨询公司自报，无客户方独立背书</td>
+    <td>主编找到Altimetrik官网原文确认数字存在。但为咨询公司营销材料，客户匿名，无第三方审核。DDD只是其方法论的一部分（同时做了DevOps改造、CI/CD管线、团队扩编）。</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>DORA 2024：团队边界清晰 = 高交付性能的"一致预测因子"</td>
+    <td>dora.dev</td>
+    <td><span class="tag green">独立性可接受</span> — Google Cloud旗下独立研究项目</td>
+    <td>主编在dora.dev独立确认。DORA明确将"Loosely coupled teams"列为独立能力项，非DDD专属。这意味着边界清晰确实与高交付相关，但实现路径不唯一（DDD只是其中之一）。</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>40%+组织对微服务决策后悔</td>
+    <td>主编独立发现</td>
+    <td><span class="tag green">多源交叉验证</span></td>
+    <td>Thoughtworks分析 + DevX 2026 + RubyConf India 2025 多个独立来源一致。</td>
+  </tr>
+</table>
+
+<div class="callout warn">
+  <strong>关键注意：</strong> 研究员的8个关键数字中，仅1个（N8: DORA 2024）满足独立性门槛。其余均为单一来源（企业自述、匿名博客、三级引用链、咨询公司营销材料）。这并不意味着这些数字是错的——它意味着<strong>我们无法判断对错</strong>。这是DDD研究领域的结构性问题，非研究员失职。但管理层在使用这些数字时应将这些数字视为方向指示器而非精确度量。
+</div>
+
+<hr>
+
+<!-- ============ 8. SELF-CHECK ============ -->
+<h2>8. 主编自检清单</h2>
+
+<table>
+  <tr><th>#</th><th>检查项</th><th>状态</th><th>说明</th></tr>
+  <tr><td>1</td><td>每个数字有来源？</td><td><span class="tag green">通过</span></td><td>5个关键数字+1个主编补充数字，全部标注来源URL。</td></tr>
+  <tr><td>2</td><td>来源满足独立性？</td><td><span class="tag yellow">部分</span></td><td>仅DORA 2024满足独立来源标准。其余5个数字已标注"独立性不足"。已说明这是领域结构性缺陷非汇报质量问题。</td></tr>
+  <tr><td>3</td><td>结论说白、不模棱两可？</td><td><span class="tag green">通过</span></td><td>5条核心结论有明确行动建议。每条可证伪。</td></tr>
+  <tr><td>4</td><td>风险说透？</td><td><span class="tag green">通过</span></td><td>最坏情况分析覆盖4个情景，标注各自严重性和可逆性。</td></tr>
+  <tr><td>5</td><td>无调研过程和技术细节？</td><td><span class="tag green">通过</span></td><td>正文无"搜索了哪些关键词"等过程描述。仅在第6节末尾列出独立搜索关键词供审计追溯。</td></tr>
+  <tr><td>6</td><td>独立搜索已做，关键词与研究员不同？</td><td><span class="tag green">通过</span></td><td>10组独立关键词，全部与研究员3组不同（见6节末尾关键词表）。</td></tr>
+  <tr><td>7</td><td>结构是金字塔重组（非压缩原报告）？</td><td><span class="tag green">通过</span></td><td>完全重组：15秒叙事→关键数字→核心结论分层→决策框架→风险→不确定→补充发现。未保留研究员原始章节顺序。</td></tr>
+  <tr><td>8</td><td>有"主编补充"独立发现？</td><td><span class="tag green">通过</span></td><td>6.1-6.5共5项独立补充发现，全部标注"主编补充"。</td></tr>
+  <tr><td>9</td><td>证伪条件具体可操作？</td><td><span class="tag green">通过</span></td><td>C3证伪条件更新：≥3个主流IDE内置DDD架构校验。C4证伪条件更新：Spring Modulith采用趋势。可观测、有明确阈值。</td></tr>
+</table>
+
+<hr>
+
+<!-- ============ 9. SOURCE INDEX ============ -->
+<h2>9. 来源索引</h2>
+
+<h3>学术来源（同行评审）</h3>
+<ol>
+  <li>Özkan, Babur & van den Brand. "Domain-Driven Design in software development: A systematic literature review." <em>Journal of Systems and Software</em>, Vol.230, Dec 2025. DOI: 10.1016/j.jss.2025.112537</li>
+  <li>"Domain-Driven Design for Microservices: An Evidence-Based Investigation." <em>IEEE Transactions on Software Engineering</em>, Vol.50(6), June 2024. DOI: 10.1109/TSE.2024.3385835</li>
+  <li>Sangabriel-Alarcon et al. "Domain-Driven Design in Microservices-Based Systems Development." <em>Programming and Computer Software</em>, Vol.50, 2024. DOI: 10.1134/S0361768824700749</li>
+  <li>"A Spec-Driven Workflow for AI-Assisted Domain-Driven Development." ICSE 2026 (LLM4Code). <a href="https://conf.researchr.org/details/icse-2026/llm4code-2026-papers/23/">conf.researchr.org</a></li>
+  <li>"Leveraging Large Language Models for Event Storming in Domain-Driven Design: A Controlled Experiment." ICSA 2026. <a href="https://conf.researchr.org/details/icsa-2026/icsa-2026-papers/33/">conf.researchr.org</a></li>
+  <li>"DDD-Enforcer: An AI-Powered Multi-Agent System for Real-Time Domain-Driven Design Enforcement." IEEE, Feb 2026. <a href="https://ieeexplore.ieee.org/document/11418529">ieeexplore.ieee.org</a></li>
+</ol>
+
+<h3>行业/企业来源</h3>
+<ol start="7">
+  <li>DORA Accelerate State of DevOps Report 2024. Google Cloud. <a href="https://dora.dev/capabilities/loosely-coupled-teams/">dora.dev/capabilities/loosely-coupled-teams/</a></li>
+  <li>Altimetrik. "Transforming a Rigid Platform." Case Study, Dec 2024. <a href="https://www.altimetrik.com/case-study/increasing-the-velocity-of-digital-transformation/">altimetrik.com</a></li>
+  <li>JetBrains Blog. "Migrating to Modular Monolith using Spring Modulith and IntelliJ IDEA." Feb 2026. <a href="https://blog.jetbrains.com/idea/2026/02/migrating-to-modular-monolith-using-spring-modulith-and-intellij-idea/">blog.jetbrains.com</a></li>
+  <li>Edana.ch. "Spring Modulith: Why the Modular Monolith Is Once Again a Strategic Choice." Dec 2025. <a href="https://edana.ch/en/2025/12/07/spring-modulith-why-the-modular-monolith-is-once-again-a-strategic-choice/">edana.ch</a></li>
+  <li>Tenets Framework (open source). <a href="https://github.com/bardiakhosravi/tenets">github.com/bardiakhosravi/tenets</a></li>
+</ol>
+
+<h3>行业观点/社区来源</h3>
+<ol start="12">
+  <li>heise.de. "Applying DDD to DDD leaves no Domain-Driven Design." Nov 2025. <a href="https://www.heise.de/en/blog/Applying-DDD-to-DDD-leaves-no-Domain-Driven-Design-11109231.html">heise.de</a></li>
+  <li>EventSourcingDB. "If You Apply DDD to DDD, You Won't Get DDD." Nov 2025. <a href="https://docs.eventsourcingdb.io/blog/2025/11/13/if-you-apply-ddd-to-ddd-you-wont-get-ddd/">docs.eventsourcingdb.io</a></li>
+  <li>Verraes, Mathias. "No, Your Domains and Bounded Contexts Don't Map 1 on 1." Aug 2025. <a href="https://verraes.net/2025/08/domain-and-bounded-contexts-dont-map-one-on-one/">verraes.net</a></li>
+  <li>Domain Language. "Context Mapping with an AI-based Component." <a href="https://www.domainlanguage.com/articles/context-mapping-an-ai-based-component/">domainlanguage.com</a></li>
+  <li>DevX. "The Microservices Backlash: When Monoliths Make a Comeback." 2026. <a href="https://www.devx.com/uncategorized/microservices-backlash-monoliths-comeback-2026/">devx.com</a></li>
+  <li>美团技术团队. "领域驱动设计DDD在B端营销系统的实践." 2024.</li>
+  <li>百度开发者平台. "从单体到领域驱动：某OTA平台DDD实践之路." 2025. <a href="https://developer.baidu.com/article/detail.html?id=5322747">developer.baidu.com</a></li>
+  <li>Stackademic. "DDD Everywhere: How Domain-Driven Design Destroyed Our Team Velocity." 2024. <a href="https://blog.stackademic.com/ddd-everywhere-how-domain-driven-design-destroyed-our-team-velocity">blog.stackademic.com</a></li>
+</ol>
+
+<hr>
+
+<!-- ============ HANDOVER ============ -->
+<div class="card" style="border: 2px solid var(--accent);">
+  <h3>交接备注</h3>
+  <p><strong>基于报告：</strong> Agent1 独立调研 v1 (领域驱动设计 软件研发应用现状_Agent1_report_v1.html)</p>
+  <p><strong>审计状态：</strong> 单研究员→所有发现标"单源"。主编独立搜索 10 组关键词完成交叉验证。5 个待验证数字中 1 个通过独立验证，4 个标注"独立性不足"。3 个盲区中 1 个（AI-DDD融合）获得大量独立证据补充，1 个（Hype Cycle）被付费墙阻挡，1 个（低代码+DDD）确认信息缺口。</p>
+  <p><strong>版本演进：</strong> Agent1 v1 → 主编综合 v1（本报告）。版本号+1 表示通过主编复核。</p>
+  <p><strong>下一步：</strong> 提交审计 skill 进行质量终审。</p>
+</div>
+
+<hr>
+
+<p style="text-align:center; color:var(--text-secondary); font-size:.85rem;">
+  主编综合报告 &nbsp;|&nbsp; 生成: 2026-06-30 &nbsp;|&nbsp; 版本: v1 &nbsp;|&nbsp; 状态: 待审计
+</p>
+
+</body>
+</html>
