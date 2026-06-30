@@ -12,7 +12,7 @@
         3.5 采用红蓝对抗审计方法
     4，阅读友好
         4.1 总编按金字塔结构汇报
-        4.2 附录研究员原始报告
+         4.2 附录研究员原始报告
         4.3 附录第三方审计报告
         4.4 html结构化输出
 
@@ -30,9 +30,11 @@
 
 
 
-
  [VibeCoding 企业实践_report.html](VibeCoding%20%E4%BC%81%E4%B8%9A%E5%AE%9E%E8%B7%B5/VibeCoding%20%E4%BC%81%E4%B8%9A%E5%AE%9E%E8%B7%B5_report.html)
  
+ [领域驱动设计 软件研发应用现状_report_v1.html](%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%20%E8%BD%AF%E4%BB%B6%E7%A0%94%E5%8F%91%E5%BA%94%E7%94%A8%E7%8E%B0%E7%8A%B6/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1%20%E8%BD%AF%E4%BB%B6%E7%A0%94%E5%8F%91%E5%BA%94%E7%94%A8%E7%8E%B0%E7%8A%B6_report_v1.html)
 
+
+[非洲没收中国企业资产历史模式_report_v1.html](%E9%9D%9E%E6%B4%B2%E6%B2%A1%E6%94%B6%E4%B8%AD%E5%9B%BD%E4%BC%81%E4%B8%9A%E8%B5%84%E4%BA%A7%E5%8E%86%E5%8F%B2%E6%A8%A1%E5%BC%8F/%E9%9D%9E%E6%B4%B2%E6%B2%A1%E6%94%B6%E4%B8%AD%E5%9B%BD%E4%BC%81%E4%B8%9A%E8%B5%84%E4%BA%A7%E5%8E%86%E5%8F%B2%E6%A8%A1%E5%BC%8F_report_v1.html)
 
 
