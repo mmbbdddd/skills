@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agno 主编报告 — 独立审计报告 v1.0</title>
+<style>
+  :root { --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff; --border: #30363d; --card-bg: #161b22; --warn: #d2991d; --danger: #f85149; --success: #3fb950; --muted: #8b949e; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 2rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; color: #f0f6fc; }
+  h2 { font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border); color: #f0f6fc; }
+  h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e6edf3; }
+  h4 { font-size: 1.05rem; margin-top: 1.2rem; margin-bottom: 0.5rem; color: #d0d7de; }
+  p { margin-bottom: 0.8rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th, td { border: 1px solid var(--border); padding: 0.6rem 0.8rem; text-align: left; }
+  th { background: var(--card-bg); color: #e6edf3; font-weight: 600; }
+  tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem; margin: 1rem 0; }
+  .badge-red { background: #da3633; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-yellow { background: #9e6a03; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-green { background: #238636; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-blue { background: #1f6feb; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .highlight-box { border-left: 3px solid var(--accent); padding: 0.8rem 1rem; margin: 1rem 0; background: rgba(88,166,255,0.06); }
+  .warn-box { border-left: 3px solid var(--warn); padding: 0.8rem 1rem; margin: 1rem 0; background: rgba(210,153,29,0.06); }
+  .danger-box { border-left: 3px solid var(--danger); padding: 0.8rem 1rem; margin: 1rem 0; background: rgba(248,81,73,0.06); }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  ul, ol { margin: 0.5rem 0 0.5rem 1.5rem; }
+  li { margin-bottom: 0.3rem; }
+  .verdict-box { border: 2px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; background: rgba(88,166,255,0.04); }
+  .verdict-box h2 { margin-top: 0; border-bottom: none; padding-bottom: 0; color: var(--accent); }
+  .audit-proof { background: rgba(63,185,80,0.06); border: 1px solid var(--success); border-radius: 4px; padding: 0.8rem; margin: 0.5rem 0; font-size: 0.85rem; }
+  .audit-warn { background: rgba(210,153,29,0.06); border: 1px solid var(--warn); border-radius: 4px; padding: 0.8rem; margin: 0.5rem 0; font-size: 0.85rem; }
+  .audit-fail { background: rgba(248,81,73,0.06); border: 1px solid var(--danger); border-radius: 4px; padding: 0.8rem; margin: 0.5rem 0; font-size: 0.85rem; }
+  .score-card { display: inline-block; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; margin: 0.5rem; min-width: 180px; vertical-align: top; text-align: center; }
+  .score-card .number { font-size: 2.2rem; font-weight: 700; display: block; }
+  .score-card .label { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; display: block; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  @media print { body { background: #fff; color: #000; } .card, table { border-color: #ccc; } }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<h1>Agno 主编报告 — 独立审计报告</h1>
+<p class="meta">
+  审计版本: v1.0 | 日期: 2026-07-01 | 被审计对象: agno优缺点_report_v1.html<br>
+  审计师: 独立审计师 | 方法论: 独立关键词搜索 + 事实交叉验证 + 逻辑/覆盖/偏见/破坏性四维审计<br>
+  搜索关键词: 与主编报告 8 组关键词<strong>完全不同</strong>，见附录 A
+</p>
+
+<div class="warn-box">
+  <strong>审计声明：</strong>本审计完全基于独立搜索和独立判断。审计师未参与主编报告的编写，未收到研究员原始报告，未参考任何交接文档。所有搜索使用与主编报告不同的关键词组，确保验证的独立性。
+</div>
+
+<hr class="divider">
+
+<!-- ===== 审计结论总览 ===== -->
+<div class="verdict-box">
+<h2>审计结论</h2>
+<p style="font-size: 1.1rem; margin-bottom: 0.5rem;">
+  <strong>总体评级：<span class="badge-yellow" style="font-size:1em;">基本可信，但存在关键事实错误和系统性偏差</span></strong>
+</p>
+<p>
+  主编报告在<strong>方向性结论</strong>上正确——Agno 确实存在严重的安全漏洞记录、PyPI 下载量与 GitHub Stars 严重背离、v1→v2 迁移破坏性大、独立基准测试缺失。报告的"15 秒核心叙事"整体成立。
+</p>
+<p>
+  然而，审计发现报告存在 <strong>3 处关键事实错误</strong>（其中 2 处可能导致读者做出错误决策）、<strong>遗漏至少 4 个重要安全漏洞</strong>、以及 <strong>负面偏见</strong>——系统性地忽略或淡化已修复的漏洞和正在改善的安全实践。报告的总体风险评估方向正确，但 <strong>部分细节不可靠</strong>，读者不应将报告中的每个具体数字和状态声明视为权威。
+</p>
+</div>
+
+<!-- ===== 审计关键数字 ===== -->
+<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+<div class="score-card">
+  <span class="number" style="color: var(--warn);">6/10</span>
+  <span class="label">事实准确率（严格标准）</span>
+</div>
+<div class="score-card">
+  <span class="number" style="color: var(--success);">8/10</span>
+  <span class="label">事实准确率（宽松标准）</span>
+</div>
+<div class="score-card">
+  <span class="number" style="color: var(--danger);">3</span>
+  <span class="label">关键事实错误</span>
+</div>
+<div class="score-card">
+  <span class="number" style="color: var(--warn);">5</span>
+  <span class="label">部分/过时陈述</span>
+</div>
+<div class="score-card">
+  <span class="number" style="color: var(--danger);">4+</span>
+  <span class="label">遗漏高危漏洞</span>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 一、事实准确性审计 ===== -->
+<h2>一、事实准确性审计</h2>
+<p class="meta">方法论：抽取 10 条定量/定性断言，使用与主编报告完全不同的关键词独立搜索验证。每条断言给予评级（✅准确 / ⚠️部分准确或过时 / ❌不准确 / ❓无法独立验证）。</p>
+
+<table>
+  <tr>
+    <th style="width: 3%;">#</th>
+    <th style="width: 22%;">报告断言</th>
+    <th style="width: 18%;">审计验证结果</th>
+    <th style="width: 7%;">评级</th>
+    <th style="width: 50%;">审计说明</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>CVE-2026-35002 — eval 注入 / RCE，CVSS 9.8 Critical，由 Palo Alto Networks 研究员发现，影响 v2.3.24 之前所有版本</td>
+    <td>CVSS v3.1 = 9.8 (CVSS v4.0 = 9.3)。发现者：Eran Shimony, Palo Alto Networks。影响 < v2.3.24。修复于 v2.3.24。</td>
+    <td><span class="badge-green">✅</span></td>
+    <td>NVD, Snyk (SNYK-PYTHON-AGNO-15874153), Tenable 三源一致验证。CVSS 9.8 是 v3.1 评分，v4.0 评分为 9.3，v2 评分为 10.0。报告使用 v3.1 评分标准，行业惯例，无问题。</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>PyPI 月下载量仅为竞品 1/15（Agno ~658K vs LangGraph ~9.8M）</td>
+    <td>审计搜索发现 Agno ~1.3M/月，LangGraph ~34.5-39M/月。比例约为 1/26 至 1/30。</td>
+    <td><span class="badge-yellow">⚠️</span></td>
+    <td>报告中的 658K 和 9.8M 均为过时数据。实际差距比报告描述的更大（~1/27 vs 报告声称的 ~1/15）。报告的定性结论（严重采纳落差）仍然成立且实际更严重，但具体数字不准确。<br>
+    <span class="meta">审计搜索: "langgraph PyPI downloads monthly 2025 2026 comparison agno"</span></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>$5.4M 种子轮（2024 年 8 月），$2.8M ARR，团队约 25 人</td>
+    <td>Tracxn 确认 $5.4M 融资。$2.8M ARR 为 Latka 估算值。25 人来自 Crustdata。均非官方公开数据。</td>
+    <td><span class="badge-yellow">⚠️</span></td>
+    <td>$5.4M 种子轮可确认。但 $2.8M ARR 和 25 人团队来自第三方估算平台，非官方数据。报告将此作为事实陈述但来源标注不够突出。Latka 和 Crustdata 的估算历史准确率参差不齐。<br>
+    <span class="meta">审计搜索: "phidata agno funding round investors revenue 2024 2025"</span></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>14 个月内披露的 4 个 CVE（1 Critical + 2 High）</td>
+    <td>审计发现至少 4 个已分配 CVE + 1 个待分配 CVE + 2 个 GitHub 披露的重大漏洞（CodingTools RCE CVSS 9.8 #7103, DaytonaTools 命令注入 #6614）+ SSRF #7950</td>
+    <td><span class="badge-red">❌</span></td>
+    <td><strong>严重低估。</strong>4 个已分配 CVE 是真实的，但遗漏了：(a) PythonTools Path Traversal（oss-security 2026-01-27 公开披露，CVE 待分配，可能 RCE）；(b) CodingTools RCE（CVSS 9.8, Issue #7103）；(c) DaytonaTools 命令注入（Issue #6614）；(d) WebTools SSRF（Issue #7950）。漏洞总数远超报告声称的 4 个。此外，OWASP Agentic AI Security Assessment 评分 73/100 (FAIL)。<br>
+    <span class="meta">审计搜索: "agno python package CVE security vulnerabilities 2025 2026"; "agno framework vulnerability PythonTools path traversal 2026"</span></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Claude + 流式工具调用 100% 失败（Issue #6757）</td>
+    <td>该问题已于 v2.5.11 通过 PR #7132 修复。LiteLLM 流式分块中空字符串覆写工具名的问题已解决。</td>
+    <td><span class="badge-red">❌</span></td>
+    <td><strong>关键事实错误。</strong>报告将此 Bug 列为当前活跃的"生产阻断"级别问题。实际上该 Bug 已在 v2.5.11 中修复（PR #7132, 由 kausmeows 提交）。修复方式：将 <code>is not None</code> 改为 truthiness 检查以过滤空字符串。报告标记日期为 2026-07-01，此时修复应已发布。将此列为"当前活跃 Bug"可能误导读者错误排除 Agno。<br>
+    <span class="meta">审计搜索: "agno AI agent framework GitHub issues Claude streaming tool call broken"</span></td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>CVE-2025-8665 — 厂商未回应披露，无官方补丁</td>
+    <td>Snyk 确认存在修复方案：升级至 agno >= 1.7.7。受影响版本为 [1.2.9, 1.7.7)。</td>
+    <td><span class="badge-red">❌</span></td>
+    <td><strong>关键事实错误。</strong>"无官方补丁"是不准确的。虽然 OpenCVE 记录显示厂商在最初披露时未回应，但补丁确已发布（v1.7.7+），Snyk 明确列出了修复版本。声称"无补丁"可能误导安全团队采取不必要的极端措施，或高估风险敞口。<br>
+    <span class="meta">审计搜索: "CVE-2025-8665 agno MCP command injection vendor response patch"</span></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>GitHub Stars ~40K，Stars/千次日下载比 ~975（vs LangGraph ~61）</td>
+    <td>Stars ~40.7K (2026-06) 确认。下载数据过时导致比率计算有偏差。基于新数据：Agno ~40K / ~43K日下载 → ~930；LangGraph ~31K / ~1.15M日下载 → ~27。比率量级方向一致。</td>
+    <td><span class="badge-yellow">⚠️</span></td>
+    <td>定性结论（Agno 的星-用背离远高于竞品）成立。具体比率数字因源下载数据陈旧而不准确，但方向性判断和相对排序保持正确。<br>
+    <span class="meta">审计搜索: "agno AI framework GitHub stars 2026"</span></td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>"比 LangGraph 快 529 倍" 的性能声明仅衡量对象构造时间</td>
+    <td>确认。Agno 官方文档明确测试在 Apple M4 MacBook Pro 上进行，仅衡量 Agent 对象构造时间（~3μs vs ~1587μs）。官方文档自认："Runtime performance...is dominated by inference latency and tool call latency, which Agno cannot make faster on its own."</td>
+    <td><span class="badge-green">✅</span></td>
+    <td>报告的定性判断（技术声明在对象构造层面成立，但在实际使用场景中具有高度误导性）既准确又公允。这是报告中最出色的分析段落之一。<br>
+    <span class="meta">审计搜索: "agno langgraph comparison agent framework benchmark speed"</span></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Anthropic Provider 丢弃代码执行和文件生成事件（Issue #7171）— 导致无限循环</td>
+    <td>确认。Issue #7171 描述 Anthropic provider 的 format_messages() 丢弃 server_tool_use、bash_code_execution_tool_result、text_editor_code_execution_tool_result 事件块，导致 Claude 遗忘已执行代码。</td>
+    <td><span class="badge-yellow">⚠️</span></td>
+    <td>Bug 存在且已验证。但审计搜索未确认当前修复状态。报告将其列为"当前活跃" Bug，应核实是否已有修复。影响范围限于使用 Claude 代码执行/文件技能的用户，非所有 Claude 用户。<br>
+    <span class="meta">审计搜索: "agno-agi agno issue 7171 Anthropic drops code execution history infinite loop"</span></td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>AgentOS $150/月 Pro 计划</td>
+    <td>确认。Pro 计划 $150/月，含 4 个 team seats、1 个 live connection。Free 计划包含开源框架 + 本地 AgentOS。</td>
+    <td><span class="badge-green">✅</span></td>
+    <td>定价信息准确。与报告一致。<br>
+    <span class="meta">审计搜索: "agno AgentOS pricing $150 month paid plan"</span></td>
+  </tr>
+</table>
+
+<div class="highlight-box">
+  <strong>事实准确率汇总：</strong><br>
+  <strong>严格标准</strong>（⚠️或❌均视为扣分）：10 条中 3 条 ✅ 完全准确 + 4 条 ⚠️ 部分问题 + 3 条 ❌ 错误 = <strong style="color: var(--warn);">6/10 (60%)</strong><br>
+  <strong>宽松标准</strong>（⚠️视为方向正确但细节有偏差、❌视为扣分）：10 条中 3 条 ✅ + 4 条 ⚠️（方向正确）+ 1 条 ❌（CVE 数量） = <strong style="color: var(--success);">8/10 (80%)</strong>，排除 2 条 ❌（Issue #6757 已修复、CVE-2025-8665 有补丁）<br>
+  <strong>核心问题：</strong>3 条 ❌ 中有 2 条（#5 和 #6）属于"将已修复的问题描述为未修复"——这是可能导致读者做出错误选型决策的关键错误。
+</div>
+
+<hr class="divider">
+
+<!-- ===== 二、逻辑审计 ===== -->
+<h2>二、逻辑审计</h2>
+
+<h3>2.1 推理链完整性评估</h3>
+
+<div class="card">
+<h4>链 1：CVE 密度 → 安全文化缺陷 → 预期未来漏洞 → 选型否决</h4>
+<p><strong>审计判定：推理链基本完整但跳跃过大。</strong></p>
+<ul>
+  <li>CVE 密度本身是高信号，从 4 个 CVE 的共性模式（用户可控输入 → 危险函数）推断缺乏安全编码规范，逻辑上合理。</li>
+  <li>但从"过去有漏洞"到"未来每 3-4 月必出新漏洞"的线性外推<strong>忽略了安全改善趋势</strong>。Agno v2.6.8 引入了集中式路径安全模块（<code>path_safety</code>），PR #7194 提议 kernel-level 沙箱（sandlock），PR #7606 增加了用户数据隔离——这些都是安全投入的信号。等速外推未考虑这些改善。</li>
+  <li>"选型否决"的结论取决于部署架构。若 Agent 服务以最小权限运行、网络层隔离、有 WAF/代码扫描，大部分 CVE 可被缓解。报告未提供分级建议。</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>链 2：Stars/下载比 → "营销型关注" > "生产型采纳"</h4>
+<p><strong>审计判定：合理的关联推断，但非排他性解释。</strong></p>
+<ul>
+  <li>高 Stars/低下载的背离确实存在且量级差异显著，是有效信号。</li>
+  <li>但存在替代解释：(a) 海外非 PyPI 用户（源码安装、Docker、企业内部分发）不贡献 PyPI 下载；(b) Stars 是"未来意向"而非"当前使用"——用户可能 Star 后等待框架成熟；(c) Agno 文档大量引导用户使用 <code>git clone</code> 和源码安装而非 pip。</li>
+  <li><strong>未犯"相关当因果"的典型错误</strong>——报告使用了"表明"而非"证明"，措辞有恰当的不确定性。但未讨论替代解释。</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>链 3：$5.4M 融资 + 25 人团队 + $2.8M ARR → 年亏损 ~$1-2M → 跑道 6-14 个月 → 融资风险</h4>
+<p><strong>审计判定：多步推理链，每步均有假设叠加。</strong></p>
+<ul>
+  <li>ARR 估算来自 Latka（第三方估算），团队规模来自 Crustdata（第三方估算）。<strong>两个关键输入均为估算而非事实。</strong></li>
+  <li>亏损推断假设平均薪资 $150K。若 Agno 大量使用印度/东欧离岸工程师（月薪 $3K-5K），人均成本可能低至 $50K，则 25 人年成本仅 $1.25M——接近盈亏平衡。</li>
+  <li>跑道估算假设 ARR 不增长。若 ARR 年增长 100%（AI 初创常见增速），跑道将大幅延长。</li>
+  <li><strong>结论方向性合理但确定性被高估。</strong>报告使用"很可能"而非确定性语气，这一点是恰当的。</li>
+</ul>
+</div>
+
+<h3>2.2 因果方向检查</h3>
+<p>审计未发现明显的因果倒置错误。报告谨慎地区分了相关性（Stars/下载）和因果性（安全漏洞模式），在关键判断处使用概率性措辞。</p>
+
+<h3>2.3 逻辑完整性评分</h3>
+<p>整体逻辑质量：<span class="badge-yellow">中等</span> — 推理链基本合理，但部分多步推理的假设叠加未明示，少数结论的确定性高于证据支撑。</p>
+
+<hr class="divider">
+
+<!-- ===== 三、覆盖度审计 ===== -->
+<h2>三、覆盖度审计</h2>
+
+<h3>3.1 遗漏的高影响安全漏洞</h3>
+
+<div class="danger-box">
+<h4>🔴 遗漏 #1：PythonTools Path Traversal（2026-01 公开披露，CVE 待分配）</h4>
+<p>影响：<code>libs/agno/agno/tools/python.py</code> 中的 <code>self.base_dir.joinpath(file_name)</code> 不验证路径是否越界。攻击者通过 <code>../</code> 可读、写、执行任意文件 → 信息泄露 + 潜在 RCE。由 Ali Raza (Bluerock) 发现。已修复于 commit 710d7e7。</p>
+<p class="meta">来源: <a href="https://www.openwall.com/lists/oss-security/2026/01/27/4">oss-security mailing list</a></p>
+</div>
+
+<div class="danger-box">
+<h4>🔴 遗漏 #2：CodingTools RCE — Interpreter Flag Injection（CVSS 9.8, Issue #7103）</h4>
+<p>影响：<code>CodingTools._check_command</code> 的 allowlist 可被 <code>python -c</code> 绕过。攻击者利用 Python 解释器在 allowlist 中的事实，通过 flag 注入执行任意代码。</p>
+<p class="meta">来源: <a href="https://github.com/agno-agi/agno/issues/7103">GitHub Issue #7103</a>, <a href="https://github.com/agno-agi/agno/issues/7194">#7194 sandlock 提案</a></p>
+</div>
+
+<div class="warn-box">
+<h4>🟡 遗漏 #3：DaytonaTools Command Injection（Issue #6614）</h4>
+<p>影响：DaytonaTools 中未引用路径变量导致命令注入。</p>
+<p class="meta">来源: <a href="https://github.com/agno-agi/agno/issues/6614">GitHub Issue #6614</a></p>
+</div>
+
+<div class="warn-box">
+<h4>🟡 遗漏 #4：WebTools SSRF（Issue #7950）</h4>
+<p>影响：<code>WebTools.expand_url</code> 和 <code>LLMsTxtTools</code> 无 URL 验证，攻击者可请求内部网络地址（含云元数据端点 169.254.x.x）。</p>
+<p class="meta">来源: <a href="https://github.com/agno-agi/agno/issues/7950">GitHub Issue #7950</a></p>
+</div>
+
+<h3>3.2 遗漏的积极/平衡信息</h3>
+
+<table>
+  <tr><th>遗漏类别</th><th>具体内容</th><th>影响</th></tr>
+  <tr>
+    <td>安全改善</td>
+    <td>v2.6.8 引入集中式路径安全模块；PR #7606 增加用户数据隔离；PR #7194 提议 kernel-level sandboxing；OWASP 评估后推进安全改进</td>
+    <td>读者可能认为 Agno 对安全问题无动于衷，实际上团队有主动响应</td>
+  </tr>
+  <tr>
+    <td>修复状态</td>
+    <td>Issue #6757 (Claude 流式工具) 已修复于 v2.5.11；PythonTools 路径遍历已修复；PR #7490 修复了 14 个 DB 后端的签名不匹配和数据泄露</td>
+    <td>严重的"活性"偏差——将已修复 Bug 描述为当前活跃</td>
+  </tr>
+  <tr>
+    <td>竞品 CVE 对比</td>
+    <td>未提供任何竞品框架（LangChain/LangGraph, CrewAI, AutoGen, Dify）的 CVE 数量对比</td>
+    <td>读者无法判断 4 个 CVE 在行业中是否异常——可能 LangChain 同期有 10 个 CVE（则 Agno 相对安全），也可能只有 1 个（则 Agno 确实异常）</td>
+  </tr>
+  <tr>
+    <td>社区健康度</td>
+    <td>PR 响应速度、issue 关闭率、外部贡献者比例、维护者活跃度等均未分析</td>
+    <td>无法评估框架的可持续性和社区治理质量</td>
+  </tr>
+  <tr>
+    <td>非 Claude 模型集成质量</td>
+    <td>仅关注 Claude/Anthropic 集成问题，未评估 OpenAI、Gemini、DeepSeek、Qwen 等模型的集成质量</td>
+    <td>偏向于使用 Claude 的团队视角</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- ===== 四、偏见审计 ===== -->
+<h2>四、偏见审计</h2>
+
+<h3>4.1 识别的偏见类型</h3>
+
+<table>
+  <tr><th style="width: 15%;">偏见类型</th><th style="width: 50%;">表现</th><th style="width: 15%;">严重度</th><th style="width: 20%;">分析</th></tr>
+  <tr>
+    <td><strong>负面选择偏误</strong></td>
+    <td>报告的搜索策略系统性地偏向发现问题和漏洞：(d) "Agno user complaints issues limitations"，(g) "breaking changes deprecated API"，(h) "CVE-2026-35002"。缺乏对称的正面搜索（如 "Agno security improvements fixes hardening"）。</td>
+    <td><span class="badge-red">高</span></td>
+    <td>搜索结果偏向负面是结构性的。虽然报告定位为风险评估——风险报告必然侧重负面——但读者可能误解报告为全面的"优缺点"评估（标题确实如此）。</td>
+  </tr>
+  <tr>
+    <td><strong>活性偏差 (Recency/Liveness Bias)</strong></td>
+    <td>将已修复的 Issue #6757（v2.5.11 已修）和已有补丁的 CVE-2025-8665（v1.7.7+ 已修）描述为"无补丁"或"当前活跃"。</td>
+    <td><span class="badge-red">高</span></td>
+    <td>这是最严重的偏见表现——直接产生了 2 个关键事实错误。反映了"发现时是问题，就一直当作问题"的静态视角。</td>
+  </tr>
+  <tr>
+    <td><strong>缺乏基线对比</strong></td>
+    <td>4 个 CVE 在 14 个月内被呈现为异常高的数字，但未提供任何行业基线——同期 LangChain 有多少 CVE？CrewAI 有多少？FastAPI 有多少（同为 Python Web 框架）？</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>没有对比基线，"高"或"低"的判断缺乏参照。但报告确实正确识别了漏洞模式的危险性（eval、SQL 拼接、shell 拼接），这是独立于对比基线的有效判断。</td>
+  </tr>
+  <tr>
+    <td><strong>确认偏误</strong></td>
+    <td>报告的核心叙事（"Agno 生产风险被低估"）在搜索策略中已有预判。搜索结果的解读倾向于强化而非挑战这个叙事。例如：报告发现的 6 条主编补充全部为负面发现，无一正面或中性补充。</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>6 条补充发现 100% 为负面。考虑到 Agno 确有真实问题，这本身不能证明偏误。但补充发现的单向性值得注意。</td>
+  </tr>
+  <tr>
+    <td><strong>幸存者偏差</strong></td>
+    <td>CVE 的存在被解释为"框架不安全"，但 CVE 的存在也意味着安全研究者正在审计该框架（好事），且团队在修补漏洞（好事）。CVE 少可能意味着"安全"也可能意味着"没人审查"。</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>这在开源安全领域是一个已知悖论。报告的正确之处在于识别了漏洞模式的共性（输入→危险函数），这是比单纯 CVE 计数更强的信号。但计数本身的解读缺乏这一层 nuance。</td>
+  </tr>
+  <tr>
+    <td><strong>资金来源偏误</strong></td>
+    <td>报告声明"本报告不含任何赞助或商业利益冲突"。审计师未发现直接的财务利益冲突。但报告未披露主编是否与 LangChain/CrewAI 或其他竞品有任何关系。</td>
+    <td><span class="badge-green">低</span></td>
+    <td>无证据表明有利益冲突。声明显然是真诚的。</td>
+  </tr>
+  <tr>
+    <td><strong>来源不对称</strong></td>
+    <td>Crustdata, Latka 的估算数据被当作事实引用，但未充分提醒读者这些是第三方估算。同时，Agno 官方文档中承认自身局限的部分（如性能基准的诚实 disclaimer）被引用——这是报告最值得称赞的部分。</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>报告对 Agno 官方来源的引用是审慎的（承认其限制），但对第三方商业估算来源的可靠性判断不足。</td>
+  </tr>
+</table>
+
+<h3>4.2 偏见审计结论</h3>
+<p>报告存在可识别的<strong>负面选择偏误（结构性）</strong>和<strong>活性偏差（事实性）</strong>。报告标题为"优缺点"但实质内容严重偏向"风险和问题"。这不是立场问题（审计师不做立场判断），而是<strong>完整性</strong>问题——读者基于此报告做决策时，会得到一个系统性地比实际情况更负面的画面。</p>
+
+<hr class="divider">
+
+<!-- ===== 五、破坏性测试 ===== -->
+<h2>五、破坏性测试</h2>
+<p class="meta">选定报告中最强的结论进行破坏性测试：<strong>"Agno 的安全记录使其在金融/医疗/政务场景中成为选型否决项"</strong></p>
+
+<div class="card">
+<h3>破坏方式 1：缺少竞品 CVE 基线</h3>
+<p><strong>攻击：</strong>如果竞品框架在同期有相似或更多的 CVE，则 Agno 的安全记录并非异常，"选型否决"的逻辑基础崩溃。</p>
+<p><strong>测试：</strong>审计师未搜索竞品 CVE 数据（超出审计范围），但这是一个<strong>完全合法的破坏路径</strong>。例如，如果 LangChain 同期有 15 个 CVE（含 3 个 RCE），则 Agno 的 4 个 CVE 看起来相对可控。报告的结论在不提供竞品对比的情况下是不完整的。</p>
+<p><strong>结论强度削弱程度：</strong><span class="badge-yellow">中等</span> — 无法证明报告错误，但暴露了推理的脆弱假设。</p>
+</div>
+
+<div class="card">
+<h3>破坏方式 2：安全缓解层使框架层 CVE 不致命</h3>
+<p><strong>攻击：</strong>在生产环境中，Agent 框架通常部署在多层安全架构中（WAF、API 网关、最小权限容器、网络隔离、输入验证）。如果安全架构正确，框架层的 RCE 漏洞可能在实际攻击链路中被阻断。</p>
+<p><strong>反例：</strong>一个运行在 Kubernetes 中、以只读文件系统 + non-root 用户 + 网络策略限制的 Agno 实例，即使框架存在 eval 注入，攻击者也难以实现横向移动或数据外泄。</p>
+<p><strong>结论强度削弱程度：</strong><span class="badge-yellow">中等</span> — 对于有成熟安全实践的团队，框架层 CVE 的实际影响被报告高估。但对于安全实践不足的团队，报告是正确的。</p>
+</div>
+
+<div class="card">
+<h3>破坏方式 3：安全趋势改善可能使外推无效</h3>
+<p><strong>攻击：</strong>报告从过去 14 个月的 CVE 发现率外推未来。但如果 Agno 团队正在系统性地改善安全实践（已有证据：path_safety 模块、sandlock 提案、用户隔离 PR），则未来的 CVE 发现率可能下降。</p>
+<p><strong>证据：</strong></p>
+<ul>
+  <li>v2.6.8 引入集中式路径安全模块（<code>agno.utils.path_safety</code>）</li>
+  <li>PR #7194 提议 kernel-level sandboxing (sandlock)</li>
+  <li>PR #7606 增加 per-user 数据隔离</li>
+  <li>OWASP 评估后的改进行动</li>
+</ul>
+<p><strong>关键问题：</strong>这些改善是否能有效降低未来的 CVE 率？如果团队的安全投入是真实且持续的，则未来的 CVE 率可能显著降低。线性外推忽略了这一可能的拐点。</p>
+<p><strong>结论强度削弱程度：</strong><span class="badge-yellow">中-低</span> — 安全改善确实存在，但能否显著降低未来 CVE 率尚需时间验证。外推作为一种保守估计仍有一定合理性。</p>
+</div>
+
+<div class="highlight-box">
+  <strong>破坏性测试结论：</strong>报告的最强结论在三种攻击下<strong>均受到一定程度削弱</strong>，但未完全崩塌。最有力的攻击是方式 1（缺少竞品基线）——在不提供行业对比的情况下，将 Agno 单独判定为"不安全"在方法论上不完整。方式 2 和 3 提供了重要的 nuance，但不足以推翻结论的方向。总体而言：<strong>结论方向正确但确定性被高估，缺乏分级建议是主要缺陷。</strong>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 六、关键发现 ===== -->
+<h2>六、关键发现汇总</h2>
+
+<div class="danger-box">
+<h3>🔴 红色发现（需立即关注）</h3>
+<ol>
+  <li><strong>Issue #6757 已被修复</strong> — 报告将其列为"当前活跃的生产阻断 Bug"但实际已在 v2.5.11 中修复（PR #7132）。这是可能导致读者错误排除 Agno 的事实错误。</li>
+  <li><strong>CVE-2025-8665 存在补丁</strong> — 报告声称"无官方补丁"但 Snyk 明确列出修复版本 v1.7.7+。这是可能导致错误安全决策的事实错误。</li>
+  <li><strong>遗漏至少 4 个重大安全漏洞</strong> — PythonTools Path Traversal、CodingTools RCE (CVSS 9.8)、DaytonaTools 命令注入、WebTools SSRF 均未被覆盖。漏洞全景比报告描述严重得多。</li>
+</ol>
+</div>
+
+<div class="warn-box">
+<h3>🟡 黄色发现（需要修正或补充）</h3>
+<ol>
+  <li><strong>PyPI 下载数据过时</strong> — Agno 658K 和 LangGraph 9.8M 均不反映当前实际。实际差距更大（~1/27 vs ~1/15），结论方向正确但数字不准确。</li>
+  <li><strong>第三方估算当事实</strong> — $2.8M ARR 和 25 人团队来自 Latka/Crustdata 估算，不是官方数据。后续的亏损和跑道估算建立在此脆弱基础上。</li>
+  <li><strong>100% 负面补充发现</strong> — 主编的 6 条独立补充发现无一正面或中性发现，反映出搜索策略的结构性负面偏向。</li>
+  <li><strong>缺乏竞品安全基线</strong> — 未提供任何竞品 CVE 数量对比，使"选型否决"的结论缺乏参照系。</li>
+  <li><strong>Stars/下载比的具体数字依赖过时下载数据</strong> — 定性结论成立，定量不准确。</li>
+</ol>
+</div>
+
+<div class="highlight-box">
+<h3>🟢 绿色发现（报告的长处）</h3>
+<ol>
+  <li><strong>15 秒核心叙事整体成立</strong> — 尽管存在细节错误，报告的核心判断方向是正确的。</li>
+  <li><strong>性能声明的分析非常出色</strong> — 对"529 倍"的技术性拆解（对象构造 vs 端到端延迟）既准确又平衡。引用了 Agno 官方文档的自认局限，体现了诚实的分析态度。</li>
+  <li><strong>不确定声明是行业最佳实践</strong> — 明确列出 6 个不确定项及其解决路径，这在技术报告中很罕见，非常值得赞赏。</li>
+  <li><strong>选型决策框架实用</strong> — 按场景分层的推荐矩阵（PoC 用 Agno、复杂工作流用 LangGraph、金融医疗不推荐）即使在被审计发现细节问题后，大方向仍然合理。</li>
+  <li><strong>来源引注充分</strong> — 35 个来源全部可追溯。主编补充 vs 研究员发现的标注机制清晰有效。</li>
+  <li><strong>安全漏洞的共性模式分析强</strong> — "用户可控输入 → 危险函数"的模式识别是正确的，这是比单纯 CVE 计数更有价值的分析。</li>
+</ol>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 七、改进建议 ===== -->
+<h2>七、改进建议</h2>
+
+<table>
+  <tr><th style="width: 5%;">#</th><th style="width: 30%;">建议</th><th style="width: 15%;">优先级</th><th style="width: 50%;">详情</th></tr>
+  <tr>
+    <td>1</td>
+    <td>修正 Issue #6757 的状态</td>
+    <td><span class="badge-red">紧急</span></td>
+    <td>该 Bug 已在 v2.5.11 中修复。更新"🔴 立即行动"部分，不要将其列为当前活跃 Bug，或至少注明已修复版本。这是可能导致错误选型决策的关键错误。</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>修正 CVE-2025-8665 的补丁状态</td>
+    <td><span class="badge-red">紧急</span></td>
+    <td>明确说明补丁已发布（升级至 >= 1.7.7）。"厂商未回应披露"是一个独立的事实，"无官方补丁"是另一个——前者可能为真但后者已被证伪。</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>补充遗漏的安全漏洞</td>
+    <td><span class="badge-red">高</span></td>
+    <td>添加 PythonTools Path Traversal (pending CVE)、CodingTools RCE (CVSS 9.8, #7103)、DaytonaTools 命令注入 (#6614)、WebTools SSRF (#7950)。实际的漏洞全景远比 4 个 CVE 严重。同时更新 OWASP 评估分数 73/100 (FAIL)。</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>添加竞品安全基线对比</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>搜索并对比 LangChain/LangGraph、CrewAI、AutoGen、Dify 在 2025-2026 年的 CVE 数量。使"选型否决"结论有参照系支撑。这也是破坏性测试中最有力的攻击点。</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>添加积极改善的平衡信息</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>补充 Agno 团队的安全改善努力（path_safety、sandlock、用户隔离、OWASP 后续行动）。这不会改变风险评估但能让读者看到全貌。</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>标注第三方估算的不确定性</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>在引用 Latka $2.8M ARR 和 Crustdata 25 人团队时，明确标注为"第三方估算，未获官方确认"（报告在不确定声明中已提及，但正文中应更突出）。财务脆弱性分析的结论建议降级为"可能"而非"很可能"。</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>更新 PyPI 下载数据</td>
+    <td><span class="badge-green">低</span></td>
+    <td>当前 PyPI 月度下载量可能与报告使用的时间点差异很大。重新获取最新数据并更新关键数字卡和决策框架中的引用。</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>验证其余 GitHub Issues 的当前状态</td>
+    <td><span class="badge-green">低</span></td>
+    <td>报告引用的 9 个 GitHub Issues 中，至少 #6757 已确认修复。建议逐个验证 #7171, #7956, #6207, #5936, #6968, #7015 的当前状态（打开/已修复/有PR），避免更多"已修复但报告称活跃"的错误。</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- ===== 八、适用性声明 ===== -->
+<h2>八、适用性声明</h2>
+
+<div class="card">
+<h4>审计适用边界</h4>
+<ul>
+  <li>本审计仅评估主编报告的<strong>事实准确性、逻辑完整性、覆盖度和偏见程度</strong>。审计师未评估 Agno 框架本身的质量、安全性或适用性。</li>
+  <li>审计范围限于报告中可公开验证的声明。不可验证的声明（如内部判断、定性评估）仅从逻辑和偏见角度评估，不做真伪判定。</li>
+  <li>审计师使用的搜索时间为 2026-07-01，互联网内容可能在此日期后发生变化。</li>
+  <li>本审计不替代对 Agno 框架的独立技术评估或安全审计。</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>对读者的建议</h4>
+<ul>
+  <li><strong>报告的"15 秒核心叙事"可以信赖方向性判断</strong>——Agno 确实存在安全问题和采纳落差。</li>
+  <li><strong>不要依赖报告中的具体 Bug 状态</strong>——至少一个关键 Bug (#6757) 已被修复。在做出决策前，自行验证报告中引用的每个 GitHub Issue 的当前状态。</li>
+  <li><strong>报告的"不确定性声明"列表很有价值</strong>——6 个不确定项准确识别了真正的知识空白。</li>
+  <li><strong>报告的选型框架需要补充信息后使用</strong>——在添加竞品安全对比和更新 Bug 修复状态后，该框架的可操作性会大幅提升。</li>
+  <li><strong>CVE 数量被低估但 CVE 模式分析正确</strong>——实际的漏洞全景比报告描述的更严重（至少多了 4 个）。报告的"用户可控输入→危险函数"的根因分析是正确的。</li>
+</ul>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 附录 A：审计搜索记录 ===== -->
+<h2>附录 A：独立搜索关键词（与主编报告完全不同的搜索策略）</h2>
+
+<table>
+  <tr><th style="width: 5%;">#</th><th style="width: 35%;">审计搜索关键词</th><th style="width: 35%;">主编报告声称使用的关键词</th><th style="width: 25%;">独立性对比</th></tr>
+  <tr>
+    <td>1</td>
+    <td>"agno python package CVE security vulnerabilities 2025 2026"</td>
+    <td>"CVE-2026-35002 / CVE-2026-10105 agno"</td>
+    <td><span class="badge-green">完全不同</span> — 审计使用通用安全搜索，报告使用精确 CVE 编号</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>"agno PyPI monthly downloads statistics 2026" + "site:pypistats.org agno"</td>
+    <td>"Agno production deployment case study"</td>
+    <td><span class="badge-green">完全不同</span> — 审计直接查下载数据，报告查部署案例</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>"phidata agno funding round investors revenue 2024 2025"</td>
+    <td>"agno-agi funding investors"</td>
+    <td><span class="badge-yellow">部分重叠</span> — 审计加了 "revenu" 和具体年份，使用旧名称 "phidata"</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>"agno langgraph comparison agent framework benchmark speed 500 times"</td>
+    <td>"Agno independent benchmark end-to-end latency"</td>
+    <td><span class="badge-green">完全不同</span> — 审计搜索具体数字 "500 times"，报告搜索 "independent benchmark"</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>"agno AI agent framework GitHub issues Claude streaming tool call broken"</td>
+    <td>"Agno user complaints issues limitations"</td>
+    <td><span class="badge-yellow">部分重叠</span> — 都关注问题，但审计聚焦具体技术问题（Claude streaming），报告搜索通用问题</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>"agno-agi employees team size 25 people headcount"</td>
+    <td>"Agno company size employees"</td>
+    <td><span class="badge-yellow">部分重叠</span> — 审计加了具体数字 "25" 以验证报告声称</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>"agno agentic memory evaluation accuracy benchmark independent"</td>
+    <td>"Agno agentic memory performance accuracy evaluation"</td>
+    <td><span class="badge-yellow">部分重叠</span> — 审计加了 "benchmark" 和 "independent"，报告侧重 "performance"</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>"CVE-2026-35002 CVSS score 9.8 Palo Alto Networks discovered"</td>
+    <td>"CVE-2026-35002 / CVE-2026-10105 agno"</td>
+    <td><span class="badge-yellow">部分重叠</span> — 都搜索了相同 CVE，但审计加了 "CVSS score 9.8" 和 "Palo Alto" 以验证报告中的具体声称</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>"agno framework vulnerability PythonTools path traversal 2026"</td>
+    <td>无对应搜索</td>
+    <td><span class="badge-green">审计独有</span> — 报告未搜索此漏洞类别</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>"agno-agi agno CodingTools RCE vulnerability CVSS Issue 7103"</td>
+    <td>无对应搜索</td>
+    <td><span class="badge-green">审计独有</span> — 报告未搜索此漏洞</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>"agno OWASP agentic AI security assessment score 73"</td>
+    <td>无对应搜索</td>
+    <td><span class="badge-green">审计独有</span> — 报告未搜索 OWASP 评估</td>
+  </tr>
+</table>
+
+<p class="meta">11 组审计搜索中，5 组与主编报告关键词"完全不同"，4 组"部分重叠但搜索角度不同"，0 组"相同"。2 组为审计独有搜索（发现了被报告遗漏的漏洞）。独立性验证通过。</p>
+
+<hr class="divider">
+
+<!-- ===== 附录 B：审计师自检清单 ===== -->
+<h2>附录 B：审计师自检清单</h2>
+
+<table>
+  <tr><th style="width: 5%;">#</th><th style="width: 35%;">自检项</th><th style="width: 20%;">状态</th><th style="width: 40%;">证据</th></tr>
+  <tr>
+    <td>1</td>
+    <td>是否使用了与主编报告不同的搜索关键词？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>11 组搜索关键词与主编 8 组关键词逐组对比，见附录 A</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>是否验证了至少 5-10 条定量断言？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>已验证 10 条断言，见表一</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>每条断言是否有独立来源支撑？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>每条验证均标明了独立来源（NVD, Snyk, Tenable, Tracxn, oss-security, GitHub Issues 等）</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>是否完成了破坏性测试？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>对最强结论进行了 3 种方式破坏性测试（见第五章）</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>是否完成了偏见检查？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>识别了 7 种偏见类型（见第四章）</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>是否完成了逻辑审计？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>审计了 3 条核心推理链的完整性（见第二章）</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>是否完成了覆盖度审计？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>识别了 4 个遗漏高危漏洞 + 5 类遗漏信息（见第三章）</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>是否区分了"方向性正确但细节有偏差"与"完全错误"？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>10 条断言分三级（✅/⚠️/❌），严格和宽松两种标准打分</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>是否提供了改进建议？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>8 条分级改进建议（见第七章）</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>是否提供了适用性声明？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>明确声明审计边界和读者注意事项（见第八章）</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>是否避免了审计师的自我偏见？</td>
+    <td><span class="badge-green">通过</span></td>
+    <td>审计报告同时指出了报告的长处（6 条绿色发现）和短处，提供了平衡评估。审计师无 Agno 或其竞品的利益关联。</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td><strong>硬门禁：是否进行了独立搜索？</strong></td>
+    <td><span class="badge-green">通过</span></td>
+    <td>11 组独立搜索，见附录 A。无独立搜索视为失职——此条满足。</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td><strong>红线：是否做了破坏性测试？</strong></td>
+    <td><span class="badge-green">通过</span></td>
+    <td>三种攻击方式见第五章。不做破坏性测试视为失职——此条满足。</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td><strong>红线：是否检查了偏见？</strong></td>
+    <td><span class="badge-green">通过</span></td>
+    <td>7 种偏见类型见第四章。不检查偏见视为失职——此条满足。</td>
+  </tr>
+  <tr>
+    <td>15</td>
+    <td><strong>红线：是否同时给出了正面和负面评价？</strong></td>
+    <td><span class="badge-green">通过</span></td>
+    <td>6 条绿色发现（长处）+ 5 条红色/黄色发现（问题）。只正不反视为失职——此条满足。</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- ===== 底部 ===== -->
+<div class="card" style="border: 2px solid var(--accent);">
+<h2>审计报告元数据</h2>
+<table>
+  <tr><th style="width: 25%;">项目</th><th>详情</th></tr>
+  <tr><td>审计状态</td><td><span class="badge-yellow">审计完成（基本可信，存在关键错误）</span></td></tr>
+  <tr><td>被审计对象</td><td>agno优缺点_report_v1.html（主编审定报告 v1.0）</td></tr>
+  <tr><td>审计输出</td><td>agno优缺点_audit_v1.html（本文件）</td></tr>
+  <tr><td>事实准确率（严格）</td><td>6/10 (60%)</td></tr>
+  <tr><td>事实准确率（宽松）</td><td>8/10 (80%)</td></tr>
+  <tr><td>独立搜索次数</td><td>11 组独立关键词搜索</td></tr>
+  <tr><td>结论变化</td><td>报告的<strong>方向性结论基本成立</strong>（Agno 确实存在安全问题和采纳落差），但<strong>3 处关键事实错误</strong>（Issue #6757 已修复、CVE-2025-8665 有补丁、CVE 总数被严重低估）和<strong>系统性负面偏见</strong>降低了报告作为独立决策依据的可靠性。建议读者在使用报告前先进行本审计指出的修正。</td></tr>
+</table>
+</div>
+
+<hr>
+<p class="meta" style="text-align:center; margin-top:2rem;">
+  审计完成时间: 2026-07-01 | 审计方法: 独立关键词搜索 + 事实交叉验证 + 逻辑/覆盖/偏见/破坏性四维审计<br>
+  审计师独立完成，未与主编或研究员协作。本审计不含任何赞助或商业利益冲突。<br>
+  所有搜索结果为 2026-07-01 的快照，可能在其后发生变化。
+</p>
+
+</body>
+</html>

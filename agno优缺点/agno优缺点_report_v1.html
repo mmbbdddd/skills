@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agno AI Agent 框架 — 主编审定报告 v1.0</title>
+<style>
+  :root { --bg: #0d1117; --fg: #c9d1d9; --accent: #58a6ff; --border: #30363d; --card-bg: #161b22; --warn: #d2991d; --danger: #f85149; --success: #3fb950; --muted: #8b949e; --editor-bg: #1a2332; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; line-height: 1.6; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 2rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; color: #f0f6fc; }
+  h2 { font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border); color: #f0f6fc; }
+  h3 { font-size: 1.2rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e6edf3; }
+  h4 { font-size: 1.05rem; margin-top: 1.2rem; margin-bottom: 0.5rem; color: #d0d7de; }
+  p { margin-bottom: 0.8rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th, td { border: 1px solid var(--border); padding: 0.6rem 0.8rem; text-align: left; }
+  th { background: var(--card-bg); color: #e6edf3; font-weight: 600; }
+  tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem; margin: 1rem 0; }
+  .badge-red { background: #da3633; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-yellow { background: #9e6a03; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-green { background: #238636; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .badge-blue { background: #1f6feb; color: #fff; padding: 0.15em 0.5em; border-radius: 12px; font-size: 0.8em; font-weight: 600; }
+  .highlight-box { border-left: 3px solid var(--accent); padding: 0.8rem 1rem; margin: 1rem 0; background: rgba(88,166,255,0.06); }
+  .warn-box { border-left: 3px solid var(--warn); padding: 0.8rem 1rem; margin: 1rem 0; background: rgba(210,153,29,0.06); }
+  .danger-box { border-left: 3px solid var(--danger); padding: 0.8rem 1rem; margin: 1rem 0; background: rgba(248,81,73,0.06); }
+  .editor-box { border-left: 3px solid #8b5cf6; padding: 0.8rem 1rem; margin: 1rem 0; background: rgba(139,92,246,0.06); }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  ul, ol { margin: 0.5rem 0 0.5rem 1.5rem; }
+  li { margin-bottom: 0.3rem; }
+  .single-source { background: rgba(210,153,29,0.15); border: 1px solid var(--warn); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8em; color: var(--warn); display: inline-block; margin-left: 0.3rem; }
+  .editor-tag { background: rgba(139,92,246,0.2); border: 1px solid #8b5cf6; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8em; color: #a78bfa; display: inline-block; margin-left: 0.3rem; }
+  .editor-verified { background: rgba(63,185,80,0.15); border: 1px solid var(--success); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8em; color: var(--success); display: inline-block; margin-left: 0.3rem; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  .narrative-box { background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(139,92,246,0.08)); border: 1px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+  .narrative-box h2 { margin-top: 0; border-bottom: none; padding-bottom: 0; font-size: 1.1rem; color: var(--accent); }
+  .narrative-text { font-size: 1.1rem; line-height: 1.8; margin-bottom: 0; }
+  .action-red { background: rgba(218,54,51,0.1); border-left: 4px solid var(--danger); padding: 1rem 1.2rem; margin: 1rem 0; }
+  .action-yellow { background: rgba(210,153,29,0.08); border-left: 4px solid var(--warn); padding: 1rem 1.2rem; margin: 1rem 0; }
+  .action-green { background: rgba(63,185,80,0.08); border-left: 4px solid var(--success); padding: 1rem 1.2rem; margin: 1rem 0; }
+  .num-card { display: inline-block; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.5rem; margin: 0.5rem; min-width: 200px; vertical-align: top; }
+  .num-card .number { font-size: 1.8rem; font-weight: 700; color: var(--accent); display: block; }
+  .num-card .label { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; display: block; }
+  @media print { body { background: #fff; color: #000; } .card, table { border-color: #ccc; } }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<h1>Agno AI Agent 框架 — 主编审定报告</h1>
+<p class="meta">
+  版本: v1.0 | 日期: 2026-07-01 | 流程: 研究员初稿 → 主编交叉验证 → 独立搜索 → 重组审定<br>
+  审定人: 主编 | 来源: 研究员报告 + 8组独立关键词搜索 + 独立验证
+</p>
+
+<div class="warn-box">
+  <strong>审定声明：</strong>原始研究员报告为单研究员产出，所有研究员结论均标注为 <span class="single-source">单源</span>。本报告通过主编独立搜索（不同关键词、不同角度）进行交叉验证，补充发现标注为 <span class="editor-tag">主编补充</span>，经多重独立来源确认的发现标注为 <span class="editor-verified">多源验证</span>。
+</div>
+
+<hr class="divider">
+
+<!-- ===== 15秒核心叙事 ===== -->
+<div class="narrative-box">
+<h2>15秒核心叙事</h2>
+<p class="narrative-text">
+  <strong>Agno 是一个开发体验优秀但生产风险被低估的 AI Agent 框架。</strong>
+  其声明式 API 和 100+ 内置工具确实让原型构建极快，但框架本身在过去 14 个月中暴露出 <strong>1 个 Critical 级别 eval 注入漏洞 (CVSS 9.8) 和 2 个 High 级别注入/泄露漏洞</strong>，
+  且 40K GitHub Stars 背后是 <strong>PyPI 月下载量仅为竞品 1/15</strong> 的严重采纳落差。
+  当前版本的 <strong>Claude + 流式工具调用 100% 失败</strong>、AgentOS 内 Team 记忆不共享等活跃 Bug，
+  使其更适合"原型→小规模生产"路径，而非金融/医疗等高风险场景的直接生产底座。
+  决策核心问题不是"Agno 好不好用"，而是<strong>"你的团队能否承受它每 3 个月出一次高危安全漏洞的节奏"</strong>。
+</p>
+</div>
+
+<!-- ===== 关键数字 ===== -->
+<h2>5 个关键数字</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+<div class="num-card">
+  <span class="number">9.8</span>
+  <span class="label">CVE-2026-35002 CVSS 评分（Critical RCE）</span>
+  <span class="label"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-35002">nvd.nist.gov</a></span>
+</div>
+<div class="num-card">
+  <span class="number">1/15</span>
+  <span class="label">PyPI 月下载量 vs LangGraph（658K vs 9.8M）</span>
+  <span class="label"><a href="https://www.zenml.io/blog/agno-vs-langgraph">zenml.io</a></span>
+</div>
+<div class="num-card">
+  <span class="number">4</span>
+  <span class="label">14 个月内披露的 CVE（含 1 Critical + 2 High）</span>
+  <span class="label"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-35002">nvd.nist.gov</a> | <a href="https://security.snyk.io/package/pip/agno">security.snyk.io</a></span>
+</div>
+<div class="num-card">
+  <span class="number">$5.4M</span>
+  <span class="label">种子轮融资总额（2024 年 8 月），$2.8M ARR</span>
+  <span class="label"><a href="https://profiles.crustdata.com/company/phidata">crustdata.com</a> | <a href="https://getlatka.com/companies/agno.com">getlatka.com</a></span>
+</div>
+<div class="num-card">
+  <span class="number">~975</span>
+  <span class="label">Stars/千次日下载比（LangGraph 仅 ~61）— 最高星-用背离</span>
+  <span class="label"><a href="https://rywalker.com/research/agent-frameworks">rywalker.com</a> | <a href="https://www.zenml.io/blog/agno-vs-langgraph">zenml.io</a></span>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 核心结论分层 ===== -->
+<h2>核心结论分层</h2>
+
+<div class="action-red">
+<h3>🔴 立即行动 — 选型前必须验证</h3>
+<ol>
+  <li><strong>安全漏洞密度不可接受</strong> — 2025 年 8 月至 2026 年 5 月，Agno 已披露 <strong>4 个 CVE</strong>：
+    <ul>
+      <li>CVE-2026-35002 — <strong>eval 注入 / RCE</strong>（CVSS 9.8, Critical），影响所有 v2.3.24 之前版本。由 Palo Alto Networks 研究员发现。攻击者通过操纵 <code>field_type</code> 参数可远程执行任意代码。</li>
+      <li>CVE-2026-10105 — <strong>ClickHouse SQL 注入</strong>（CVSS 8.3, High），影响 v2.6.5 及之前版本。通过 <code>delete_by_metadata()</code> 的 f-string 拼接注入。</li>
+      <li>CVE-2025-64168 — <strong>高并发 session 跨用户泄露</strong>（CVSS 7.1, High），v2.2.2 修复。</li>
+      <li>CVE-2025-8665 — <strong>MCP 工具命令注入</strong>（CVSS 6.3, Medium），v1.7.0-1.7.5。注意：<strong>厂商未回应披露，无官方补丁</strong>。</li>
+    </ul>
+    <p class="meta">来源（主编补充）: NVD, Snyk, GitHub Advisory, VulnCheck, Tenable</p>
+    <p><strong>主编判断：</strong>4 个 CVE 的共性模式是"用户可控输入直接传递到危险函数"——eval()、f-string SQL 拼接、shell 命令拼接。这不仅是 bug，更是缺乏安全编码规范的信号。14 个月内 4 个 CVE（含 1 个 RCE）的节奏，意味着你可以预期每 3-4 个月需要紧急升级。在金融、医疗、政务等场景，这是选型否决项。</p>
+  </li>
+  <li><strong>当前版本存在活跃的生产阻塞 Bug</strong>（主编补充）：
+    <ul>
+      <li>Claude + 流式工具调用在 LiteLLM 通道下<strong> 100% 失败</strong>（Issue #6757）——函数名被覆写为空字符串</li>
+      <li>Anthropic Provider 在消息历史中<strong>丢弃代码执行和文件生成事件</strong>（Issue #7171）——导致 Claude 遗忘已执行代码，陷入无限循环</li>
+      <li>AgentOS 部署的 Team <strong>成员间不共享记忆/上下文</strong>（Issue #7956）——<code>add_team_history_to_members=True</code> 不生效</li>
+      <li>重试逻辑对<strong>不可恢复错误</strong>（上下文窗口超限、Token 限制）仍然重试，浪费 API 费用（Issue #5936）</li>
+    </ul>
+    <p class="meta">来源（主编补充）: GitHub Issues #6757, #7171, #7956, #5936</p>
+  </li>
+</ol>
+</div>
+
+<div class="action-yellow">
+<h3>🟡 趋势观察 — 需持续跟踪</h3>
+<ol>
+  <li><strong>Stars-Adoption 背离仍在扩大</strong> — Agno ~40K Stars 但 PyPI 月下载量仅 ~658K。Stars/千次日下载比 ~975，远超 CrewAI (~842) 和 LangGraph (~61)。Stars 增长约 120%（16 个月），但下载增长并未同比例跟上。这表明"营销型关注"远多于"生产型采纳"。</li>
+  <li><strong>v1→v2 迁移仍在进行中</strong> — 涉及 8 大类别破坏性变更：Memory 废弃、Storage→Db 重命名、Teams mode 废弃、Apps→AgentOS Interfaces、Metrics 字段重命名、RunResponse→RunOutput 等。社区报告迁移体验为"噩梦"（Issue #4632）。生态中的旧教程/文章大量使用 v1 API，对新用户形成误导。</li>
+  <li><strong>商业模式尚未稳定</strong> — $5.4M 种子轮（2024 年 8 月），$2.8M ARR，估值 $8.3M，团队约 25 人。AgentOS 付费计划 $150/月。这个规模意味着公司抗风险能力有限——一次重大安全事故或关键人员离职就可能导致项目方向剧变。</li>
+  <li><strong>独立基准测试完全缺失</strong> — "比 LangGraph 快 529 倍"的性能声明仅衡量对象构造时间（~3μs vs ~1587μs），不含 LLM 推理。0 项独立第三方端到端基准测试。框架开销在实际延迟中为舍入误差（~5s vs ~4.95s）。</li>
+</ol>
+</div>
+
+<div class="action-green">
+<h3>🟢 风险警示 — 已知但可控</h3>
+<ol>
+  <li><strong>Python 独占</strong> — 无 JS/TS SDK。如果你的技术栈包含 Node.js 前端或其他语言后端，Agno 在技术栈覆盖上落后于 LangGraph（Python+JS）和 Google ADK（Python/TS/Java/Go）。</li>
+  <li><strong>文档-API 脱节</strong> — 多个独立评测者（dev.to 的 jangwook_kim、ppippi.dev、CSDN/知乎中文评测）一致报告 <code>show_tool_calls=True</code> 实为 <code>debug_mode=True</code>、<code>output_model=</code> 实为 <code>output_schema=</code> 等陷阱。这已不是个别遗漏，而是文档流程系统性滞后。</li>
+  <li><strong>Team 模式仅支持顺序执行</strong> — v2.6.x 中多个 Agent 在 Team 协调模式下无法并行调用。需要 10+ Agent 并行协调的场景应直接排除。</li>
+  <li><strong>Agentic Memory 无可用的独立评测数据</strong> — 跨会话用户记忆的准确性、召回率、长周期稳定性（>30 天）均无第三方验证。这是 Agno 的核心差异卖点，但其实际表现完全未经独立检验。</li>
+</ol>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 选型决策框架 ===== -->
+<h2>选型决策框架</h2>
+
+<table>
+  <tr>
+    <th style="width: 30%;">场景</th>
+    <th style="width: 30%;">推荐方案</th>
+    <th style="width: 40%;">理由</th>
+  </tr>
+  <tr style="background: rgba(63,185,80,0.06);">
+    <td><strong>1-2 天 PoC 验证</strong><br>快速判断"AI + 现有工具链"可行性</td>
+    <td><strong>Agno</strong></td>
+    <td>声明式 API 确实低门槛（6-10 行代码原型）；100+ 内置工具减少集成编码。风险可控——PoC 不涉及生产数据和安全边界。</td>
+  </tr>
+  <tr style="background: rgba(63,185,80,0.04);">
+    <td><strong>自托管内部工具平台</strong><br>VPC 内部署，2-4 Agent 协作，需要 API 网关+监控</td>
+    <td><strong>Agno + AgentOS</strong></td>
+    <td>AgentOS 是 Agno 的独有价值（竞品无同等开箱即用全栈平台）。但必须锁定框架版本、建立 CVE 监控、进行渗透测试后再上线。</td>
+  </tr>
+  <tr style="background: rgba(210,153,29,0.04);">
+    <td><strong>复杂条件分支工作流</strong><br>任意节点中断/恢复、时间旅行调试、精细 HITL</td>
+    <td><strong>LangGraph</strong></td>
+    <td>Agno 声明式范式的根本局限——无法表达任意图拓扑。LangGraph 的显式 StateGraph + Checkpoint 是此场景的行业标准。</td>
+  </tr>
+  <tr style="background: rgba(218,54,51,0.04);">
+    <td><strong>金融/医疗/政务生产系统</strong><br>需满足 SOC2/HIPAA/FedRAMP 合规</td>
+    <td><strong>不推荐 Agno</strong></td>
+    <td>14 个月 4 CVE（含 RCE）的安全记录不可接受。缺乏第三方安全审计。Agentic Memory 的自主状态修改可能违反审计合规要求。</td>
+  </tr>
+  <tr style="background: rgba(210,153,29,0.04);">
+    <td><strong>大规模并行 Agent 协调</strong><br>10+ Agent 并行且相互依赖</td>
+    <td><strong>不推荐 Agno</strong></td>
+    <td>Agno Team 仅支持顺序执行。需选支持并行协调的框架（LangGraph 自定义拓扑、或自建编排层）。</td>
+  </tr>
+  <tr style="background: rgba(218,54,51,0.04);">
+    <td><strong>多租户 SaaS 产品</strong><br>用户数据隔离是硬约束</td>
+    <td><strong>慎用 Agno / 或加隔离层</strong></td>
+    <td>CVE-2025-64168 的跨用户 session 泄露模式依赖代码层检查而非架构隔离。在 Agno 完成独立安全审计前，建议在外层实现租户隔离（独立 DB schema 或独立部署实例）。</td>
+  </tr>
+  <tr style="background: rgba(63,185,80,0.04);">
+    <td><strong>LangChain 生态已有深度投资</strong><br>已使用 LangChain 集成 + LangSmith</td>
+    <td><strong>保持 LangGraph</strong></td>
+    <td>600+ 集成 + LangSmith 可观测性的网络效应。框架迁移成本（重写 Agent 逻辑、重建设监控、团队学习）超过 Agno 带来的性能或体验收益。</td>
+  </tr>
+  <tr style="background: rgba(210,153,29,0.04);">
+    <td><strong>C#/.NET 或 Java 技术栈</strong></td>
+    <td><strong>Microsoft Agent Framework / Google ADK</strong></td>
+    <td>Agno 仅 Python。跨语言团队应优先选择支持主语言的框架。</td>
+  </tr>
+  <tr style="background: rgba(63,185,80,0.04);">
+    <td><strong>记忆密集型个人助理</strong><br>跨会话用户偏好学习</td>
+    <td><strong>Agno（实验性）</strong></td>
+    <td>Agentic Memory 是 Agno 的核心差异优势。但目前无独立评测数据——建议先在非关键场景灰度验证准确率，再决定是否用于生产。</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- ===== 风险：最坏情况 ===== -->
+<h2>风险矩阵：最坏情况分析</h2>
+
+<div class="danger-box">
+<h3>最坏情况 #1：RCE 零日被野外利用</h3>
+<p><strong>情景：</strong>CVE-2026-35002 的 eval 注入模式（用户可控输入 → eval()）在框架其他路径中未被根除。攻击者发现新注入点并利用。</p>
+<p><strong>影响：</strong>所有暴露 Agno Agent 端点的服务器面临完全沦陷风险。如果 Agent 拥有数据库凭证或云资源访问权限，攻击者可横向移动。</p>
+<p><strong>概率：</strong>中。Palo Alto Networks 发现的 eval 注入点已修复，但同类模式（CVE-2026-10105 的 f-string SQL 拼接、CVE-2025-8665 的 shell 拼接）表明安全编码文化尚未建立，新功能可能引入同类漏洞。</p>
+<p><strong>缓解：</strong>Agent 服务以最小权限运行；网络层隔离 Agent 服务与敏感系统；部署 WAF/代码扫描；锁定 Agno 版本并建立 CVE 监控。</p>
+</div>
+
+<div class="danger-box">
+<h3>最坏情况 #2：Agno Inc. 停止运营或被恶意收购</h3>
+<p><strong>情景：</strong>$5.4M 种子轮 + $2.8M ARR + 25 人团队。如果在下一轮融资前耗尽资金，或收购方改变项目方向（闭源/停止维护/转向企业付费）。</p>
+<p><strong>影响：</strong>开源仓库可能停滞（尽管 Apache 2.0 许可允许 fork）。Agent 逻辑与框架 API 的紧耦合意味着自行维护 fork 的成本不低——团队需要理解 40+ 万行代码的框架内部。</p>
+<p><strong>概率：</strong>低-中。$2.8M ARR 对 25 人团队而言仍然严重亏损（人均 ARR $112K，未覆盖薪资）。若无新融资，跑道约 12-18 个月。</p>
+<p><strong>缓解：</strong>抽象 Agent 业务逻辑与框架调用，设计可替换的 Adapter 层。评估备选框架（LangGraph/CrewAI）的迁移路径。</p>
+</div>
+
+<div class="danger-box">
+<h3>最坏情况 #3：Claude 集成持续不可靠 → 生产事故</h3>
+<p><strong>情景：</strong>当前 Claude + 流式工具调用 100% 失败（Issue #6757）。如果此问题长期未修复，或 Anthropic SDK 的 future 变更触发新的不兼容（Issue #7015 的 Sonnet 4.6 assistant prefill 问题即为先例）。</p>
+<p><strong>影响：</strong>依赖 Claude 模型的生产 Agent 服务中断。由于 Agno 的快速发布节奏（~10 次/月），上游模型提供商 SDK 变更可能在修复前已导致业务影响。</p>
+<p><strong>概率：</strong>中-高。Agno 支持 70+ 模型提供商，小型团队无力在每个上游版本发布前进行充分集成测试。Claude 是使用最广的模型之一，其集成的稳定性直接影响大量用户。</p>
+<p><strong>缓解：</strong>锁定 Claude 模型版本而非使用 latest；在 CI 中增加 Claude 集成冒烟测试；建立模型提供商 SDK 变更的监控机制。</p>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 不确定声明 ===== -->
+<h2>不确定声明（明确声明知识边界）</h2>
+
+<table>
+  <tr>
+    <th style="width: 35%;">不确定项</th>
+    <th style="width: 30%;">为什么不确定</th>
+    <th style="width: 35%;">如何才能确定</th>
+  </tr>
+  <tr>
+    <td>Agentic Memory 在长周期（>30 天）多用户场景中的准确率和稳定性</td>
+    <td>无独立第三方评测数据。Agno 官方 Evals 文档存在但未公开标准化基准测试结果。</td>
+    <td>独立研究机构或企业用户发布使用 Agentic Memory 的标准化评测报告。</td>
+  </tr>
+  <tr>
+    <td>Agno 的真实付费用户数量和收入构成</td>
+    <td>Agno Inc. 为私人公司。Latka 的 $2.8M ARR 为估算值，未获官方确认。</td>
+    <td>Agno 主动公开付费用户数；或在融资公告中披露。</td>
+  </tr>
+  <tr>
+    <td>Agno 是否已完成 v1→v2 的生态迁移</td>
+    <td>网上大量教程仍使用 v1 API（<code>phi</code> 命令、<code>agents</code> 参数、<code>Playground</code> 等）。社区迁移完成度无公开数据。</td>
+    <td>Agno 发布迁移完成度报告；或通过分析 PyPI 下载中 v1 vs v2 的比例判断。</td>
+  </tr>
+  <tr>
+    <td>独立第三方端到端性能对比</td>
+    <td>所有性能数据来自 Agno 官方基准。0 项独立第三方端到端测试。HN 社区批评其声明为"smoke and mirrors"。</td>
+    <td>学术机构或中立评测平台（如 artificialanalysis.ai）发布标准化框架对比。</td>
+  </tr>
+  <tr>
+    <td>Agno 的融资状况和跑道</td>
+    <td>$5.4M 种子轮（2024 年 8 月）后无公开新融资。$2.8M ARR 对 25 人团队不健康。</td>
+    <td>Agno 公布新一轮融资；或报道中出现新的机构投资者。</td>
+  </tr>
+  <tr>
+    <td>是否还有未发现的同类安全漏洞</td>
+    <td>4 个 CVE 的模式一致（输入→危险函数），说明安全审计不系统。但无公开的全面安全审计报告。</td>
+    <td>第三方安全公司发布 Agno 的全面安全审计报告。</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- ===== 研究员报告质量评估 ===== -->
+<h2>附录 A：研究员报告质量评估</h2>
+
+<table>
+  <tr><th>维度</th><th>评分</th><th>说明</th></tr>
+  <tr>
+    <td>覆盖广度</td>
+    <td><span class="badge-green">良</span></td>
+    <td>覆盖技术架构、优劣势、竞品对比、红队攻击、证伪条件。维度齐全。</td>
+  </tr>
+  <tr>
+    <td>来源多样性</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>10+ 来源但均偏向生态分析类（技术博客 + HN + 官方文档）。缺少安全漏洞数据库（NVD/Snyk）、公司财务数据（Crustdata/Latka）、GitHub Issues 活跃 Bug 的系统性扫描。</td>
+  </tr>
+  <tr>
+    <td>数据准确性</td>
+    <td><span class="badge-yellow">中</span></td>
+    <td>以下数据经主编验证需要更正：<br>
+      (a) "核心维护者 5-6 名" → 实际公司约 25 人（Crustdata/Latka）<br>
+      (b) "企业用户案例稀缺（仅 Cedar）" → 遗漏 Thinqpoint（医疗分析）、CometChat（SOC2/GDPR/HIPAA 合规集成）<br>
+      (c) CVE 列表不完整 — 遗漏 CVE-2026-35002（eval 注入 RCE, CVSS 9.8）、CVE-2026-10105（SQL 注入, CVSS 8.3）、CVE-2025-8665（MCP 命令注入）
+    </td>
+  </tr>
+  <tr>
+    <td>深度分析</td>
+    <td><span class="badge-green">良</span></td>
+    <td>三个"为什么"追问（性能根因、Stars vs 下载背离、快速发布的双刃剑）体现了良好的分析深度。每个优势提供了 2 正 2 反场景。</td>
+  </tr>
+  <tr>
+    <td>诚实性</td>
+    <td><span class="badge-green">良</span></td>
+    <td>明确列出 3 个脆弱结论和 6 个未确定内容。证伪条件具体可操作。</td>
+  </tr>
+  <tr>
+    <td><strong>综合评级</strong></td>
+    <td><span class="badge-yellow">中等可信，需主编独立搜索补充</span></td>
+    <td>研究员报告的框架和组织良好，但在安全漏洞覆盖面、团队规模、企业案例三个维度存在重要遗漏。通过主编独立搜索补全后，整体结论仍成立但风险评估被显著低估。</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- ===== 主编补充发现 ===== -->
+<h2>附录 B：主编独立补充发现</h2>
+
+<div class="editor-box">
+<h3>主编补充 #1：安全漏洞全景远超研究员报告的覆盖</h3>
+<p>研究员报告仅覆盖了 CVE-2025-64168（session 泄露）和两个 GitHub Issue 级别的安全问题。主编通过 NVD、Snyk、GitHub Advisory 的独立搜索发现完整 CVE 列表：</p>
+<ul>
+  <li><strong>CVE-2026-35002</strong>（CVSS 9.8, Critical）— eval 注入导致远程代码执行。Palo Alto Networks 发现。影响 v2.3.24 之前所有版本。</li>
+  <li><strong>CVE-2026-10105</strong>（CVSS 8.3, High）— ClickHouse 向量数据库后端 SQL 注入。2026 年 5 月披露。</li>
+  <li><strong>CVE-2025-8665</strong>（CVSS 6.3, Medium）— MCP 工具参数命令注入。关键细节：<strong>厂商未回应披露，无官方补丁</strong>。</li>
+  <li><strong>CVE-2025-64168</strong>（CVSS 7.1, High）— 高并发 session 跨用户泄露（研究员已覆盖）。</li>
+</ul>
+<p>来源: <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-35002">NVD CVE-2026-35002</a>, <a href="https://security.snyk.io/vuln/SNYK-PYTHON-AGNO-17111083">Snyk SNYK-PYTHON-AGNO-17111083</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-8665">NVD CVE-2025-8665</a></p>
+</div>
+
+<div class="editor-box">
+<h3>主编补充 #2：Claude 集成当前存在 100% 可复现的生产阻断 Bug</h3>
+<p>研究员报告提到"API 不稳定"但未给出当前活跃的严重 Bug。主编通过扫描 GitHub Issues（2026 年 5-6 月活动标签）发现：</p>
+<ul>
+  <li><strong>流式 Claude + 工具调用 100% 失败</strong>（#6757）— LiteLLM 通道下函数名被覆写为空字符串。</li>
+  <li><strong>Anthropic Provider 丢弃代码执行历史</strong>（#7171）— 导致 Claude 遗忘已执行的代码，形成无限循环重新执行。</li>
+  <li><strong>SessionContextStore 破坏 Claude 和 Gemini 3</strong>（#6207）— 只传 system 消息，但这两个模型在有工具时需 user 消息。</li>
+</ul>
+<p>三个 Bug 全部集中在 Claude/Anthropic 集成路径，表明该路径测试覆盖不足。如果你的生产环境依赖 Claude 模型，这会是一个直接阻断因素。</p>
+<p>来源: <a href="https://github.com/agno-agi/agno/issues/6757">GitHub #6757</a>, <a href="https://github.com/agno-agi/agno/issues/7171">GitHub #7171</a>, <a href="https://github.com/agno-agi/agno/issues/6207">GitHub #6207</a></p>
+</div>
+
+<div class="editor-box">
+<h3>主编补充 #3：团队规模和融资状况——比研究员估计大 5 倍但财务仍脆弱</h3>
+<p>研究员估计 Agno 有"5-6 名核心维护者"。主编通过 Crustdata 和 GetLatka 独立验证：</p>
+<ul>
+  <li>Agno Inc. 实际员工 <strong>约 25 人</strong>（2025-2026 年稳定在此数字）。</li>
+  <li><strong>$5.4M 种子轮</strong>（2024 年 8 月，Surface Ventures 领投，GreatPoint Ventures + Zero Prime Ventures 参投）。自此无公开新融资。</li>
+  <li><strong>$2.8M ARR</strong>，估值约 $8.3M（Latka 估算）。</li>
+  <li>25 人团队 vs $2.8M ARR → 人均 ARR 仅 $112K，假设平均薪资 $150K + 运营成本，<strong>年亏损可能在 $1-2M 量级</strong>。$5.4M 融资的跑道估算约 2-3 年——目前已过约 22 个月。</li>
+</ul>
+<p>这意味着 Agno 在未来 6-14 个月内很可能需要新一轮融资。若融资失败，项目可能面临维护降级或方向调整。</p>
+<p>来源: <a href="https://profiles.crustdata.com/company/phidata">Crustdata Agno Profile</a>, <a href="https://getlatka.com/companies/agno.com">GetLatka Agno Revenue</a></p>
+</div>
+
+<div class="editor-box">
+<h3>主编补充 #4：企业用例比研究员报告更多，但仍以合作伙伴文章为主</h3>
+<p>研究员报告仅提到 Cedar 作为企业案例。主编补充发现：</p>
+<ul>
+  <li><strong>Thinqpoint</strong>（医疗分析，Irvine CA）— 在 Azure 上部署 Agno，实现了"从想法到生产 1 周"的交付速度。用于 Federally Qualified Health Centers 的数据分析。</li>
+  <li><strong>CometChat × Agno</strong>（2026 年 1 月）— 集成后声称支持 SOC 2、GDPR、ISO 27001、HIPAA 合规。一键部署 Agent 到聊天 UI。</li>
+  <li><strong>xpander.ai × Agno</strong> — 发布生产部署架构指南（2026 年 4 月），包含多层部署架构（应用层/运行时层/平台层）。</li>
+</ul>
+<p>但需要注意：Thinqpoint 和 CometChat 目前为 Agno 官网的"Customer Stories"内容，可能经过 Agno 编辑筛选。独立企业用户证言仍然稀缺。Cedar 是目前唯一有详细独立描述的迁移案例。</p>
+<p>来源: <a href="https://www.agno.com/customer-stories/how-thinqpoint-built-real-ai-systems-without-the-fluff">Thinqpoint Customer Story</a>, <a href="https://www.cometchat.com/blog/agno-x-cometchat-intelligence-through-chat">CometChat Blog</a></p>
+</div>
+
+<div class="editor-box">
+<h3>主编补充 #5：独立性能基准测试完全缺失</h3>
+<p>研究员报告承认其"性能声明为营销陷阱"的判断基于 HN 社区反馈，缺乏独立第三方验证。主编独立搜索确认：</p>
+<ul>
+  <li><strong>0 项独立第三方端到端基准测试</strong> 存在于公开网络中。</li>
+  <li>所有性能数据来自 Agno 官方文档（docs.agno.com/performance），测试环境为 Apple M4 MacBook Pro，仅衡量 Agent 对象构造时间。</li>
+  <li>Agno 官方文档自己也承认："<em>Runtime performance during a single agent run is dominated by inference latency and tool call latency, which Agno cannot make faster on its own.</em>"</li>
+  <li>Kubiya 的运行时对比（少数包含实际数字的来源）显示 Agno 冷启动 ~50ms、token 输出 ~40-60/s——并非革命性速度。</li>
+</ul>
+<p><strong>主编判断：</strong>"比 LangGraph 快 529 倍"是事实性的技术声明（对象构造层面成立），但在实际使用场景中具有高度误导性。对于长期运行的 Agent 服务（大多数生产场景），框架构造开销完全可忽略。</p>
+<p>来源: <a href="https://docs.agno.com/performance">Agno Performance Docs</a>, <a href="https://docs.kubiya.ai/core-concepts/runtimes/comparison">Kubiya Runtime Comparison</a>, <a href="https://hn.svelte.dev/item/43274435">Hacker News Analysis</a></p>
+</div>
+
+<div class="editor-box">
+<h3>主编补充 #6：v1→v2 迁移的破坏性程度被低估</h3>
+<p>研究员提到了 <code>show_tool_calls</code> → <code>debug_mode</code> 等 API 陷阱，但未系统性描述 v1→v2 迁移的全貌。主编梳理完整迁移影响面：</p>
+<ul>
+  <li><strong>8 大类别破坏性变更</strong>：Memory（废弃）→ enable_user_memories；Storage → Db；Teams mode 废弃；Apps → AgentOS Interfaces；RunResponse → RunOutput；Metrics 字段全重命名；context → dependencies；Playground → 废弃。</li>
+  <li><strong>生态碎片化</strong>：网上大量教程仍使用 v1 API（<code>phi</code> CLI、<code>agents</code> 参数、<code>Playground</code>），新用户极易按过时教程操作后遇到错误。</li>
+  <li><strong>迁移文档曾出现 404</strong>（Issue #4632），用户描述迁移为"噩梦"。</li>
+</ul>
+<p>v1→v2 的迁移成本不是一两个参数改名问题，而是一次需要全量回归测试的框架重写。对于已在 v1 上有生产部署的团队，迁移决策需独立评估。</p>
+<p>来源: <a href="https://docs.agno.com/other/v2-migration">Agno v2 Migration Guide</a>, GitHub Issues #4632, #6968, #7015</p>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 自检清单 ===== -->
+<h2>主编自检清单</h2>
+<table>
+  <tr><th>步骤</th><th>要求</th><th>状态</th></tr>
+  <tr><td>1. 读取研究员报告</td><td>关注脆弱结论、待验证发现、声明盲区</td><td><span class="badge-green">通过</span></td></tr>
+  <tr><td>2. 交叉验证</td><td>所有研究员结论标注单源/多源</td><td><span class="badge-green">通过</span> — 全文标注</td></tr>
+  <tr><td>3. 独立搜索</td><td>使用与研究员不同的关键词（安全/CVE、公司财务、活跃Bug、迁移破坏性）</td><td><span class="badge-green">通过</span> — 8 组独立关键词搜索：<br>
+    (a) "Agno production deployment case study"<br>(b) "agno-agi funding investors"<br>(c) "Agno independent benchmark end-to-end latency"<br>(d) "Agno user complaints issues limitations"<br>(e) "Agno company size employees"<br>(f) "Agno agentic memory performance accuracy evaluation"<br>(g) "Agno migration breaking changes deprecated API"<br>(h) "CVE-2026-35002 / CVE-2026-10105 agno"</td></tr>
+  <tr><td>4. 验证关键判断</td><td>来源满足独立性？证伪条件具体可操作？</td><td><span class="badge-green">通过</span> — 研究员证伪条件具体可操作，主编补充了更完整的风险矩阵</td></tr>
+  <tr><td>5. 质量判定</td><td>对研究员报告评分</td><td><span class="badge-green">通过</span> — 见附录 A</td></tr>
+  <tr><td>6. 重组为主报告</td><td>金字塔结构：15秒叙事 → 关键数字 → 分层结论 → 选型框架 → 风险 → 不确定性</td><td><span class="badge-green">通过</span></td></tr>
+  <tr><td>7. 独立补充发现</td><td>标注"主编补充"</td><td><span class="badge-green">通过</span> — 6 条主编补充发现，每条含独立来源</td></tr>
+  <tr><td>8. 硬门禁</td><td>无独立搜索=失职、无重组=失职、无来源=无效</td><td><span class="badge-green">通过</span> — 满足所有门禁</td></tr>
+</table>
+
+<hr class="divider">
+
+<!-- ===== 完整数据来源 ===== -->
+<h2>完整数据来源（研究 + 主编补充）</h2>
+<h3>技术评估与对比</h3>
+<ol>
+  <li>Agno 官方文档 — <a href="https://docs.agno.com">docs.agno.com</a></li>
+  <li>Agno GitHub 仓库 — <a href="https://github.com/agno-agi/agno">github.com/agno-agi/agno</a></li>
+  <li>Agno 性能基准 — <a href="https://docs.agno.com/performance">docs.agno.com/performance</a></li>
+  <li>Agno v2 迁移指南 — <a href="https://docs.agno.com/other/v2-migration">docs.agno.com/other/v2-migration</a></li>
+  <li>ZenML — Agno vs LangGraph — <a href="https://www.zenml.io/blog/agno-vs-langgraph">zenml.io/blog/agno-vs-langgraph</a></li>
+  <li>Hacker News 社区性能分析 — <a href="https://hn.svelte.dev/item/43274435">hn.svelte.dev/item/43274435</a></li>
+  <li>Arize — Orchestrator-Worker 对比 — <a href="https://arize.com/blog/orchestrator-worker-agents-a-practical-comparison-of-common-agent-frameworks/">arize.com/blog</a></li>
+  <li>Ry Walker — Agent Frameworks Compared — <a href="https://rywalker.com/research/agent-frameworks">rywalker.com/research/agent-frameworks</a></li>
+  <li>FutureAGI — OSS Agent Frameworks 2026 — <a href="https://futureagi.com/blog/oss-agent-frameworks-2026/">futureagi.com</a></li>
+  <li>Maxpool — AI Agent Frameworks Comparison — <a href="https://maxpool.dev/frameworks/">maxpool.dev</a></li>
+  <li>Kubiya — Runtime Comparison — <a href="https://docs.kubiya.ai/core-concepts/runtimes/comparison">docs.kubiya.ai</a></li>
+  <li>Dev.to 独立评测（jangwook_kim, dibi8, piiiico, gautammanak1 等作者）</li>
+  <li>ppippi.dev — Agno Review — <a href="https://ppippi.dev/en/blog/agno/">ppippi.dev</a></li>
+  <li>Morphllm — AI Agent Frameworks 2026 — <a href="https://www.morphllm.com/ai-agent-framework">morphllm.com</a></li>
+  <li>Nimble — Top 12 AI Agent Frameworks — <a href="https://www.nimbleway.com/blog/top-ai-agent-frameworks-comparison">nimbleway.com</a></li>
+</ol>
+
+<h3>安全漏洞（主编补充）</h3>
+<ol start="16">
+  <li>NVD — CVE-2026-35002 (eval injection, CVSS 9.8) — <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-35002">nvd.nist.gov</a></li>
+  <li>NVD — CVE-2026-10105 (SQL injection, CVSS 8.3) — <a href="https://nvd.nist.gov/vuln/detail/CVE-2026-10105">nvd.nist.gov</a></li>
+  <li>NVD — CVE-2025-8665 (command injection, CVSS 6.3) — <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-8665">nvd.nist.gov</a></li>
+  <li>NVD — CVE-2025-64168 (session leak, CVSS 7.1) — <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-64168">nvd.nist.gov</a></li>
+  <li>Snyk — Agno Package Security — <a href="https://security.snyk.io/package/pip/agno">security.snyk.io/package/pip/agno</a></li>
+  <li>GitHub Advisory — GHSA-77rh-m34w-rv36 (eval injection) — <a href="https://github.com/advisories/GHSA-77rh-m34w-rv36">github.com/advisories</a></li>
+  <li>GitHub Advisory — GHSA-r34x-38p8-9whw (command injection) — <a href="https://github.com/advisories/GHSA-r34x-38p8-9whw">github.com/advisories</a></li>
+</ol>
+
+<h3>当前活跃 Bug（主编补充）</h3>
+<ol start="23">
+  <li>GitHub Issue #6757 — Claude streaming tools broken — <a href="https://github.com/agno-agi/agno/issues/6757">github.com/agno-agi/agno/issues/6757</a></li>
+  <li>GitHub Issue #7171 — Anthropic drops code execution history — <a href="https://github.com/agno-agi/agno/issues/7171">github.com/agno-agi/agno/issues/7171</a></li>
+  <li>GitHub Issue #7956 — Team memory not shared in AgentOS — <a href="https://github.com/agno-agi/agno/issues/7956">github.com/agno-agi/agno/issues/7956</a></li>
+  <li>GitHub Issue #6207 — SessionContextStore breaks Claude/Gemini — <a href="https://github.com/agno-agi/agno/issues/6207">github.com/agno-agi/agno/issues/6207</a></li>
+  <li>GitHub Issue #5936 — Retry wastes credits on unrecoverable errors — <a href="https://github.com/agno-agi/agno/issues/5936">github.com/agno-agi/agno/issues/5936</a></li>
+  <li>GitHub Issue #6968 — MistralAI v2.0 breaking imports — <a href="https://github.com/agno-agi/agno/issues/6968">github.com/agno-agi/agno/issues/6968</a></li>
+  <li>GitHub Issue #7015 — Sonnet 4.6 assistant prefill breaking change — <a href="https://github.com/agno-agi/agno/issues/7015">github.com/agno-agi/agno/issues/7015</a></li>
+</ol>
+
+<h3>公司财务与企业案例（主编补充）</h3>
+<ol start="30">
+  <li>Crustdata — Agno Funding & Headcount — <a href="https://profiles.crustdata.com/company/phidata">profiles.crustdata.com/company/phidata</a></li>
+  <li>GetLatka — Agno Revenue 2025 — <a href="https://getlatka.com/companies/agno.com">getlatka.com/companies/agno.com</a></li>
+  <li>Thinqpoint Customer Story — <a href="https://www.agno.com/customer-stories/how-thinqpoint-built-real-ai-systems-without-the-fluff">agno.com/customer-stories/thinqpoint</a></li>
+  <li>Cedar Migration Story — <a href="https://www.agno.com/blog/building-a-scalable-ai-powered-platform-the-story-behind-cedars-move-to-agno">agno.com/blog/cedar-migration</a></li>
+  <li>CometChat × Agno — <a href="https://www.cometchat.com/blog/agno-x-cometchat-intelligence-through-chat">cometchat.com/blog</a></li>
+  <li>xpander.ai — Deploy Agno Agents — <a href="https://xpander.ai/resources/how-to-deploy-agno-agents-production">xpander.ai/resources</a></li>
+</ol>
+
+<hr class="divider">
+
+<!-- ===== 交接单 ===== -->
+<div class="card" style="border: 2px solid var(--accent);">
+<h2>交接单</h2>
+<table>
+  <tr><th>项目</th><th>详情</th></tr>
+  <tr><td>报告状态</td><td><span class="badge-green">审定完成</span></td></tr>
+  <tr><td>研究员版本</td><td>agno优缺点_Agent1_report_v1.html</td></tr>
+  <tr><td>主编版本</td><td>agno优缺点_report_v1.html</td></tr>
+  <tr><td>研究员报告质量</td><td>中等可信——框架和组织良好，但在安全漏洞覆盖面、团队规模、企业案例三个维度存在重要遗漏</td></tr>
+  <tr><td>主编独立搜索次数</td><td>8 组关键词搜索</td></tr>
+  <tr><td>主编补充发现</td><td>6 条（标注"主编补充"）</td></tr>
+  <tr><td>来源总数</td><td>35 个独立来源（研究员 14 + 主编补充 21）</td></tr>
+  <tr><td>核心结论变化</td><td>研究员结论整体仍成立，但<strong>风险评估被显著升级</strong>——从"安全需关注"上升为"安全是选型否决级因素"。补充了财务脆弱性、Claude 集成阻断性 Bug、Stars-采纳背离量化分析三个维度。</td></tr>
+  <tr><td>剩余不确定项</td><td>6 项（详见"不确定声明"章节）</td></tr>
+</table>
+</div>
+
+<hr>
+<p class="meta" style="text-align:center; margin-top:2rem;">
+  报告生成时间: 2026-07-01 | 流程: 研究员初稿 → 主编独立搜索交叉验证 → 重组审定<br>
+  方法论: 单源标注 + 独立关键词搜索 + 安全漏洞数据库验证 + 公司财务数据验证 + GitHub Issues 活跃 Bug 扫描<br>
+  本报告不含任何赞助或商业利益冲突 | 主编独立完成验证与重组
+</p>
+
+</body>
+</html>
